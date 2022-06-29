@@ -34,37 +34,16 @@ class CatAdapter @Inject constructor(@ActivityContext context: Context) :
 
     override fun onBindViewHolder(holder: CatView, position: Int) {
         holder.imageview.layoutParams.height =
-            ((1.0f * (catsList[position].height) * (displayMetrics.widthPixels / 2)) / catsList[position].width).roundToInt()
+            ((1.0f * (catsList[position].height!!) * (displayMetrics.widthPixels / 2)) / catsList[position].width!!).roundToInt()
         Picasso.get().load(Uri.parse(catsList[position].url)).into(holder.imageview)
     }
 
     override fun getItemCount(): Int {
         return catsList.size
     }
-
-    /*private class DiffCallBack(private val oldCats:List<Cat>,private val newCats:List<Cat>): DiffUtil.Callback() {
-        override fun getOldListSize(): Int {
-            return oldCats.size
-        }
-
-        override fun getNewListSize(): Int {
-            return newCats.size
-        }
-
-        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            return oldCats[oldItemPosition].id == newCats[newItemPosition].id
-        }
-
-        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            return oldCats[oldItemPosition] == newCats[newItemPosition]
-        }
-    }*/
     fun updateData(newCats: ArrayList<Cat>) {
-        /*val diffUtilCallback= DiffCallBack(newCats,catsList)
-        val diffResult= DiffUtil.calculateDiff(diffUtilCallback)*/
         catsList.clear()
         catsList.addAll(newCats.distinct())
         notifyDataSetChanged()
-        //diffResult.dispatchUpdatesTo(this)
     }
 }
