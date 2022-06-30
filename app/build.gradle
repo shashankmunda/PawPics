@@ -48,12 +48,11 @@ android {
 
 dependencies {
     implementation 'androidx.core:core-ktx:1.8.0'
-    implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'androidx.appcompat:appcompat:1.4.2'
     implementation 'com.google.android.material:material:1.6.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.paging:paging-runtime-ktx:3.1.1'
-    testImplementation 'junit:junit:4.13.2'
+
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
     implementation 'com.google.android.material:material:1.7.0-alpha02'
@@ -68,12 +67,17 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.2'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.2'
 
+    //DI
     implementation 'com.google.dagger:hilt-android:2.42'
     kapt 'com.google.dagger:hilt-android-compiler:2.42'
+
+    //Image loading
+    implementation 'com.squareup.picasso:picasso:2.71828'
 
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
 
     //Testing
+    testImplementation 'junit:junit:4.13.2'
     testImplementation "androidx.test:core-ktx:1.4.0"
     testImplementation("com.google.dagger:hilt-android-testing:2.38.1")
     kaptTest("com.google.dagger:hilt-android-compiler:2.42")
