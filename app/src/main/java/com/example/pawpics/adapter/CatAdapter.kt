@@ -12,9 +12,11 @@ import com.example.pawpics.R
 import com.example.pawpics.model.Cat
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.qualifiers.ActivityContext
+import dagger.hilt.android.scopes.ActivityScoped
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
+@ActivityScoped
 class CatAdapter @Inject constructor(@ActivityContext context: Context) :
     RecyclerView.Adapter<CatAdapter.CatView>() {
     private var catsList: ArrayList<Cat> = ArrayList()

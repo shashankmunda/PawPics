@@ -3,20 +3,15 @@ package com.example.pawpics.ui
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.pawpics.adapter.CatAdapter
 import com.example.pawpics.databinding.ActivityMainBinding
 import com.example.pawpics.model.Cat
-import com.example.pawpics.network.CatApiService
-import com.example.pawpics.repository.CatRepository
 import com.example.pawpics.util.SpacesDecoration
 import com.example.pawpics.viewmodel.CatViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.random.Random
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {

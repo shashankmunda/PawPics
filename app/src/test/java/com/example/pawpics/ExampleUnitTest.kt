@@ -1,5 +1,7 @@
 package com.example.pawpics
 
+import com.example.pawpics.data.CatRepository
+import com.example.pawpics.viewmodel.CatViewModel
 import org.junit.Test
 
 import org.junit.Assert.*
