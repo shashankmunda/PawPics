@@ -2,7 +2,6 @@ package com.example.pawpics.adapter
 
 import android.content.Context
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,10 +32,6 @@ class CatAdapter @Inject constructor(@ActivityContext context: Context) :
 
     override fun onBindViewHolder(holder: CatView, position: Int) {
         val cat=catsList[position]
-        Log.d("size",catsList.size.toString())
-        Log.d("Position",position.toString())
-        Log.d("Height",cat.height.toString())
-        Log.d("width",cat.width.toString())
         if(cat.height==null || cat.width==null)
             holder.invalidate()
         else

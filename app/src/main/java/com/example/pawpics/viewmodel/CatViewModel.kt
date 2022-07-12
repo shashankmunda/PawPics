@@ -1,6 +1,5 @@
 package com.example.pawpics.viewmodel
 
-import android.util.Log
 import androidx.annotation.UiThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -18,10 +17,7 @@ class CatViewModel @Inject constructor(private val catRepository: CatRepository)
     private val _cats= MutableLiveData<List<Cat>>()
     val cats: LiveData<List<Cat>>
         get()=_cats
-    init{
-        Log.d("ViewModel initialized","YES")
-        fetchData()
-    }
+
     @UiThread
      private fun fetchData() {
         viewModelScope.launch {
