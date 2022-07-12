@@ -1,12 +1,13 @@
 package com.example.pawpics.viewmodel
 
 import android.util.Log
+import androidx.annotation.UiThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.pawpics.model.Cat
 import com.example.pawpics.data.CatRepository
+import com.example.pawpics.model.Cat
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -21,15 +22,30 @@ class CatViewModel @Inject constructor(private val catRepository: CatRepository)
         Log.d("ViewModel initialized","YES")
         fetchData()
     }
-     fun fetchData() {
+    @UiThread
+     private fun fetchData() {
         viewModelScope.launch {
             val response = catRepository.getImages(Random.nextInt(100))
             if (response.isSuccessful && response.body()?.isNotEmpty() == true) {
-                _cats.value?.filter { cat ->
-                    cat.height!=null && cat.width!=null
-                }
-                _cats.value=response.body()
+                filterDuplicateOrInvalidEntries()
+                _cats.postValue(response.body())
             }
         }
+     }
+
+    private fun filterDuplicateOrInvalidEntries() {
+        val catEntries = mutableSetOf<String>()
+        _cats.value?.filter { cat ->
+            var isNotDuplicateOrInvalid = false
+            if (cat.height != null && cat.width != null && !catEntries.contains(cat.id)) {
+                catEntries.add(cat.id)
+                isNotDuplicateOrInvalid = true
+            }
+            isNotDuplicateOrInvalid
+        }
     }
+
+    fun refreshCalled(){
+         fetchData()
+     }
 }

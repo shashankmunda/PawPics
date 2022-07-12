@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
     private fun onRefresh() {
-        model.fetchData()
+        model.refreshCalled()
         binding.catRefresh.isRefreshing = false
     }
 
@@ -45,6 +45,7 @@ class MainActivity : AppCompatActivity() {
             StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL).apply {
                 gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_NONE
             }
+        cat_display.setItemViewCacheSize(100)
         cat_display.addItemDecoration(SpacesDecoration(8))
     }
 }

@@ -1,16 +1,20 @@
 package com.example.pawpics.adapter
 
 import android.content.Context
-import android.net.Uri
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
+import coil.request.CachePolicy
 import com.example.pawpics.R
 import com.example.pawpics.model.Cat
-import com.squareup.picasso.Picasso
+import com.facebook.shimmer.Shimmer
+import com.facebook.shimmer.ShimmerDrawable
+import com.google.android.material.imageview.ShapeableImageView
 import dagger.hilt.android.qualifiers.ActivityContext
 import dagger.hilt.android.scopes.ActivityScoped
 import javax.inject.Inject
@@ -23,21 +27,20 @@ class CatAdapter @Inject constructor(@ActivityContext context: Context) :
     private val displayMetrics: DisplayMetrics by lazy {
         context.resources.displayMetrics
     }
-
-    class CatView(view: View) : RecyclerView.ViewHolder(view) {
-        var imageview: ImageView = view.findViewById(R.id.cat_image_view)
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CatView {
-        val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.cat_image_holder, parent, false)
-        return CatView(view)
+        return CatView.getInstance(parent,R.layout.cat_image_holder)
     }
 
     override fun onBindViewHolder(holder: CatView, position: Int) {
-        holder.imageview.layoutParams.height =
-            ((1.0f * (catsList[position].height!!) * (displayMetrics.widthPixels / 2)) / catsList[position].width!!).roundToInt()
-        Picasso.get().load(Uri.parse(catsList[position].url)).into(holder.imageview)
+        val cat=catsList[position]
+        Log.d("size",catsList.size.toString())
+        Log.d("Position",position.toString())
+        Log.d("Height",cat.height.toString())
+        Log.d("width",cat.width.toString())
+        if(cat.height==null || cat.width==null)
+            holder.invalidate()
+        else
+            holder.bind(cat,displayMetrics)
     }
 
     override fun getItemCount(): Int {
@@ -47,5 +50,43 @@ class CatAdapter @Inject constructor(@ActivityContext context: Context) :
         catsList.clear()
         catsList.addAll(newCats.distinct())
         notifyDataSetChanged()
+    }
+    class CatView(view: View) : RecyclerView.ViewHolder(view) {
+        private var imageView: ShapeableImageView= view.findViewById(R.id.cat_image_view)
+        companion object{
+            fun getInstance(parent: ViewGroup,layoutId: Int): CatView {
+                val view=LayoutInflater.from(parent.context).inflate(layoutId,parent,false)
+                return CatView(view)
+            }
+        }
+        private val shimmerDrawable:ShimmerDrawable
+        init{
+            val shimmer: Shimmer =Shimmer.ColorHighlightBuilder()
+                .setHighlightAlpha(0.93f)
+                .setBaseAlpha(0.9f)
+                .setAutoStart(true)
+                .setWidthRatio(1.6f)
+                .setBaseColor(ContextCompat.getColor(this.itemView.context,android.R.color.darker_gray))
+                .setHighlightColor(ContextCompat.getColor(this.itemView.context,android.R.color.white))
+                .setHighlightAlpha(0.7f)
+                .build()
+            shimmerDrawable=ShimmerDrawable().apply {
+                setShimmer(shimmer)
+            }
+        }
+
+        fun bind(cat:Cat,displayMetrics: DisplayMetrics){
+            imageView.layoutParams.height =
+                ((1.0f * (cat.height!!) * (displayMetrics.widthPixels / 2)) / cat.width!!).roundToInt()
+            imageView.load(data= cat.url){
+                placeholder(shimmerDrawable)
+                allowRgb565(true)
+                diskCachePolicy(CachePolicy.ENABLED)
+                memoryCachePolicy(CachePolicy.DISABLED)
+            }
+        }
+        fun invalidate() {
+            imageView.invalidate()
+        }
     }
 }
