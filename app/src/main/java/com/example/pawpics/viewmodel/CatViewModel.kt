@@ -17,7 +17,9 @@ class CatViewModel @Inject constructor(private val catRepository: CatRepository)
     private val _cats= MutableLiveData<List<Cat>>()
     val cats: LiveData<List<Cat>>
         get()=_cats
-
+    init{
+        fetchData()
+    }
     @UiThread
      private fun fetchData() {
         viewModelScope.launch {
@@ -30,14 +32,8 @@ class CatViewModel @Inject constructor(private val catRepository: CatRepository)
      }
 
     private fun filterDuplicateOrInvalidEntries() {
-        val catEntries = mutableSetOf<String>()
-        _cats.value?.filter { cat ->
-            var isNotDuplicateOrInvalid = false
-            if (cat.height != null && cat.width != null && !catEntries.contains(cat.id)) {
-                catEntries.add(cat.id)
-                isNotDuplicateOrInvalid = true
-            }
-            isNotDuplicateOrInvalid
+        _cats.value?.distinctBy { cat->
+            cat.url
         }
     }
 

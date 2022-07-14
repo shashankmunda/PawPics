@@ -43,7 +43,7 @@ class CatAdapter @Inject constructor(@ActivityContext context: Context) :
     }
     fun updateData(newCats: ArrayList<Cat>) {
         catsList.clear()
-        catsList.addAll(newCats.distinct())
+        catsList.addAll(newCats)
         notifyDataSetChanged()
     }
     class CatView(view: View) : RecyclerView.ViewHolder(view) {

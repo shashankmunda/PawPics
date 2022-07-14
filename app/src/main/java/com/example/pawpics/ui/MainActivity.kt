@@ -5,6 +5,8 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import coil.annotation.ExperimentalCoilApi
+import coil.imageLoader
 import com.example.pawpics.adapter.CatAdapter
 import com.example.pawpics.databinding.ActivityMainBinding
 import com.example.pawpics.model.Cat
@@ -47,5 +49,15 @@ class MainActivity : AppCompatActivity() {
             }
         cat_display.setItemViewCacheSize(100)
         cat_display.addItemDecoration(SpacesDecoration(8))
+    }
+
+    override fun onStart() {
+        super.onStart()
+        clearImageCache()
+    }
+
+    @OptIn(ExperimentalCoilApi::class)
+    private fun clearImageCache(){
+        imageLoader.diskCache?.clear()
     }
 }
