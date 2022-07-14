@@ -41,11 +41,14 @@ class CatAdapter @Inject constructor(@ActivityContext context: Context) :
     override fun getItemCount(): Int {
         return catsList.size
     }
+
     fun updateData(newCats: ArrayList<Cat>) {
         catsList.clear()
         catsList.addAll(newCats)
         notifyDataSetChanged()
     }
+
+
     class CatView(view: View) : RecyclerView.ViewHolder(view) {
         private var imageView: ShapeableImageView= view.findViewById(R.id.cat_image_view)
         companion object{

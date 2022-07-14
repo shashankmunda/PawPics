@@ -7,6 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pawpics.data.CatRepository
 import com.example.pawpics.model.Cat
+import com.example.pawpics.util.Constants.Companion.MAX_LIMIT
+import com.example.pawpics.util.Constants.Companion.OFFSET
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -23,7 +25,7 @@ class CatViewModel @Inject constructor(private val catRepository: CatRepository)
     @UiThread
      private fun fetchData() {
         viewModelScope.launch {
-            val response = catRepository.getImages(Random.nextInt(100))
+            val response = catRepository.getImages(OFFSET+Random.nextInt(MAX_LIMIT))
             if (response.isSuccessful && response.body()?.isNotEmpty() == true) {
                 filterDuplicateOrInvalidEntries()
                 _cats.postValue(response.body())
