@@ -11,7 +11,7 @@ Our goal is to provide an ad-free, clean experience of amazing cat pictures in a
 </ul>
 
 We welcome you to try out this app and tell us about your experience, suggestions and feedback. We'd love hearing from you :relaxed:.
- </b>Stay tuned</b> as we have got features like saving as wallpaper and sharing in our future releases &#9996. Also if you like our app, don't forget to give a &#9733 rating.
+ </b>Stay tuned</b> as we have got features like saving as wallpaper and sharing in our future releases &#9996. Also if you like our app, don't forget to give a 5-:star: rating.
 <b>Acknowledgement:</b>
 This app is powered by the <a href="https://thecatapi.com">Cat API<a> and we want to thank Aden, its creator for its immense support in our project.
 
