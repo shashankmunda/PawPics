@@ -15,5 +15,5 @@ We welcome you to try out this app and tell us about your experience, suggestion
  
 <b>Acknowledgement:</b>
 
-This app is powered by the <a href="https://thecatapi.com">Cat API<a> and we want to thank Aden, its creator for its immense support in our project.
+This app is powered by the <a href="https://thecatapi.com">Cat API</a> and we want to thank Aden, its creator for its immense support in our project.
 Special thanks to <a href="https://www.flaticon.com/authors/aomam"> AomAm from FlatIcon</a> for creating the icon for this app
