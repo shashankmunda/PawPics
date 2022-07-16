@@ -7,7 +7,7 @@ Our goal is to provide an ad-free, clean experience of amazing cat pictures in a
 <li> Zero ads/fees :wink: </li>
 <li>No login/registration, which means we don't collect any of your private data</li>
 <li>Beautiful,clean,easy to navigate user-interface</li>
-<li>Open-source, we encourage and invite other cat-lovers to help us improve this app &#128588</li>
+<li>Open-source, we encourage and invite other cat-lovers to help us improve this app <span>&#128588</span></li>
 </ul>
 
 We welcome you to try out this app and tell us about your experience, suggestions and feedback. We'd love hearing from you :relaxed:.
