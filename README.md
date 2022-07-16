@@ -1,6 +1,6 @@
 Explore our collection of coolest and most quirky cat pictures for free and with zero-ads.
 
-<p>Our goal is to provide an ad-free, clean experience of amazing cat pictures in a user-friendly feed that serves all types of cat lovers <span>&#128571.</span> </p>
+<p>Our goal is to provide an ad-free, clean experience of amazing cat pictures in a user-friendly feed that serves all types of cat lovers <span>&#128571</span> </p>
 
 <b>Key Features:</b>
 <ul>
