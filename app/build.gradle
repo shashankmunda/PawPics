@@ -7,10 +7,17 @@ plugins {
 
 android {
     signingConfigs {
+        debug {
+            storeFile file('/home/bassic_shashank/release-store/pawpics.jks')
+            storePassword 'Shank16Munda'
+            keyAlias 'uploadKey'
+            keyPassword 'Shank16Munda'
+        }
     }
     compileSdk 31
 
     defaultConfig {
+
         applicationId "com.shashankmunda.pawpics"
         minSdk 21
         targetSdk 31
@@ -22,10 +29,17 @@ android {
         Properties properties=new Properties()
         properties.load(project.rootProject.file("local.properties").newDataInputStream())
         buildConfigField "String", "CAT_API_KEY", "\"${properties.getProperty("CAT_API_KEY")}\""
+        signingConfig signingConfigs.debug
+        proguardFiles getDefaultProguardFile('proguard-android.txt')
     }
 
     buildTypes {
         release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug{
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -59,7 +73,7 @@ dependencies {
 
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
-    implementation 'com.google.android.material:material:1.7.0-alpha02'
+    implementation 'com.google.android.material:material:1.7.0-alpha03'
     //Retrofit libraries
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-moshi:2.9.0'

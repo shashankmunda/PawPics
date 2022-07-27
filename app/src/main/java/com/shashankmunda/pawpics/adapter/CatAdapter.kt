@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import coil.request.CachePolicy
+import coil.size.Scale
 import com.example.pawpics.R
 import com.shashankmunda.pawpics.model.Cat
 import com.facebook.shimmer.Shimmer
@@ -77,6 +78,7 @@ class CatAdapter @Inject constructor(@ActivityContext context: Context) :
             imageView.layoutParams.height =
                 ((1.0f * (cat.height!!) * (displayMetrics.widthPixels / 2)) / cat.width!!).roundToInt()
             imageView.load(data= cat.url){
+                scale(Scale.FIT)
                 placeholder(shimmerDrawable)
                 allowRgb565(true)
                 diskCachePolicy(CachePolicy.ENABLED)

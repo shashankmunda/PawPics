@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
                 is Result.Error -> {
                     hideProgressBar()
                     response.message?.let{ errorMessage ->
-                        Toast.makeText(this,"An error occured: $errorMessage",Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this,"An error occurred: $errorMessage",Toast.LENGTH_SHORT).show()
                     }
                 }
                 is Result.Loading -> {

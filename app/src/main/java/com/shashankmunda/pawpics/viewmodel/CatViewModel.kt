@@ -54,7 +54,7 @@ class CatViewModel @Inject constructor(private val catRepository: CatRepository,
         if(response.isSuccessful && response.body()?.isNotEmpty()== true){
             val cats=response.body()
             cats?.distinctBy { cat->
-                cat.url
+                cat.id
             }
             return Result.Success(cats!!)
         }
