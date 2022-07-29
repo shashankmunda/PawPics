@@ -13,10 +13,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shashankmunda.pawpics.data.CatRepository
 import com.shashankmunda.pawpics.model.Cat
-import com.shashankmunda.pawpics.util.Constants.Companion.MAX_LIMIT
-import com.shashankmunda.pawpics.util.Constants.Companion.OFFSET
 import com.shashankmunda.pawpics.util.Result
+import com.shashankmunda.pawpics.util.Utils.Companion.MAX_LIMIT
+import com.shashankmunda.pawpics.util.Utils.Companion.OFFSET
+import com.shashankmunda.pawpics.util.Utils.Companion.clearImageCache
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Response
 import java.io.IOException
@@ -35,9 +37,9 @@ class CatViewModel @Inject constructor(private val catRepository: CatRepository,
      private fun fetchNewCats() {
         _cats.postValue(Result.Loading())
             if (hasInternetConnection()) {
-                viewModelScope.launch{
+                viewModelScope.launch(Dispatchers.IO){
                     try {
-                        val response = catRepository.getImages(OFFSET + Random.nextInt(MAX_LIMIT))
+                        val response = catRepository.getCats(OFFSET + Random.nextInt(MAX_LIMIT),"thumb")
                         _cats.postValue(updateCats(response))
                     }
                     catch(t:Throwable){
@@ -48,7 +50,6 @@ class CatViewModel @Inject constructor(private val catRepository: CatRepository,
                     }
             }
         } else _cats.postValue(Result.Error("No Internet connection"))
-
      }
 
     private fun updateCats(response: Response<List<Cat>>): Result<List<Cat>>? {
@@ -59,6 +60,7 @@ class CatViewModel @Inject constructor(private val catRepository: CatRepository,
             val cats=response.body()!!.distinctBy { cat ->
                 cat.id
             }
+            clearImageCache(application)
             return Result.Success(cats)
         }
         return Result.Error(response.message())
@@ -86,7 +88,6 @@ class CatViewModel @Inject constructor(private val catRepository: CatRepository,
         }
         return false
     }
-
 
     fun refreshCalled(){
          fetchNewCats()

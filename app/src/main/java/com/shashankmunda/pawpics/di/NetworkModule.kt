@@ -1,7 +1,7 @@
 package com.shashankmunda.pawpics.di
 
 import com.shashankmunda.pawpics.network.CatApiService
-import com.shashankmunda.pawpics.util.Constants
+import com.shashankmunda.pawpics.util.Utils
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,7 +28,7 @@ object NetworkModule {
     @Provides
     fun provideCatService(okHttpClient: OkHttpClient): CatApiService {
         return Retrofit.Builder()
-            .baseUrl(Constants.BASE_URL)
+            .baseUrl(Utils.BASE_URL)
             .addConverterFactory(MoshiConverterFactory.create())
             .client(okHttpClient)
             .build()

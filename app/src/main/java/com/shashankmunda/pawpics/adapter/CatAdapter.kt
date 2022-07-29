@@ -1,27 +1,30 @@
 package com.shashankmunda.pawpics.adapter
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import coil.decode.Decoder
+import coil.dispose
 import coil.load
 import coil.request.CachePolicy
 import coil.size.Scale
 import com.example.pawpics.R
-import com.shashankmunda.pawpics.model.Cat
 import com.facebook.shimmer.Shimmer
 import com.facebook.shimmer.ShimmerDrawable
 import com.google.android.material.imageview.ShapeableImageView
-import dagger.hilt.android.qualifiers.ActivityContext
+import com.shashankmunda.pawpics.model.Cat
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ActivityScoped
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
 @ActivityScoped
-class CatAdapter @Inject constructor(@ActivityContext context: Context) :
+class CatAdapter @Inject constructor(@ApplicationContext context: Context) :
     RecyclerView.Adapter<CatAdapter.CatView>() {
     private var catsList: ArrayList<Cat> = ArrayList()
     private val displayMetrics: DisplayMetrics by lazy {
@@ -32,11 +35,17 @@ class CatAdapter @Inject constructor(@ActivityContext context: Context) :
     }
 
     override fun onBindViewHolder(holder: CatView, position: Int) {
+        holder.setIsRecyclable(false)
         val cat=catsList[position]
         if(cat.height==null || cat.width==null)
             holder.invalidate()
         else
             holder.bind(cat,displayMetrics)
+    }
+
+    override fun onViewRecycled(holder: CatView) {
+        holder.dispose()
+        super.onViewRecycled(holder)
     }
 
     override fun getItemCount(): Int {
@@ -78,15 +87,19 @@ class CatAdapter @Inject constructor(@ActivityContext context: Context) :
             imageView.layoutParams.height =
                 ((1.0f * (cat.height!!) * (displayMetrics.widthPixels / 2)) / cat.width!!).roundToInt()
             imageView.load(data= cat.url){
-                scale(Scale.FIT)
                 placeholder(shimmerDrawable)
-                allowRgb565(true)
-                diskCachePolicy(CachePolicy.ENABLED)
+                allowHardware(false)
                 memoryCachePolicy(CachePolicy.DISABLED)
+                diskCachePolicy(CachePolicy.ENABLED)
+                bitmapConfig(Bitmap.Config.RGB_565)
+                allowRgb565(true)
             }
         }
         fun invalidate() {
             imageView.invalidate()
+        }
+        fun dispose(){
+            imageView.dispose()
         }
     }
 }

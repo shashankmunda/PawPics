@@ -6,6 +6,6 @@ import javax.inject.Inject
 
 @ViewModelScoped
 class CatRepository @Inject constructor(private var catApiService: CatApiService) {
-    suspend fun getImages(limit:Int)=
-       catApiService.getImages(limit)
+    suspend fun getCats(limit:Int,size:String)=
+       catApiService.getCats(limit,size)
 }

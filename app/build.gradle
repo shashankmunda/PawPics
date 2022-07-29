@@ -7,12 +7,6 @@ plugins {
 
 android {
     signingConfigs {
-        debug {
-            storeFile file('/home/bassic_shashank/release-store/pawpics.jks')
-            storePassword 'Shank16Munda'
-            keyAlias 'uploadKey'
-            keyPassword 'Shank16Munda'
-        }
     }
     compileSdk 32
 
@@ -35,7 +29,6 @@ android {
 
     buildTypes {
         release {
-            debuggable true
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -69,7 +62,6 @@ android {
 dependencies {
     implementation 'androidx.core:core-ktx:1.8.0'
     implementation 'androidx.appcompat:appcompat:1.4.2'
-    implementation 'com.google.android.material:material:1.6.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
@@ -83,7 +75,6 @@ dependencies {
     implementation 'androidx.activity:activity-ktx:1.5.0'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.0'
     //Coroutines
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
 
     //DI

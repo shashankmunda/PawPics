@@ -7,13 +7,12 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import coil.annotation.ExperimentalCoilApi
-import coil.imageLoader
 import com.example.pawpics.databinding.ActivityMainBinding
 import com.shashankmunda.pawpics.adapter.CatAdapter
 import com.shashankmunda.pawpics.model.Cat
 import com.shashankmunda.pawpics.util.Result
 import com.shashankmunda.pawpics.util.SpacesDecoration
+import com.shashankmunda.pawpics.util.Utils.Companion.clearImageCache
 import com.shashankmunda.pawpics.viewmodel.CatViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -79,13 +78,9 @@ class MainActivity : AppCompatActivity() {
         cat_display.addItemDecoration(SpacesDecoration(8))
     }
 
-    override fun onStart() {
-        super.onStart()
-        clearImageCache()
+    override fun onStop() {
+        clearImageCache(application)
+        super.onStop()
     }
 
-    @OptIn(ExperimentalCoilApi::class)
-    private fun clearImageCache(){
-        imageLoader.diskCache?.clear()
-    }
 }
