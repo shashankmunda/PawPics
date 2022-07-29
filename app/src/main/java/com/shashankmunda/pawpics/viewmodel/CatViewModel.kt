@@ -34,29 +34,32 @@ class CatViewModel @Inject constructor(private val catRepository: CatRepository,
     @UiThread
      private fun fetchNewCats() {
         _cats.postValue(Result.Loading())
-        try {
             if (hasInternetConnection()) {
                 viewModelScope.launch{
-                    val response= catRepository.getImages(OFFSET+Random.nextInt(MAX_LIMIT))
-                    _cats.postValue(updateCats(response))
-                }
-            } else _cats.postValue(Result.Error("No Internet connection"))
-        }
-        catch(t:Throwable){
-            when(t){
-                is IOException -> _cats.postValue(Result.Error("Network error"))
-                else -> _cats.postValue(Result.Error("JSON parsing error"))
+                    try {
+                        val response = catRepository.getImages(OFFSET + Random.nextInt(MAX_LIMIT))
+                        _cats.postValue(updateCats(response))
+                    }
+                    catch(t:Throwable){
+                        when(t){
+                            is IOException -> _cats.postValue(Result.Error("Couldn't connect to the source"))
+                            else -> _cats.postValue(Result.Error("JSON parsing error"))
+                        }
+                    }
             }
-        }
+        } else _cats.postValue(Result.Error("No Internet connection"))
+
      }
 
     private fun updateCats(response: Response<List<Cat>>): Result<List<Cat>>? {
         if(response.isSuccessful && response.body()?.isNotEmpty()== true){
-            val cats=response.body()
-            cats?.distinctBy { cat->
+            /*
+            * Filter out duplicates in the Json response
+             */
+            val cats=response.body()!!.distinctBy { cat ->
                 cat.id
             }
-            return Result.Success(cats!!)
+            return Result.Success(cats)
         }
         return Result.Error(response.message())
     }
