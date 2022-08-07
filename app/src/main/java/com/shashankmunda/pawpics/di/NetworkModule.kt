@@ -1,6 +1,6 @@
 package com.shashankmunda.pawpics.di
 
-import com.shashankmunda.pawpics.network.CatApiService
+import com.shashankmunda.pawpics.api.CatApiService
 import com.shashankmunda.pawpics.util.Utils
 import dagger.Module
 import dagger.Provides

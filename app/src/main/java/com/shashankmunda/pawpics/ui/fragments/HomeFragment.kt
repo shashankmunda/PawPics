@@ -1,4 +1,4 @@
-package com.shashankmunda.pawpics.ui
+package com.shashankmunda.pawpics.ui.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,8 +14,8 @@ import com.example.pawpics.databinding.HomeFragmentBinding
 import com.shashankmunda.pawpics.util.Result
 import com.shashankmunda.pawpics.adapter.CatAdapter
 import com.shashankmunda.pawpics.model.Cat
+import com.shashankmunda.pawpics.ui.CatViewModel
 import com.shashankmunda.pawpics.util.SpacesDecoration
-import com.shashankmunda.pawpics.viewmodel.CatViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -23,7 +23,7 @@ import javax.inject.Inject
 class HomeFragment: Fragment(R.layout.home_fragment) {
     private var _binding:HomeFragmentBinding?=null
     private val binding get()=_binding!!
-    private val model:CatViewModel by viewModels()
+    private val model: CatViewModel by viewModels()
     @Inject lateinit var catAdapter: CatAdapter
     private val catsDisplay: RecyclerView by lazy {
         binding.catsGridViewer

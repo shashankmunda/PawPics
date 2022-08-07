@@ -1,4 +1,4 @@
-package com.shashankmunda.pawpics.viewmodel
+package com.shashankmunda.pawpics.ui
 
 import android.app.Application
 import android.content.Context
@@ -11,7 +11,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.shashankmunda.pawpics.data.CatRepository
+import com.shashankmunda.pawpics.repository.CatRepository
 import com.shashankmunda.pawpics.model.Cat
 import com.shashankmunda.pawpics.util.Result
 import com.shashankmunda.pawpics.util.Utils.Companion.MAX_LIMIT
@@ -54,9 +54,6 @@ class CatViewModel @Inject constructor(private val catRepository: CatRepository,
 
     private fun updateCats(response: Response<List<Cat>>): Result<List<Cat>>? {
         if(response.isSuccessful && response.body()?.isNotEmpty()== true){
-            /*
-            * Filter out duplicates in the Json response
-             */
             val cats=response.body()!!.distinctBy { cat ->
                 cat.id
             }

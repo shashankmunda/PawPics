@@ -1,4 +1,4 @@
-package com.shashankmunda.pawpics.network
+package com.shashankmunda.pawpics.api
 
 import com.example.pawpics.BuildConfig
 import com.shashankmunda.pawpics.model.Cat

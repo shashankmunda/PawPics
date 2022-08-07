@@ -9,6 +9,6 @@
         android:id="@+id/cat_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:name="com.shashankmunda.pawpics.ui.HomeFragment">
+        android:name="com.shashankmunda.pawpics.ui.fragments.HomeFragment">
     </androidx.fragment.app.FragmentContainerView>
 </androidx.constraintlayout.widget.ConstraintLayout>

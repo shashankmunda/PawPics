@@ -1,6 +1,6 @@
-package com.shashankmunda.pawpics.data
+package com.shashankmunda.pawpics.repository
 
-import com.shashankmunda.pawpics.network.CatApiService
+import com.shashankmunda.pawpics.api.CatApiService
 import dagger.hilt.android.scopes.ViewModelScoped
 import javax.inject.Inject
 
