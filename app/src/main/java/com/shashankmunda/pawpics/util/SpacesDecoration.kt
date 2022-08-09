@@ -8,7 +8,6 @@ class SpacesDecoration(space: Int) : RecyclerView.ItemDecoration() {
     private val mSpace by lazy{
         space
     }
-
     override fun getItemOffsets(
         outRect: Rect,
         view: View,

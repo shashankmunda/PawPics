@@ -2,39 +2,46 @@ package com.shashankmunda.pawpics.adapter
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.text.Layout
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.navigation.Navigation
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import coil.decode.Decoder
 import coil.dispose
 import coil.load
 import coil.request.CachePolicy
 import coil.size.Scale
+import com.example.pawpics.NavGraphDirections
 import com.example.pawpics.R
+import com.example.pawpics.databinding.CatImageHolderBinding
 import com.facebook.shimmer.Shimmer
 import com.facebook.shimmer.ShimmerDrawable
 import com.google.android.material.imageview.ShapeableImageView
 import com.shashankmunda.pawpics.model.Cat
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ActivityScoped
+import dagger.hilt.android.scopes.FragmentScoped
 import javax.inject.Inject
+import javax.inject.Singleton
 import kotlin.math.roundToInt
 
-@ActivityScoped
-class CatAdapter @Inject constructor(@ApplicationContext context: Context) :
-    RecyclerView.Adapter<CatAdapter.CatView>() {
+class CatAdapter(context: Context) :
+    RecyclerView.Adapter<CatAdapter.CatViewHolder>() {
     private var catsList: ArrayList<Cat> = ArrayList()
     private val displayMetrics: DisplayMetrics by lazy {
         context.resources.displayMetrics
     }
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CatView {
-        return CatView.getInstance(parent, R.layout.cat_image_holder)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CatViewHolder {
+        val binding=CatImageHolderBinding.inflate(LayoutInflater.from(parent.context),parent,false)
+        return CatViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: CatView, position: Int) {
+    override fun onBindViewHolder(holder: CatViewHolder, position: Int) {
         holder.setIsRecyclable(false)
         val cat=catsList[position]
         if(cat.height==null || cat.width==null)
@@ -43,7 +50,7 @@ class CatAdapter @Inject constructor(@ApplicationContext context: Context) :
             holder.bind(cat,displayMetrics)
     }
 
-    override fun onViewRecycled(holder: CatView) {
+    override fun onViewRecycled(holder: CatViewHolder) {
         holder.dispose()
         super.onViewRecycled(holder)
     }
@@ -59,14 +66,8 @@ class CatAdapter @Inject constructor(@ApplicationContext context: Context) :
     }
 
 
-    class CatView(view: View) : RecyclerView.ViewHolder(view) {
-        private var imageView: ShapeableImageView= view.findViewById(R.id.cat_image_view)
-        companion object{
-            fun getInstance(parent: ViewGroup,layoutId: Int): CatView {
-                val view=LayoutInflater.from(parent.context).inflate(layoutId,parent,false)
-                return CatView(view)
-            }
-        }
+    class CatViewHolder(binding: CatImageHolderBinding) : RecyclerView.ViewHolder(binding.root) {
+        private var imageView: ShapeableImageView= binding.catImageView
         private val shimmerDrawable:ShimmerDrawable
         init{
             val shimmer: Shimmer =Shimmer.ColorHighlightBuilder()
@@ -80,6 +81,10 @@ class CatAdapter @Inject constructor(@ApplicationContext context: Context) :
                 .build()
             shimmerDrawable=ShimmerDrawable().apply {
                 setShimmer(shimmer)
+            }
+            binding.root.setOnClickListener {
+                val action=NavGraphDirections.actionGlobalHomeFragment()
+                it.findNavController().navigate(action)
             }
         }
 

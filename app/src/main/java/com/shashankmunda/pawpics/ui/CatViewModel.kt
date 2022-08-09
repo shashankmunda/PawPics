@@ -36,23 +36,27 @@ class CatViewModel @Inject constructor(private val catRepository: CatRepository,
     @UiThread
      private fun fetchNewCats() {
         _cats.postValue(Result.Loading())
-            if (hasInternetConnection()) {
-                viewModelScope.launch(Dispatchers.IO){
-                    try {
-                        val response = catRepository.getCats(OFFSET + Random.nextInt(MAX_LIMIT),"thumb")
-                        _cats.postValue(updateCats(response))
-                    }
-                    catch(t:Throwable){
-                        when(t){
-                            is IOException -> _cats.postValue(Result.Error("Couldn't connect to the source"))
-                            else -> _cats.postValue(Result.Error("JSON parsing error"))
-                        }
-                    }
-            }
-        } else _cats.postValue(Result.Error("No Internet connection"))
+        if (hasInternetConnection()) {
+            makeApiRequest()
+        }
+        else _cats.postValue(Result.Error("No Internet connection"))
      }
 
-    private fun updateCats(response: Response<List<Cat>>): Result<List<Cat>>? {
+    private fun makeApiRequest() {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = catRepository.getCats(OFFSET + Random.nextInt(MAX_LIMIT), "thumb")
+                _cats.postValue(updateCats(response))
+            } catch (t: Throwable) {
+                when (t) {
+                    is IOException -> _cats.postValue(Result.Error("Couldn't connect to the source"))
+                    else -> _cats.postValue(Result.Error("JSON parsing error"))
+                }
+            }
+        }
+    }
+
+    private fun updateCats(response: Response<List<Cat>>): Result<List<Cat>> {
         if(response.isSuccessful && response.body()?.isNotEmpty()== true){
             val cats=response.body()!!.distinctBy { cat ->
                 cat.id

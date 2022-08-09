@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/save"
+        android:title="@string/save"
+        android:icon="@drawable/ic_baseline_save_24"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/share"
+        android:title="@string/share"
+        android:icon="@drawable/ic_baseline_share_24"
+        app:showAsAction="ifRoom"/>
+    <item android:id="@+id/set_wallpaper"
+        android:title="@string/set_wallpaper"
+        android:icon="@drawable/ic_baseline_wallpaper_24"
+        app:showAsAction="ifRoom"/>
+</menu>
