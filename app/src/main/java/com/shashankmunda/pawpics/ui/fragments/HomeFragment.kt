@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
@@ -16,15 +17,18 @@ import com.shashankmunda.pawpics.ui.CatViewModel
 import com.shashankmunda.pawpics.util.Result
 import com.shashankmunda.pawpics.util.SpacesDecoration
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeFragment: Fragment(R.layout.home_fragment) {
     private val catViewModel: CatViewModel by viewModels()
-    private lateinit var catAdapter: CatAdapter
+    @Inject lateinit var catAdapter: CatAdapter
     private lateinit var catsDisplay: RecyclerView
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val binding=HomeFragmentBinding.bind(view)
+        binding.catHomeToolbar.title = "PawPics"
+        //(requireActivity() as AppCompatActivity).setSupportActionBar(binding.catHomeToolbar)
         setupAdapter(binding)
         catViewModel.cats.observe(viewLifecycleOwner) { response ->
             updateUI(response,binding)
@@ -60,7 +64,6 @@ class HomeFragment: Fragment(R.layout.home_fragment) {
     }
 
     private fun setupAdapter(binding: HomeFragmentBinding) {
-        catAdapter= CatAdapter(requireContext())
         catsDisplay=binding.catsGridViewer
         catsDisplay.layoutManager =
             StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL).apply {

@@ -30,7 +30,8 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.roundToInt
 
-class CatAdapter(context: Context) :
+@FragmentScoped
+class CatAdapter @Inject constructor(@ApplicationContext context: Context) :
     RecyclerView.Adapter<CatAdapter.CatViewHolder>() {
     private var catsList: ArrayList<Cat> = ArrayList()
     private val displayMetrics: DisplayMetrics by lazy {

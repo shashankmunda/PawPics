@@ -18,5 +18,10 @@
         />
     <action
         android:id="@+id/action_global_home_fragment"
-        app:destination="@id/full_cat_image_fragment" />
+        app:destination="@id/full_cat_image_fragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+        app:popExitAnim="@anim/nav_default_pop_exit_anim"
+        app:popUpTo="@id/home_fragment" />
 </navigation>
