@@ -2,32 +2,23 @@ package com.shashankmunda.pawpics.adapter
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.text.Layout
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
-import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
-import coil.decode.Decoder
 import coil.dispose
 import coil.load
 import coil.request.CachePolicy
-import coil.size.Scale
-import com.example.pawpics.NavGraphDirections
-import com.example.pawpics.R
 import com.example.pawpics.databinding.CatImageHolderBinding
-import com.facebook.shimmer.Shimmer
 import com.facebook.shimmer.ShimmerDrawable
 import com.google.android.material.imageview.ShapeableImageView
 import com.shashankmunda.pawpics.model.Cat
+import com.shashankmunda.pawpics.ui.fragments.HomeFragmentDirections
+import com.shashankmunda.pawpics.util.Utils
 import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.android.scopes.ActivityScoped
 import dagger.hilt.android.scopes.FragmentScoped
 import javax.inject.Inject
-import javax.inject.Singleton
 import kotlin.math.roundToInt
 
 @FragmentScoped
@@ -67,27 +58,9 @@ class CatAdapter @Inject constructor(@ApplicationContext context: Context) :
     }
 
 
-    class CatViewHolder(binding: CatImageHolderBinding) : RecyclerView.ViewHolder(binding.root) {
+    class CatViewHolder(private val binding: CatImageHolderBinding) : RecyclerView.ViewHolder(binding.root) {
         private var imageView: ShapeableImageView= binding.catImageView
-        private val shimmerDrawable:ShimmerDrawable
-        init{
-            val shimmer: Shimmer =Shimmer.ColorHighlightBuilder()
-                .setHighlightAlpha(0.93f)
-                .setBaseAlpha(0.9f)
-                .setAutoStart(true)
-                .setWidthRatio(1.6f)
-                .setBaseColor(ContextCompat.getColor(this.itemView.context,android.R.color.darker_gray))
-                .setHighlightColor(ContextCompat.getColor(this.itemView.context,android.R.color.white))
-                .setHighlightAlpha(0.7f)
-                .build()
-            shimmerDrawable=ShimmerDrawable().apply {
-                setShimmer(shimmer)
-            }
-            binding.root.setOnClickListener {
-                val action=NavGraphDirections.actionGlobalHomeFragment()
-                it.findNavController().navigate(action)
-            }
-        }
+        private val shimmerDrawable:ShimmerDrawable = Utils.provideShimmerDrawable(binding.root.context)
 
         fun bind(cat: Cat, displayMetrics: DisplayMetrics){
             imageView.layoutParams.height =
@@ -99,6 +72,10 @@ class CatAdapter @Inject constructor(@ApplicationContext context: Context) :
                 diskCachePolicy(CachePolicy.ENABLED)
                 bitmapConfig(Bitmap.Config.RGB_565)
                 allowRgb565(true)
+            }
+            imageView.setOnClickListener {
+                val action=HomeFragmentDirections.actionHomeFragmentToFullCatImageFragment(cat.id)
+                it.findNavController().navigate(action)
             }
         }
         fun invalidate() {

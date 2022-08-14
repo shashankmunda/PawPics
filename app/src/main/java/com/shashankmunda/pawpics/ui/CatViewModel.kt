@@ -1,22 +1,17 @@
 package com.shashankmunda.pawpics.ui
 
 import android.app.Application
-import android.content.Context
-import android.net.ConnectivityManager
-import android.net.ConnectivityManager.*
-import android.net.NetworkCapabilities.*
-import android.os.Build
+import android.util.Log
 import androidx.annotation.UiThread
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.shashankmunda.pawpics.repository.CatRepository
+import androidx.lifecycle.*
 import com.shashankmunda.pawpics.model.Cat
+import com.shashankmunda.pawpics.repository.CatRepository
+import com.shashankmunda.pawpics.util.ImageSize
 import com.shashankmunda.pawpics.util.Result
 import com.shashankmunda.pawpics.util.Utils.Companion.MAX_LIMIT
 import com.shashankmunda.pawpics.util.Utils.Companion.OFFSET
 import com.shashankmunda.pawpics.util.Utils.Companion.clearImageCache
+import com.shashankmunda.pawpics.util.Utils.Companion.hasInternetConnection
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -30,13 +25,18 @@ class CatViewModel @Inject constructor(private val catRepository: CatRepository,
     private val _cats= MutableLiveData<Result<List<Cat>>>()
     val cats: LiveData<Result<List<Cat>>>
         get()=_cats
+    private val _currCatStatus=MutableLiveData<Result<Cat>>()
+    val currCatStatus:LiveData<Result<Cat>>
+        get()=_currCatStatus
+    private var catImageSpecs=HashMap<String,Cat>()
     init{
         fetchNewCats()
     }
+
     @UiThread
      private fun fetchNewCats() {
         _cats.postValue(Result.Loading())
-        if (hasInternetConnection()) {
+        if (hasInternetConnection(application)) {
             makeApiRequest()
         }
         else _cats.postValue(Result.Error("No Internet connection"))
@@ -45,7 +45,7 @@ class CatViewModel @Inject constructor(private val catRepository: CatRepository,
     private fun makeApiRequest() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val response = catRepository.getCats(OFFSET + Random.nextInt(MAX_LIMIT), "small")
+                val response = catRepository.getCats(OFFSET + Random.nextInt(MAX_LIMIT), ImageSize.small)
                 _cats.postValue(updateCats(response))
             } catch (t: Throwable) {
                 when (t) {
@@ -67,30 +67,40 @@ class CatViewModel @Inject constructor(private val catRepository: CatRepository,
         return Result.Error(response.message())
     }
 
-    private fun hasInternetConnection(): Boolean {
-        val connectivityManager= application.applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M){
-            val networkInfo=connectivityManager.activeNetwork ?: return false
-            val capabilities=connectivityManager.getNetworkCapabilities(networkInfo)?: return false
-            return when{
-                capabilities.hasTransport(TRANSPORT_WIFI) -> true
-                capabilities.hasTransport(TRANSPORT_CELLULAR) -> true
-                capabilities.hasTransport(TRANSPORT_ETHERNET) -> true
-                else -> false
-            }
-        }
-        connectivityManager.activeNetworkInfo?.run{
-            return when(type){
-                TYPE_WIFI -> true
-                TYPE_MOBILE -> true
-                TYPE_ETHERNET -> true
-                else -> false
-            }
-        }
-        return false
-    }
-
     fun refreshCalled(){
          fetchNewCats()
      }
+
+    fun isCatSpecsAvailable(catImageId: String): Boolean {
+        _currCatStatus.postValue(Result.Loading())
+        return catImageSpecs.containsKey(catImageId)
+    }
+
+    fun getCatSpecs(catImageId: String): Cat? {
+        return catImageSpecs[catImageId]
+    }
+
+    @UiThread
+    fun fetchCatSpecs(lifecycleScope:LifecycleCoroutineScope, catImageId: String) {
+        if (!hasInternetConnection(application)) {
+            _currCatStatus.postValue(Result.Error("Couldn't connect to the Internet. Please check your connection"))
+        }
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val response = catRepository.getCatImage(catImageId, ImageSize.full)
+                if (response.isSuccessful && response.body()!=null)
+                {
+                    _currCatStatus.postValue(Result.Success(response.body()!!))
+                    catImageSpecs.put(catImageId,response.body()!!)
+                }
+                else _currCatStatus.postValue(Result.Error("Image not found"))
+            } catch (exception: Exception) {
+                when (exception) {
+                    is IOException -> _currCatStatus.postValue(Result.Error("Couldn't connect to the API"))
+                    else -> _currCatStatus.postValue(Result.Error("Problems parsing the JSON response"))
+                }
+            }
+        }
+    }
+
 }

@@ -1,12 +1,10 @@
 package com.shashankmunda.pawpics.ui.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.pawpics.R
@@ -21,14 +19,13 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeFragment: Fragment(R.layout.home_fragment) {
-    private val catViewModel: CatViewModel by viewModels()
+    private val catViewModel: CatViewModel by activityViewModels()
     @Inject lateinit var catAdapter: CatAdapter
     private lateinit var catsDisplay: RecyclerView
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val binding=HomeFragmentBinding.bind(view)
         binding.catHomeToolbar.title = "PawPics"
-        //(requireActivity() as AppCompatActivity).setSupportActionBar(binding.catHomeToolbar)
         setupAdapter(binding)
         catViewModel.cats.observe(viewLifecycleOwner) { response ->
             updateUI(response,binding)
@@ -42,7 +39,6 @@ class HomeFragment: Fragment(R.layout.home_fragment) {
         when (response) {
             is Result.Success -> {
                 hideProgressBar(binding)
-                Log.d("HELLO","hello")
                 response.data?.let { latestCats ->
                     (catsDisplay.adapter as CatAdapter).updateData(latestCats as ArrayList<Cat>)
                 }
