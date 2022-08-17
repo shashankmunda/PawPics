@@ -2,14 +2,22 @@ package com.shashankmunda.pawpics.util
 
 import android.app.Application
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.net.Uri
 import android.os.Build
+import android.os.Environment
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import coil.annotation.ExperimentalCoilApi
 import coil.imageLoader
 import com.facebook.shimmer.Shimmer
 import com.facebook.shimmer.ShimmerDrawable
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
 
 class Utils{
     companion object {
@@ -59,6 +67,42 @@ class Utils{
                 }
             }
             return false
+        }
+
+         fun getCurrentImageUri(catImageId:String,context: Context): Uri? {
+            val catDir = context.externalCacheDir
+            val newFile = File(catDir,catImageId)
+            return FileProvider.getUriForFile(
+               context,
+                "com.shashankmunda.fileprovider",
+                newFile
+            )
+        }
+         fun getFileFromExernalCache(catImageId:String,context: Context): File {
+            val catDir = context.externalCacheDir
+            if (!catDir!!.exists()) catDir.mkdirs()
+            val targetFile = File(catDir, catImageId)
+            if (!targetFile.exists()) targetFile.createNewFile()
+            return targetFile
+        }
+
+        fun getFileFromExternalStorage(catImageId: String,context: Context):File{
+            val catDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+            if (!catDir!!.exists()) catDir.mkdirs()
+            val targetFile = File(catDir, catImageId)
+            if (!targetFile.exists()) targetFile.createNewFile()
+            return targetFile
+        }
+        fun readFile(tempFile: File): Bitmap {
+            val inputStream = FileInputStream(tempFile)
+            val currBitmap = BitmapFactory.decodeStream(inputStream)
+            inputStream.close()
+            return currBitmap
+        }
+        fun saveBitmapToFile(targetFile:File,bitmap: Bitmap){
+            val fileOutputStream = FileOutputStream(targetFile)
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream)
+            fileOutputStream.close()
         }
     }
 }

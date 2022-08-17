@@ -1,22 +1,24 @@
 package com.shashankmunda.pawpics.ui.fragments
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
-import android.net.Uri
+import android.graphics.BitmapFactory
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.Toolbar
-import androidx.core.content.FileProvider.getUriForFile
 import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import coil.imageLoader
 import coil.load
 import coil.request.CachePolicy
 import com.example.pawpics.R
@@ -26,7 +28,12 @@ import com.shashankmunda.pawpics.ui.CatViewModel
 import com.shashankmunda.pawpics.util.Result
 import com.shashankmunda.pawpics.util.Utils
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.withContext
+import okhttp3.internal.threadName
 import java.io.File
+import java.io.FileInputStream
+import java.io.FileNotFoundException
 import java.io.FileOutputStream
 
 @AndroidEntryPoint
@@ -39,23 +46,12 @@ class CatImageFragment: Fragment(R.layout.cat_image_fragment) {
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        catImageId=arguments?.getString("image_id")!!
         val binding=CatImageFragmentBinding.bind(view)
         catImageView=binding.catFullImageView
         setUpToolbar(binding)
-        catImageId=arguments?.getString("image_id")!!
         catViewModel.currCatStatus.observe(viewLifecycleOwner){ result ->
-            when(result){
-                is Result.Success -> {
-                    displayCatImage(result.data!!,binding)
-                }
-                is Result.Error -> {
-                    hideProgressBar(binding)
-                    Toast.makeText(context,result.message,Toast.LENGTH_SHORT).show()
-                }
-                is Result.Loading -> {
-                    showProgressBar(binding)
-                }
-            }
+            updateImageLoadStatus(result, binding)
         }
         if(catViewModel.isCatSpecsAvailable(catImageId))
         {
@@ -63,6 +59,8 @@ class CatImageFragment: Fragment(R.layout.cat_image_fragment) {
         }
         else catViewModel.fetchCatSpecs(lifecycleScope,catImageId)
     }
+
+
 
     private fun hideProgressBar(binding: CatImageFragmentBinding) {
         binding.loadingProgressBar.visibility=View.GONE
@@ -90,12 +88,8 @@ class CatImageFragment: Fragment(R.layout.cat_image_fragment) {
                     hideProgressBar(binding)
                     val bitmap=result.drawable.toBitmap(cat.width,cat.height,Bitmap.Config.ARGB_8888)
                     try{
-                        val targetFile = createTempFile()
-                        val fileOutputStream=FileOutputStream(targetFile)
-                        if(Build.VERSION.SDK_INT>=30)
-                        bitmap.compress(Bitmap.CompressFormat.WEBP_LOSSLESS,100,fileOutputStream)
-                        else bitmap.compress(Bitmap.CompressFormat.WEBP,100,fileOutputStream)
-                        fileOutputStream.close()
+                        val targetFile = Utils.getFileFromExernalCache("$catImageId.png",requireContext())
+                        saveBitmapToFile(targetFile, bitmap)
                     }
                     catch (e:Exception){
                         e.printStackTrace()
@@ -104,8 +98,6 @@ class CatImageFragment: Fragment(R.layout.cat_image_fragment) {
             )
         }
     }
-
-
 
     private fun setUpToolbar(binding: CatImageFragmentBinding) {
         binding.catImageToolbar.apply {
@@ -121,14 +113,15 @@ class CatImageFragment: Fragment(R.layout.cat_image_fragment) {
     private val catMenuListener = Toolbar.OnMenuItemClickListener { item ->
         when(item.itemId){
             R.id.save -> {
+                saveImageToGallery()
                 true
             }
             R.id.share -> {
-                val contentUri = getCurrentImageUri()
+                val contentUri = Utils.getCurrentImageUri("${catImageId}.png",requireContext())
                 val shareIntent: Intent =Intent().apply {
                     action=Intent.ACTION_SEND
                      putExtra(Intent.EXTRA_STREAM, contentUri)
-                    type="image/webp"
+                    type="image/png"
                     flags=Intent.FLAG_GRANT_READ_URI_PERMISSION
                 }
                 startActivity(Intent.createChooser(shareIntent,null))
@@ -141,22 +134,48 @@ class CatImageFragment: Fragment(R.layout.cat_image_fragment) {
         }
     }
 
-    private fun getCurrentImageUri(): Uri? {
-        val catDir = requireContext().externalCacheDir
-        val newFile = File(catDir, "$catImageId.webp")
-        return getUriForFile(requireContext(), "com.shashankmunda.fileprovider", newFile)
+    private fun saveImageToGallery() {
+        val tempFile = Utils.getFileFromExernalCache("${catImageId}.png", requireContext())
+        try {
+            val currBitmap = Utils.readFile(tempFile)
+            val targetFile=Utils.getFileFromExternalStorage("$catImageId.png",requireContext())
+            Utils.saveBitmapToFile(targetFile,currBitmap)
+            Toast.makeText(
+                requireContext(),
+                "Image saved: ${targetFile.absolutePath}",
+                Toast.LENGTH_SHORT
+            ).show()
+        } catch (e: FileSystemException) {
+            e.printStackTrace()
+        }
     }
 
-    private fun createTempFile(): File {
-        val catDir = context?.externalCacheDir
-        if (!catDir!!.exists()) catDir.mkdirs()
-        val targetFile = File(catDir, "$catImageId.webp")
-        if (!targetFile.exists()) targetFile.createNewFile()
-        return targetFile
+    private fun saveBitmapToFile(targetFile: File, bitmap: Bitmap) {
+        val fileOutputStream = FileOutputStream(targetFile)
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream)
+        fileOutputStream.close()
+    }
+
+
+    private fun updateImageLoadStatus(
+        result: Result<Cat>,
+        binding: CatImageFragmentBinding
+    ) {
+        when (result) {
+            is Result.Success -> {
+                displayCatImage(result.data!!, binding)
+            }
+            is Result.Error -> {
+                hideProgressBar(binding)
+                Toast.makeText(context, result.message, Toast.LENGTH_SHORT).show()
+            }
+            is Result.Loading -> {
+                showProgressBar(binding)
+            }
+        }
     }
 
     override fun onDestroyView() {
-        Log.d("DESTROYED","yes")
         catImageView=null
         super.onDestroyView()
     }
