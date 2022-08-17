@@ -1,10 +1,10 @@
 package com.shashankmunda.pawpics.ui.fragments
 
-import android.content.ClipData
 import android.content.Intent
 import android.graphics.Bitmap
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
@@ -17,7 +17,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import coil.dispose
 import coil.load
 import coil.request.CachePolicy
 import com.example.pawpics.R
@@ -76,7 +75,6 @@ class CatImageFragment: Fragment(R.layout.cat_image_fragment) {
     private fun displayCatImage(cat: Cat, binding:CatImageFragmentBinding) {
         catImageView?.setImageBitmap(null)
         catImageView?.layoutParams!!.height= (1.0f*displayMetrics.widthPixels*cat.height!!).toInt()/cat.width!!
-        catImageView?.dispose()
         catImageView?.load(cat.url){
             placeholder(Utils.provideShimmerDrawable(requireContext()))
             allowHardware(false)
@@ -92,13 +90,11 @@ class CatImageFragment: Fragment(R.layout.cat_image_fragment) {
                     hideProgressBar(binding)
                     val bitmap=result.drawable.toBitmap(cat.width,cat.height,Bitmap.Config.ARGB_8888)
                     try{
-                        val catDir=context?.externalCacheDir
-                        if(!catDir!!.exists()) catDir.mkdirs()
-                        val targetFile=File(catDir,"$catImageId.png")
-                        if(!targetFile.exists()) targetFile.createNewFile()
-                        Toast.makeText(context,targetFile.absolutePath,Toast.LENGTH_SHORT).show()
+                        val targetFile = createTempFile()
                         val fileOutputStream=FileOutputStream(targetFile)
-                        bitmap.compress(Bitmap.CompressFormat.PNG,100,fileOutputStream)
+                        if(Build.VERSION.SDK_INT>=30)
+                        bitmap.compress(Bitmap.CompressFormat.WEBP_LOSSLESS,100,fileOutputStream)
+                        else bitmap.compress(Bitmap.CompressFormat.WEBP,100,fileOutputStream)
                         fileOutputStream.close()
                     }
                     catch (e:Exception){
@@ -108,6 +104,8 @@ class CatImageFragment: Fragment(R.layout.cat_image_fragment) {
             )
         }
     }
+
+
 
     private fun setUpToolbar(binding: CatImageFragmentBinding) {
         binding.catImageToolbar.apply {
@@ -126,17 +124,13 @@ class CatImageFragment: Fragment(R.layout.cat_image_fragment) {
                 true
             }
             R.id.share -> {
-                //val catDir=context?.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-                val catDir=requireContext().externalCacheDir
-                val newFile=File(catDir,"$catImageId.png")
-                val contentUri=getUriForFile(requireContext(),"com.shashankmunda.fileprovider",newFile)
+                val contentUri = getCurrentImageUri()
                 val shareIntent: Intent =Intent().apply {
                     action=Intent.ACTION_SEND
                      putExtra(Intent.EXTRA_STREAM, contentUri)
-                    type="image/png"
+                    type="image/webp"
+                    flags=Intent.FLAG_GRANT_READ_URI_PERMISSION
                 }
-                shareIntent.setClipData(ClipData.newRawUri("", contentUri))
-                shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 startActivity(Intent.createChooser(shareIntent,null))
                 true
             }
@@ -145,6 +139,20 @@ class CatImageFragment: Fragment(R.layout.cat_image_fragment) {
             }
             else -> false
         }
+    }
+
+    private fun getCurrentImageUri(): Uri? {
+        val catDir = requireContext().externalCacheDir
+        val newFile = File(catDir, "$catImageId.webp")
+        return getUriForFile(requireContext(), "com.shashankmunda.fileprovider", newFile)
+    }
+
+    private fun createTempFile(): File {
+        val catDir = context?.externalCacheDir
+        if (!catDir!!.exists()) catDir.mkdirs()
+        val targetFile = File(catDir, "$catImageId.webp")
+        if (!targetFile.exists()) targetFile.createNewFile()
+        return targetFile
     }
 
     override fun onDestroyView() {
