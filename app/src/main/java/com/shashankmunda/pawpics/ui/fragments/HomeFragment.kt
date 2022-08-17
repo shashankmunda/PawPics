@@ -5,6 +5,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.pawpics.R
@@ -15,13 +16,16 @@ import com.shashankmunda.pawpics.ui.CatViewModel
 import com.shashankmunda.pawpics.util.Result
 import com.shashankmunda.pawpics.util.SpacesDecoration
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeFragment: Fragment(R.layout.home_fragment) {
     private val catViewModel: CatViewModel by activityViewModels()
     @Inject lateinit var catAdapter: CatAdapter
-    private lateinit var catsDisplay: RecyclerView
+    private var catsDisplay: RecyclerView?=null
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val binding=HomeFragmentBinding.bind(view)
@@ -40,7 +44,7 @@ class HomeFragment: Fragment(R.layout.home_fragment) {
             is Result.Success -> {
                 hideProgressBar(binding)
                 response.data?.let { latestCats ->
-                    (catsDisplay.adapter as CatAdapter).updateData(latestCats as ArrayList<Cat>)
+                    (catsDisplay!!.adapter as CatAdapter).updateData(latestCats as ArrayList<Cat>)
                 }
             }
             is Result.Error -> {
@@ -61,13 +65,13 @@ class HomeFragment: Fragment(R.layout.home_fragment) {
 
     private fun setupAdapter(binding: HomeFragmentBinding) {
         catsDisplay=binding.catsGridViewer
-        catsDisplay.layoutManager =
+        catsDisplay?.layoutManager =
             StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL).apply {
                 gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_NONE
             }
-        catsDisplay.setItemViewCacheSize(100)
-        catsDisplay.addItemDecoration(SpacesDecoration(8))
-        catsDisplay.adapter = catAdapter
+        catsDisplay?.setItemViewCacheSize(25)
+        catsDisplay?.addItemDecoration(SpacesDecoration(8))
+        catsDisplay?.adapter = catAdapter
     }
     private fun hideProgressBar(binding: HomeFragmentBinding) {
         binding.loadingProgressBar.visibility=View.INVISIBLE
@@ -78,5 +82,10 @@ class HomeFragment: Fragment(R.layout.home_fragment) {
     }
     private fun showProgressBar(binding: HomeFragmentBinding) {
         binding.loadingProgressBar.visibility= View.VISIBLE
+    }
+
+    override fun onDestroyView() {
+        catsDisplay=null
+        super.onDestroyView()
     }
 }

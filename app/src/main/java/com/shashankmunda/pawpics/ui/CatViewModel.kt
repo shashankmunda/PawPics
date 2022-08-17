@@ -1,12 +1,12 @@
 package com.shashankmunda.pawpics.ui
 
 import android.app.Application
-import android.util.Log
 import androidx.annotation.UiThread
 import androidx.lifecycle.*
 import com.shashankmunda.pawpics.model.Cat
 import com.shashankmunda.pawpics.repository.CatRepository
 import com.shashankmunda.pawpics.util.ImageSize
+import com.shashankmunda.pawpics.util.MimeType
 import com.shashankmunda.pawpics.util.Result
 import com.shashankmunda.pawpics.util.Utils.Companion.MAX_LIMIT
 import com.shashankmunda.pawpics.util.Utils.Companion.OFFSET
@@ -33,19 +33,18 @@ class CatViewModel @Inject constructor(private val catRepository: CatRepository,
         fetchNewCats()
     }
 
-    @UiThread
-     private fun fetchNewCats() {
+    private fun fetchNewCats() {
         _cats.postValue(Result.Loading())
         if (hasInternetConnection(application)) {
             makeApiRequest()
         }
         else _cats.postValue(Result.Error("No Internet connection"))
-     }
+    }
 
     private fun makeApiRequest() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val response = catRepository.getCats(OFFSET + Random.nextInt(MAX_LIMIT), ImageSize.small)
+                val response = catRepository.getCats(OFFSET + Random.nextInt(MAX_LIMIT), ImageSize.THUMB,MimeType.PNG)
                 _cats.postValue(updateCats(response))
             } catch (t: Throwable) {
                 when (t) {
@@ -68,8 +67,8 @@ class CatViewModel @Inject constructor(private val catRepository: CatRepository,
     }
 
     fun refreshCalled(){
-         fetchNewCats()
-     }
+        fetchNewCats()
+    }
 
     fun isCatSpecsAvailable(catImageId: String): Boolean {
         _currCatStatus.postValue(Result.Loading())
@@ -80,18 +79,17 @@ class CatViewModel @Inject constructor(private val catRepository: CatRepository,
         return catImageSpecs[catImageId]
     }
 
-    @UiThread
     fun fetchCatSpecs(lifecycleScope:LifecycleCoroutineScope, catImageId: String) {
         if (!hasInternetConnection(application)) {
             _currCatStatus.postValue(Result.Error("Couldn't connect to the Internet. Please check your connection"))
         }
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                val response = catRepository.getCatImage(catImageId, ImageSize.full)
+                val response = catRepository.getCatImage(catImageId, ImageSize.FULL)
                 if (response.isSuccessful && response.body()!=null)
                 {
                     _currCatStatus.postValue(Result.Success(response.body()!!))
-                    catImageSpecs.put(catImageId,response.body()!!)
+                    catImageSpecs[catImageId] = response.body()!!
                 }
                 else _currCatStatus.postValue(Result.Error("Image not found"))
             } catch (exception: Exception) {

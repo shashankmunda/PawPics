@@ -18,6 +18,7 @@ import com.shashankmunda.pawpics.ui.fragments.HomeFragmentDirections
 import com.shashankmunda.pawpics.util.Utils
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.FragmentScoped
+import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
@@ -58,7 +59,7 @@ class CatAdapter @Inject constructor(@ApplicationContext context: Context) :
     }
 
 
-    class CatViewHolder(private val binding: CatImageHolderBinding) : RecyclerView.ViewHolder(binding.root) {
+    class CatViewHolder(binding: CatImageHolderBinding) : RecyclerView.ViewHolder(binding.root) {
         private var imageView: ShapeableImageView= binding.catImageView
         private val shimmerDrawable:ShimmerDrawable = Utils.provideShimmerDrawable(binding.root.context)
 
@@ -69,8 +70,6 @@ class CatAdapter @Inject constructor(@ApplicationContext context: Context) :
                 placeholder(shimmerDrawable)
                 allowHardware(false)
                 memoryCachePolicy(CachePolicy.DISABLED)
-                diskCachePolicy(CachePolicy.ENABLED)
-                bitmapConfig(Bitmap.Config.RGB_565)
                 allowRgb565(true)
             }
             imageView.setOnClickListener {
