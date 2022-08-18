@@ -1,6 +1,7 @@
 package com.shashankmunda.pawpics.util
 
 import android.app.Application
+import android.content.ContentValues
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -9,6 +10,8 @@ import android.net.NetworkCapabilities
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
+import android.provider.MediaStore
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import coil.annotation.ExperimentalCoilApi
@@ -18,6 +21,7 @@ import com.facebook.shimmer.ShimmerDrawable
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
+import java.util.*
 
 class Utils{
     companion object {
@@ -71,38 +75,80 @@ class Utils{
 
          fun getCurrentImageUri(catImageId:String,context: Context): Uri? {
             val catDir = context.externalCacheDir
-            val newFile = File(catDir,catImageId)
+            val imageCacheFile = File(catDir,"$catImageId.png")
             return FileProvider.getUriForFile(
                context,
                 "com.shashankmunda.fileprovider",
-                newFile
+                imageCacheFile
             )
         }
-         fun getFileFromExernalCache(catImageId:String,context: Context): File {
+         private fun getFileFromExternalCache(catImageId:String, context: Context): File {
             val catDir = context.externalCacheDir
             if (!catDir!!.exists()) catDir.mkdirs()
-            val targetFile = File(catDir, catImageId)
+            val targetFile = File(catDir, "$catImageId.png")
             if (!targetFile.exists()) targetFile.createNewFile()
             return targetFile
         }
 
-        fun getFileFromExternalStorage(catImageId: String,context: Context):File{
-            val catDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        private fun getFileFromExternalStorage(catImageId: String, context: Context):File{
+            val catDir = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
             if (!catDir!!.exists()) catDir.mkdirs()
             val targetFile = File(catDir, catImageId)
             if (!targetFile.exists()) targetFile.createNewFile()
             return targetFile
         }
-        fun readFile(tempFile: File): Bitmap {
+        private fun readBitmapFromFile(tempFile: File): Bitmap {
             val inputStream = FileInputStream(tempFile)
             val currBitmap = BitmapFactory.decodeStream(inputStream)
             inputStream.close()
             return currBitmap
         }
-        fun saveBitmapToFile(targetFile:File,bitmap: Bitmap){
+        private fun writeBitmapToFile(targetFile:File, bitmap: Bitmap){
             val fileOutputStream = FileOutputStream(targetFile)
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream)
             fileOutputStream.close()
+        }
+
+        fun saveImageToGallery(catImageId: String,context:Context) {
+            val tempFile = getFileFromExternalCache(catImageId,context)
+            try {
+                val currBitmap = readBitmapFromFile(tempFile)
+                if(Build.VERSION.SDK_INT<29) {
+                    val targetFile =
+                        getFileFromExternalStorage("$catImageId.png", context)
+                    writeBitmapToFile(targetFile, currBitmap)
+                    Toast.makeText(
+                        context,
+                        "Image saved: ${targetFile.absolutePath}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                else{
+                    val resolver=context.contentResolver
+                    val contentValues= ContentValues()
+                    contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME,"$catImageId.png")
+                    contentValues.put(MediaStore.MediaColumns.MIME_TYPE,"image/png")
+                    contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH,Environment.DIRECTORY_DOWNLOADS)
+                    val imageUri= resolver?.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI,contentValues)
+                    val outputStream=resolver?.openOutputStream(Objects.requireNonNull(imageUri!!))
+                    currBitmap.compress(Bitmap.CompressFormat.PNG,100,outputStream)
+                    Objects.requireNonNull(outputStream)
+                    Toast.makeText(context,"Image Saved successfully", Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: FileSystemException) {
+                Toast.makeText(context,"Image not saved :("+e.reason, Toast.LENGTH_SHORT).show()
+                e.printStackTrace()
+            }
+        }
+
+        fun saveBitmapToCache(context: Context, bitmap: Bitmap, catImageId:String) {
+            try{
+                val targetFile = getFileFromExternalCache(catImageId,context)
+                writeBitmapToFile(targetFile,bitmap)
+            }
+            catch (e:Exception){
+                e.printStackTrace()
+            }
         }
     }
 }

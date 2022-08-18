@@ -6,7 +6,7 @@ import dagger.hilt.android.HiltAndroidApp
 @HiltAndroidApp
 class PawPicsApp:Application(){
     override fun onTerminate() {
-        applicationContext.externalCacheDir!!.deleteRecursively()
+        applicationContext.externalCacheDir?.deleteRecursively()
         super.onTerminate()
     }
 }

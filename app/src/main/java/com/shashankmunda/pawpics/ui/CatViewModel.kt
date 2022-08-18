@@ -1,7 +1,6 @@
 package com.shashankmunda.pawpics.ui
 
 import android.app.Application
-import androidx.annotation.UiThread
 import androidx.lifecycle.*
 import com.shashankmunda.pawpics.model.Cat
 import com.shashankmunda.pawpics.repository.CatRepository
