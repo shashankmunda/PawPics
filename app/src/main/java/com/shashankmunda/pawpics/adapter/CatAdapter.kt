@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.dispose
 import coil.load
 import coil.request.CachePolicy
+import coil.size.Precision
 import com.example.pawpics.databinding.CatImageHolderBinding
 import com.facebook.shimmer.ShimmerDrawable
 import com.google.android.material.imageview.ShapeableImageView
@@ -69,6 +70,7 @@ class CatAdapter @Inject constructor(@ApplicationContext context: Context) :
             imageView.load(data= cat.url){
                 placeholder(shimmerDrawable)
                 allowHardware(false)
+                precision(Precision.INEXACT)
                 memoryCachePolicy(CachePolicy.DISABLED)
                 allowRgb565(true)
             }

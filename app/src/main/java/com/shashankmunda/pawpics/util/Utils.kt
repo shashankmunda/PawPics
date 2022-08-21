@@ -12,6 +12,7 @@ import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import coil.annotation.ExperimentalCoilApi
@@ -25,25 +26,25 @@ import java.util.*
 
 class Utils{
     companion object {
-        const val BASE_URL:String = "https://api.thecatapi.com/v1/"
-        const val OFFSET=30
-        const val MAX_LIMIT=20
-        const val cacheSize=(5*1024*1024).toLong()
+        val BASE_URL by lazy { "https://api.thecatapi.com/v1/" }
+        val OFFSET by lazy{30}
+        val MAX_LIMIT by lazy{20}
+        val cacheSize by lazy{(5*1024*1024).toLong()}
         @OptIn(ExperimentalCoilApi::class)
         fun clearImageCache(context: Application){
             context.imageLoader.diskCache?.clear()
         }
 
         fun provideShimmerDrawable(context: Context): ShimmerDrawable {
-            val shimmer= Shimmer.ColorHighlightBuilder()
-                .setHighlightAlpha(0.93f)
-                .setBaseAlpha(0.9f)
-                .setAutoStart(true)
-                .setWidthRatio(1.6f)
-                .setBaseColor(ContextCompat.getColor(context,android.R.color.darker_gray))
-                .setHighlightColor(ContextCompat.getColor(context,android.R.color.white))
-                .setHighlightAlpha(0.7f)
-                .build()
+            val shimmer= Shimmer.ColorHighlightBuilder().apply {
+                setHighlightAlpha(0.93f)
+                setBaseAlpha(0.9f)
+                setAutoStart(true)
+                setWidthRatio(1.6f)
+                setBaseColor(ContextCompat.getColor(context,android.R.color.darker_gray))
+                setHighlightColor(ContextCompat.getColor(context,android.R.color.white))
+                setHighlightAlpha(0.7f)
+            }.build()
             return ShimmerDrawable().apply {
                 setShimmer(shimmer)
             }
@@ -98,15 +99,16 @@ class Utils{
             return targetFile
         }
         private fun readBitmapFromFile(tempFile: File): Bitmap {
-            val inputStream = FileInputStream(tempFile)
-            val currBitmap = BitmapFactory.decodeStream(inputStream)
-            inputStream.close()
-            return currBitmap
+            val inputStream=FileInputStream(tempFile)
+            inputStream.use {
+                return BitmapFactory.decodeStream(it)
+            }
         }
         private fun writeBitmapToFile(targetFile:File, bitmap: Bitmap){
             val fileOutputStream = FileOutputStream(targetFile)
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream)
-            fileOutputStream.close()
+            fileOutputStream.use {
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream)
+            }
         }
 
         fun saveImageToGallery(catImageId: String,context:Context) {
@@ -124,20 +126,36 @@ class Utils{
                     ).show()
                 }
                 else{
-                    val resolver=context.contentResolver
-                    val contentValues= ContentValues()
-                    contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME,"$catImageId.png")
-                    contentValues.put(MediaStore.MediaColumns.MIME_TYPE,"image/png")
-                    contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH,Environment.DIRECTORY_DOWNLOADS)
-                    val imageUri= resolver?.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI,contentValues)
-                    val outputStream=resolver?.openOutputStream(Objects.requireNonNull(imageUri!!))
-                    currBitmap.compress(Bitmap.CompressFormat.PNG,100,outputStream)
-                    Objects.requireNonNull(outputStream)
-                    Toast.makeText(context,"Image Saved successfully", Toast.LENGTH_SHORT).show()
+                    saveToMediaStore(context, catImageId, currBitmap)
                 }
             } catch (e: FileSystemException) {
                 Toast.makeText(context,"Image not saved :("+e.reason, Toast.LENGTH_SHORT).show()
                 e.printStackTrace()
+            }
+        }
+
+
+        @RequiresApi(Build.VERSION_CODES.Q)
+        private fun saveToMediaStore(
+            context: Context,
+            catImageId: String,
+            currBitmap: Bitmap
+        ) {
+            val resolver = context.contentResolver
+            val contentValues = ContentValues()
+            contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, "$catImageId.png")
+            contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/png")
+            contentValues.put(
+                MediaStore.MediaColumns.RELATIVE_PATH,
+                Environment.DIRECTORY_DOWNLOADS
+            )
+            val imageUri =
+                resolver?.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues)
+            val outputStream = resolver?.openOutputStream(Objects.requireNonNull(imageUri!!))
+            outputStream.use {
+                currBitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+                Objects.requireNonNull(outputStream)
+                Toast.makeText(context, "Image Saved successfully", Toast.LENGTH_SHORT).show()
             }
         }
 
