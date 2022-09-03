@@ -24,10 +24,10 @@ import java.io.FileOutputStream
 
 class Utils{
     companion object {
-        val BASE_URL by lazy { "https://api.thecatapi.com/v1/" }
-        val OFFSET by lazy{30}
-        val MAX_LIMIT by lazy{20}
-        val cacheSize by lazy{(5*1024*1024).toLong()}
+        const val BASE_URL="https://api.thecatapi.com/v1/"
+        const val OFFSET=30
+        const val MAX_LIMIT=20
+        const val cacheSize=(5*1024*1024).toLong()
         @OptIn(ExperimentalCoilApi::class)
         fun clearImageCache(context: Application){
             context.imageLoader.diskCache?.clear()

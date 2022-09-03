@@ -107,26 +107,12 @@ class CatImageFragment: Fragment(R.layout.cat_image_fragment) {
     private val catMenuListener = Toolbar.OnMenuItemClickListener { item ->
         when(item.itemId){
             R.id.save -> {
-                //Utils.saveImageToGallery(catBitmap!!,catImageId,requireContext())
                 if(ActivityCompat.checkSelfPermission(requireContext(),Manifest.permission.READ_EXTERNAL_STORAGE)!=PackageManager.PERMISSION_GRANTED
                     || ActivityCompat.checkSelfPermission(requireContext(),Manifest.permission.WRITE_EXTERNAL_STORAGE)!=PackageManager.PERMISSION_GRANTED){
                     ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE),1)
                 }
                 else{
-                    val downloadManager=requireContext().getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-                    val url= "https://cdn2.thecatapi.com/images/$catImageId.png"
-                    Log.d("URL",url)
-                    val request=DownloadManager.Request(Uri.parse(url)).apply {
-                        addRequestHeader("x-api-key", BuildConfig.CAT_API_KEY)
-                        setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE)
-                        setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS,"$catImageId.png")
-                        setMimeType("image/png")
-                        setTitle("$catImageId.png")
-                        setDescription("File Downloaded!")
-                        setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-                    }
-                    request.allowScanningByMediaScanner()
-                    downloadManager.enqueue(request)
+                    Utils.downloadImage(requireContext(),catImageId)
                 }
                 true
             }
