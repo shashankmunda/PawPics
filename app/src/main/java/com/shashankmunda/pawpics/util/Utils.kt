@@ -89,14 +89,6 @@ class Utils{
             return targetFile
         }
 
-        private fun getFileFromExternalStorage(catImageId: String, context: Context):File{
-            val catDir = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
-            if (!catDir!!.exists()) catDir.mkdirs()
-            val targetFile = File(catDir, catImageId)
-            if (!targetFile.exists()) targetFile.createNewFile()
-            return targetFile
-        }
-
         private fun writeBitmapToFile(targetFile:File, bitmap: Bitmap){
             val fileOutputStream = FileOutputStream(targetFile)
             fileOutputStream.use {

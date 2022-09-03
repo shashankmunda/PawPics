@@ -1,15 +1,10 @@
 package com.shashankmunda.pawpics.ui.fragments
 
 import android.Manifest
-import android.app.DownloadManager
-import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatImageView
@@ -22,14 +17,12 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import coil.load
 import coil.request.CachePolicy
-import com.example.pawpics.BuildConfig
 import com.example.pawpics.R
 import com.example.pawpics.databinding.CatImageFragmentBinding
 import com.shashankmunda.pawpics.model.Cat
 import com.shashankmunda.pawpics.ui.CatViewModel
 import com.shashankmunda.pawpics.util.Result
 import com.shashankmunda.pawpics.util.Utils
-import com.shashankmunda.pawpics.util.Utils.Companion.BASE_URL
 import dagger.hilt.android.AndroidEntryPoint
 
 
