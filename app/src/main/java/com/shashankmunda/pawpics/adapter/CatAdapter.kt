@@ -11,6 +11,7 @@ import coil.dispose
 import coil.load
 import coil.request.CachePolicy
 import coil.size.Precision
+import com.example.pawpics.R
 import com.example.pawpics.databinding.CatImageHolderBinding
 import com.facebook.shimmer.ShimmerDrawable
 import com.google.android.material.imageview.ShapeableImageView
@@ -36,7 +37,6 @@ class CatAdapter @Inject constructor(@ApplicationContext context: Context) :
     }
 
     override fun onBindViewHolder(holder: CatViewHolder, position: Int) {
-        holder.setIsRecyclable(false)
         val cat=catsList[position]
         if(cat.height==null || cat.width==null)
             holder.invalidate()
@@ -73,6 +73,11 @@ class CatAdapter @Inject constructor(@ApplicationContext context: Context) :
                 precision(Precision.INEXACT)
                 memoryCachePolicy(CachePolicy.DISABLED)
                 allowRgb565(true)
+                listener(
+                    onError ={_,_ ->
+                        imageView.setImageResource(R.drawable.ic_baseline_broken_image_24)
+                    }
+                )
             }
             imageView.setOnClickListener {
                 val action=HomeFragmentDirections.actionHomeFragmentToFullCatImageFragment(cat.id)

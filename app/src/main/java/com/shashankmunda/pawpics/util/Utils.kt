@@ -1,28 +1,26 @@
 package com.shashankmunda.pawpics.util
 
 import android.app.Application
-import android.content.ContentValues
+import android.app.DownloadManager
+import android.content.ClipData
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
-import android.provider.MediaStore
-import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.startActivity
 import androidx.core.content.FileProvider
 import coil.annotation.ExperimentalCoilApi
 import coil.imageLoader
+import com.example.pawpics.BuildConfig
 import com.facebook.shimmer.Shimmer
 import com.facebook.shimmer.ShimmerDrawable
 import java.io.File
-import java.io.FileInputStream
 import java.io.FileOutputStream
-import java.util.*
 
 class Utils{
     companion object {
@@ -74,7 +72,7 @@ class Utils{
             return false
         }
 
-         fun getCurrentImageUri(catImageId:String,context: Context): Uri? {
+         private fun getCurrentImageUri(catImageId:String, context: Context): Uri? {
             val catDir = context.externalCacheDir
             val imageCacheFile = File(catDir,"$catImageId.png")
             return FileProvider.getUriForFile(
@@ -98,12 +96,7 @@ class Utils{
             if (!targetFile.exists()) targetFile.createNewFile()
             return targetFile
         }
-        private fun readBitmapFromFile(tempFile: File): Bitmap {
-            val inputStream=FileInputStream(tempFile)
-            inputStream.use {
-                return BitmapFactory.decodeStream(it)
-            }
-        }
+
         private fun writeBitmapToFile(targetFile:File, bitmap: Bitmap){
             val fileOutputStream = FileOutputStream(targetFile)
             fileOutputStream.use {
@@ -111,55 +104,8 @@ class Utils{
             }
         }
 
-        fun saveImageToGallery(catImageId: String,context:Context) {
-            val tempFile = getFileFromExternalCache(catImageId,context)
-            try {
-                val currBitmap = readBitmapFromFile(tempFile)
-                if(Build.VERSION.SDK_INT<29) {
-                    val targetFile =
-                        getFileFromExternalStorage("$catImageId.png", context)
-                    writeBitmapToFile(targetFile, currBitmap)
-                    Toast.makeText(
-                        context,
-                        "Image saved: ${targetFile.absolutePath}",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-                else{
-                    saveToMediaStore(context, catImageId, currBitmap)
-                }
-            } catch (e: FileSystemException) {
-                Toast.makeText(context,"Image not saved :("+e.reason, Toast.LENGTH_SHORT).show()
-                e.printStackTrace()
-            }
-        }
 
-
-        @RequiresApi(Build.VERSION_CODES.Q)
-        private fun saveToMediaStore(
-            context: Context,
-            catImageId: String,
-            currBitmap: Bitmap
-        ) {
-            val resolver = context.contentResolver
-            val contentValues = ContentValues()
-            contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, "$catImageId.png")
-            contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/png")
-            contentValues.put(
-                MediaStore.MediaColumns.RELATIVE_PATH,
-                Environment.DIRECTORY_DOWNLOADS
-            )
-            val imageUri =
-                resolver?.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues)
-            val outputStream = resolver?.openOutputStream(Objects.requireNonNull(imageUri!!))
-            outputStream.use {
-                currBitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
-                Objects.requireNonNull(outputStream)
-                Toast.makeText(context, "Image Saved successfully", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        fun saveBitmapToCache(context: Context, bitmap: Bitmap, catImageId:String) {
+        private fun saveBitmapToCache(context: Context, bitmap: Bitmap, catImageId:String) {
             try{
                 val targetFile = getFileFromExternalCache(catImageId,context)
                 writeBitmapToFile(targetFile,bitmap)
@@ -167,6 +113,36 @@ class Utils{
             catch (e:Exception){
                 e.printStackTrace()
             }
+        }
+        fun shareImage(context:Context,catBitmap:Bitmap,catImageId:String) {
+            saveBitmapToCache(context, catBitmap,catImageId)
+            val contentUri = getCurrentImageUri(catImageId, context)
+            val shareIntent: Intent = Intent().apply {
+                action = Intent.ACTION_SEND
+                setDataAndType(contentUri,"image/png")
+                putExtra(Intent.EXTRA_STREAM, contentUri)
+            }
+            shareIntent.clipData = ClipData.newRawUri("", contentUri)
+            shareIntent.addFlags(
+                Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+            )
+            startActivity(context,Intent.createChooser(shareIntent,null),null)
+        }
+        fun downloadImage(context: Context,catImageId: String) {
+            val downloadManager =
+                context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+            val url = "https://cdn2.thecatapi.com/images/$catImageId.png"
+            val request = DownloadManager.Request(Uri.parse(url)).apply {
+                addRequestHeader("x-api-key", BuildConfig.CAT_API_KEY)
+                setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE)
+                setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "$catImageId.png")
+                setMimeType("image/png")
+                setTitle("$catImageId.png")
+                setDescription("File Downloaded!")
+                setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+            }
+            request.allowScanningByMediaScanner()
+            downloadManager.enqueue(request)
         }
     }
 }

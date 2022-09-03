@@ -42,6 +42,7 @@ class CatViewModel @Inject constructor(private val catRepository: CatRepository,
 
     private fun makeApiRequest() {
         viewModelScope.launch(Dispatchers.IO) {
+
             try {
                 val response = catRepository.getCats(OFFSET + Random.nextInt(MAX_LIMIT), ImageSize.THUMB,MimeType.PNG)
                 _cats.postValue(updateCats(response))

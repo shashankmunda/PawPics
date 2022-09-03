@@ -1,14 +1,20 @@
 package com.shashankmunda.pawpics.ui.fragments
 
-import android.content.ClipData
-import android.content.Intent
+import android.Manifest
+import android.app.DownloadManager
+import android.content.Context
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.Toolbar
+import androidx.core.app.ActivityCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -16,12 +22,14 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import coil.load
 import coil.request.CachePolicy
+import com.example.pawpics.BuildConfig
 import com.example.pawpics.R
 import com.example.pawpics.databinding.CatImageFragmentBinding
 import com.shashankmunda.pawpics.model.Cat
 import com.shashankmunda.pawpics.ui.CatViewModel
 import com.shashankmunda.pawpics.util.Result
 import com.shashankmunda.pawpics.util.Utils
+import com.shashankmunda.pawpics.util.Utils.Companion.BASE_URL
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -30,6 +38,8 @@ class CatImageFragment: Fragment(R.layout.cat_image_fragment) {
     private lateinit var catImageId: String
     private val catViewModel:CatViewModel by activityViewModels()
     private var catImageView: AppCompatImageView?=null
+    private var catBitmap:Bitmap?=null
+    private var pendingShare=false
     private val displayMetrics: DisplayMetrics by lazy {
         requireContext().resources.displayMetrics
     }
@@ -60,7 +70,6 @@ class CatImageFragment: Fragment(R.layout.cat_image_fragment) {
     }
 
     private fun displayCatImage(cat: Cat, binding:CatImageFragmentBinding) {
-
         Thread.sleep(1000)
         catImageView?.layoutParams!!.height= (1.0f*displayMetrics.widthPixels*cat.height!!).toInt()/cat.width!!
         catImageView?.load(cat.url){
@@ -73,11 +82,12 @@ class CatImageFragment: Fragment(R.layout.cat_image_fragment) {
             listener(
                 onError = { _,_ ->
                     hideProgressBar(binding)
+                    catImageView?.setImageResource(R.drawable.ic_baseline_broken_image_24)
                 },
                 onSuccess = { _, result ->
                     hideProgressBar(binding)
-                    val bitmap=result.drawable.toBitmap(cat.width,cat.height,Bitmap.Config.ARGB_8888)
-                    Utils.saveBitmapToCache(requireContext(), bitmap, catImageId)
+                    catBitmap=result.drawable.toBitmap(cat.width,cat.height,Bitmap.Config.ARGB_8888)
+                    if(pendingShare) Utils.shareImage(requireContext(),catBitmap!!,catImageId)
                 }
             )
         }
@@ -97,30 +107,41 @@ class CatImageFragment: Fragment(R.layout.cat_image_fragment) {
     private val catMenuListener = Toolbar.OnMenuItemClickListener { item ->
         when(item.itemId){
             R.id.save -> {
-                Utils.saveImageToGallery(catImageId,requireContext())
+                //Utils.saveImageToGallery(catBitmap!!,catImageId,requireContext())
+                if(ActivityCompat.checkSelfPermission(requireContext(),Manifest.permission.READ_EXTERNAL_STORAGE)!=PackageManager.PERMISSION_GRANTED
+                    || ActivityCompat.checkSelfPermission(requireContext(),Manifest.permission.WRITE_EXTERNAL_STORAGE)!=PackageManager.PERMISSION_GRANTED){
+                    ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE),1)
+                }
+                else{
+                    val downloadManager=requireContext().getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+                    val url= "https://cdn2.thecatapi.com/images/$catImageId.png"
+                    Log.d("URL",url)
+                    val request=DownloadManager.Request(Uri.parse(url)).apply {
+                        addRequestHeader("x-api-key", BuildConfig.CAT_API_KEY)
+                        setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE)
+                        setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS,"$catImageId.png")
+                        setMimeType("image/png")
+                        setTitle("$catImageId.png")
+                        setDescription("File Downloaded!")
+                        setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+                    }
+                    request.allowScanningByMediaScanner()
+                    downloadManager.enqueue(request)
+                }
                 true
             }
             R.id.share -> {
-                val contentUri = Utils.getCurrentImageUri(catImageId,requireContext())
-                val shareIntent: Intent =Intent().apply {
-                    action=Intent.ACTION_SEND
-                    data=contentUri
-                    putExtra(Intent.EXTRA_STREAM, contentUri)
-                    type="image/png"
+                if(catBitmap==null) pendingShare=true
+                else{
+                    Utils.shareImage(requireContext(),catBitmap!!,catImageId)
                 }
-                shareIntent.clipData = ClipData.newRawUri("", contentUri)
-                shareIntent.addFlags(
-                    Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-                )
-                startActivity(Intent.createChooser(shareIntent,null))
-                true
-            }
-            R.id.set_wallpaper -> {
                 true
             }
             else -> false
         }
     }
+
+
 
 
     private fun updateImageLoadStatus(
