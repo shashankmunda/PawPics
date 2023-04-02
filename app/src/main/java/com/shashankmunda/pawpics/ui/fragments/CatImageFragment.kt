@@ -79,6 +79,10 @@ class CatImageFragment: Fragment(R.layout.cat_image_fragment) {
                 },
                 onSuccess = { _, result ->
                     hideProgressBar(binding)
+                    binding.catImageToolbar.menu.apply {
+                        getItem(0).isEnabled=true
+                        getItem(1).isEnabled=true
+                    }
                     catBitmap=result.drawable.toBitmap(cat.width,cat.height,Bitmap.Config.ARGB_8888)
                     if(pendingShare) Utils.shareImage(requireContext(),catBitmap!!,catImageId)
                 }
@@ -119,9 +123,6 @@ class CatImageFragment: Fragment(R.layout.cat_image_fragment) {
             else -> false
         }
     }
-
-
-
 
     private fun updateImageLoadStatus(
         result: Result<Cat>,

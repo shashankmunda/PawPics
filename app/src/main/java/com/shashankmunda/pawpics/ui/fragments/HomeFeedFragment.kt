@@ -8,8 +8,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.pawpics.R
-import com.example.pawpics.databinding.HomeFragmentBinding
-import com.shashankmunda.pawpics.adapter.CatAdapter
+import com.example.pawpics.databinding.HomeFeedFragmentBinding
 import com.shashankmunda.pawpics.model.Cat
 import com.shashankmunda.pawpics.ui.CatViewModel
 import com.shashankmunda.pawpics.util.Result
@@ -18,13 +17,13 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class HomeFragment: Fragment(R.layout.home_fragment) {
+class HomeFeedFragment: Fragment(R.layout.home_feed_fragment) {
     private val catViewModel: CatViewModel by activityViewModels()
     @Inject lateinit var catAdapter: CatAdapter
     private var catsDisplay: RecyclerView?=null
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val binding=HomeFragmentBinding.bind(view)
+        val binding=HomeFeedFragmentBinding.bind(view)
         binding.catHomeToolbar.title = "PawPics"
         setupAdapter(binding)
         catViewModel.cats.observe(viewLifecycleOwner) { response ->
@@ -35,7 +34,7 @@ class HomeFragment: Fragment(R.layout.home_fragment) {
         }
     }
 
-    private fun updateUI(response: Result<List<Cat>>,binding: HomeFragmentBinding) {
+    private fun updateUI(response: Result<List<Cat>>,binding: HomeFeedFragmentBinding) {
         when (response) {
             is Result.Success -> {
                 hideProgressBar(binding)
@@ -59,7 +58,7 @@ class HomeFragment: Fragment(R.layout.home_fragment) {
         }
     }
 
-    private fun setupAdapter(binding: HomeFragmentBinding) {
+    private fun setupAdapter(binding: HomeFeedFragmentBinding) {
         catsDisplay=binding.catsGridViewer
         catsDisplay?.layoutManager =
             StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL).apply {
@@ -69,14 +68,14 @@ class HomeFragment: Fragment(R.layout.home_fragment) {
         catsDisplay?.addItemDecoration(SpacesDecoration(8))
         catsDisplay?.adapter = catAdapter
     }
-    private fun hideProgressBar(binding: HomeFragmentBinding) {
+    private fun hideProgressBar(binding: HomeFeedFragmentBinding) {
         binding.loadingProgressBar.visibility=View.INVISIBLE
     }
-    private fun onRefresh(binding: HomeFragmentBinding) {
+    private fun onRefresh(binding: HomeFeedFragmentBinding) {
         catViewModel.refreshCalled()
         binding.catRefresh.isRefreshing = false
     }
-    private fun showProgressBar(binding: HomeFragmentBinding) {
+    private fun showProgressBar(binding: HomeFeedFragmentBinding) {
         binding.loadingProgressBar.visibility= View.VISIBLE
     }
 

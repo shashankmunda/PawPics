@@ -1,7 +1,6 @@
-package com.shashankmunda.pawpics.adapter
+package com.shashankmunda.pawpics.ui.fragments
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -16,11 +15,9 @@ import com.example.pawpics.databinding.CatImageHolderBinding
 import com.facebook.shimmer.ShimmerDrawable
 import com.google.android.material.imageview.ShapeableImageView
 import com.shashankmunda.pawpics.model.Cat
-import com.shashankmunda.pawpics.ui.fragments.HomeFragmentDirections
 import com.shashankmunda.pawpics.util.Utils
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.FragmentScoped
-import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 import kotlin.math.roundToInt
 

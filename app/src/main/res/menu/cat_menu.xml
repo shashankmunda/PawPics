@@ -3,12 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/save"
-        android:title="@string/save"
+        android:enabled="false"
         android:icon="@drawable/ic_baseline_save_24"
-        app:showAsAction="ifRoom"/>
+        android:title="@string/save"
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/share"
-        android:title="@string/share"
+        android:enabled="false"
         android:icon="@drawable/ic_baseline_share_24"
-        app:showAsAction="ifRoom"/>
+        android:title="@string/share"
+        app:showAsAction="ifRoom" />
 </menu>
