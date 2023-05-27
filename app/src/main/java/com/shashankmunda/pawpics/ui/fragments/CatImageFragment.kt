@@ -1,15 +1,13 @@
 package com.shashankmunda.pawpics.ui.fragments
 
-import android.Manifest
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.Toolbar
-import androidx.core.app.ActivityCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -20,7 +18,6 @@ import coil.request.CachePolicy
 import com.example.pawpics.R
 import com.example.pawpics.databinding.CatImageFragmentBinding
 import com.shashankmunda.pawpics.model.Cat
-import com.shashankmunda.pawpics.ui.CatViewModel
 import com.shashankmunda.pawpics.util.Result
 import com.shashankmunda.pawpics.util.Utils
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,15 +26,15 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class CatImageFragment: Fragment(R.layout.cat_image_fragment) {
     private lateinit var catImageId: String
-    private val catViewModel:CatViewModel by activityViewModels()
+    private val catViewModel: HomeFeedViewModel by activityViewModels()
     private var catImageView: AppCompatImageView?=null
     private var catBitmap:Bitmap?=null
-    private var pendingShare=false
     private val displayMetrics: DisplayMetrics by lazy {
         requireContext().resources.displayMetrics
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         catImageId=arguments?.getString("image_id")!!
         val binding=CatImageFragmentBinding.bind(view)
         catImageView=binding.catFullImageView
@@ -80,11 +77,11 @@ class CatImageFragment: Fragment(R.layout.cat_image_fragment) {
                 onSuccess = { _, result ->
                     hideProgressBar(binding)
                     binding.catImageToolbar.menu.apply {
+                        Log.d("TOOLBAR",getItem(0).title.toString()+getItem(1).toString())
                         getItem(0).isEnabled=true
                         getItem(1).isEnabled=true
                     }
                     catBitmap=result.drawable.toBitmap(cat.width,cat.height,Bitmap.Config.ARGB_8888)
-                    if(pendingShare) Utils.shareImage(requireContext(),catBitmap!!,catImageId)
                 }
             )
         }
@@ -104,25 +101,16 @@ class CatImageFragment: Fragment(R.layout.cat_image_fragment) {
     private val catMenuListener = Toolbar.OnMenuItemClickListener { item ->
         when(item.itemId){
             R.id.save -> {
-                if(ActivityCompat.checkSelfPermission(requireContext(),Manifest.permission.READ_EXTERNAL_STORAGE)!=PackageManager.PERMISSION_GRANTED
-                    || ActivityCompat.checkSelfPermission(requireContext(),Manifest.permission.WRITE_EXTERNAL_STORAGE)!=PackageManager.PERMISSION_GRANTED){
-                    ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE),1)
-                }
-                else{
                     Utils.downloadImage(requireContext(),catImageId)
-                }
                 true
             }
             R.id.share -> {
-                if(catBitmap==null) pendingShare=true
-                else{
                     Utils.shareImage(requireContext(),catBitmap!!,catImageId)
+                    true
                 }
-                true
-            }
             else -> false
+            }
         }
-    }
 
     private fun updateImageLoadStatus(
         result: Result<Cat>,

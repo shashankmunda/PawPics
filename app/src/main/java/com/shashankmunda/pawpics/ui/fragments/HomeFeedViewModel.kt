@@ -1,4 +1,4 @@
-package com.shashankmunda.pawpics.ui
+package com.shashankmunda.pawpics.ui.fragments
 
 import android.app.Application
 import androidx.lifecycle.*
@@ -20,7 +20,7 @@ import javax.inject.Inject
 import kotlin.random.Random
 
 @HiltViewModel
-class CatViewModel @Inject constructor(private val catRepository: CatRepository, private val application: Application): ViewModel() {
+class HomeFeedViewModel @Inject constructor(private val catRepository: CatRepository, private val application: Application): ViewModel() {
     private val _cats= MutableLiveData<Result<List<Cat>>>()
     val cats: LiveData<Result<List<Cat>>>
         get()=_cats

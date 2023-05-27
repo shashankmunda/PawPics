@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.pawpics.R
 import com.example.pawpics.databinding.HomeFeedFragmentBinding
 import com.shashankmunda.pawpics.model.Cat
-import com.shashankmunda.pawpics.ui.CatViewModel
 import com.shashankmunda.pawpics.util.Result
 import com.shashankmunda.pawpics.util.SpacesDecoration
 import dagger.hilt.android.AndroidEntryPoint
@@ -18,8 +17,8 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeFeedFragment: Fragment(R.layout.home_feed_fragment) {
-    private val catViewModel: CatViewModel by activityViewModels()
-    @Inject lateinit var catAdapter: CatAdapter
+    private val catViewModel: HomeFeedViewModel by activityViewModels()
+    @Inject lateinit var catAdapter: HomeFeedAdapter
     private var catsDisplay: RecyclerView?=null
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -39,7 +38,7 @@ class HomeFeedFragment: Fragment(R.layout.home_feed_fragment) {
             is Result.Success -> {
                 hideProgressBar(binding)
                 response.data?.let { latestCats ->
-                    (catsDisplay!!.adapter as CatAdapter).updateData(latestCats as ArrayList<Cat>)
+                    (catsDisplay!!.adapter as HomeFeedAdapter).updateData(latestCats as ArrayList<Cat>)
                 }
             }
             is Result.Error -> {

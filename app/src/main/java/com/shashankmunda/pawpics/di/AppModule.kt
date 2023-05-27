@@ -1,6 +1,7 @@
 package com.shashankmunda.pawpics.di
 
 import android.app.Application
+import android.app.NotificationManager
 import android.content.Context
 import com.shashankmunda.pawpics.api.CatApiService
 import com.shashankmunda.pawpics.util.Utils
@@ -50,6 +51,11 @@ object AppModule {
             .client(okHttpClient)
             .build()
             .create(CatApiService::class.java)
+    }
+    @Singleton
+    @Provides
+    fun provideNotificationManager(@ApplicationContext context:Context):NotificationManager{
+        return context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     }
 
 }

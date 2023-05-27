@@ -22,8 +22,8 @@ import javax.inject.Inject
 import kotlin.math.roundToInt
 
 @FragmentScoped
-class CatAdapter @Inject constructor(@ApplicationContext context: Context) :
-    RecyclerView.Adapter<CatAdapter.CatViewHolder>() {
+class HomeFeedAdapter @Inject constructor(@ApplicationContext context: Context) :
+    RecyclerView.Adapter<HomeFeedAdapter.CatViewHolder>() {
     private var catsList: ArrayList<Cat> = ArrayList()
     private val displayMetrics: DisplayMetrics by lazy {
         context.resources.displayMetrics
@@ -77,7 +77,7 @@ class CatAdapter @Inject constructor(@ApplicationContext context: Context) :
                 )
             }
             imageView.setOnClickListener {
-                val action=HomeFragmentDirections.actionHomeFragmentToFullCatImageFragment(cat.id)
+                val action=HomeFeedFragmentDirections.actionHomeFragmentToFullCatImageFragment(cat.id)
                 it.findNavController().navigate(action)
             }
         }
