@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeFeedFragment: Fragment(R.layout.home_feed_fragment) {
-    private val catViewModel: HomeFeedViewModel by activityViewModels()
+    private val catViewModel: HomeViewModel by activityViewModels()
     @Inject lateinit var catAdapter: HomeFeedAdapter
     private var catsDisplay: RecyclerView?=null
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -36,13 +36,14 @@ class HomeFeedFragment: Fragment(R.layout.home_feed_fragment) {
     private fun updateUI(response: Result<List<Cat>>,binding: HomeFeedFragmentBinding) {
         when (response) {
             is Result.Success -> {
-                hideProgressBar(binding)
+                binding.loadingProgressBar.visibility = View.GONE
                 response.data?.let { latestCats ->
-                    (catsDisplay!!.adapter as HomeFeedAdapter).updateData(latestCats as ArrayList<Cat>)
+                    (catsDisplay!!.adapter as HomeFeedAdapter)
+                        .updateData(latestCats as ArrayList<Cat>)
                 }
             }
             is Result.Error -> {
-                hideProgressBar(binding)
+                binding.loadingProgressBar.visibility = View.GONE
                 response.message?.let { errorMessage ->
                     Toast.makeText(
                         context,
@@ -52,7 +53,7 @@ class HomeFeedFragment: Fragment(R.layout.home_feed_fragment) {
                 }
             }
             is Result.Loading -> {
-                showProgressBar(binding)
+                binding.loadingProgressBar.visibility = View.VISIBLE
             }
         }
     }
@@ -67,15 +68,10 @@ class HomeFeedFragment: Fragment(R.layout.home_feed_fragment) {
         catsDisplay?.addItemDecoration(SpacesDecoration(8))
         catsDisplay?.adapter = catAdapter
     }
-    private fun hideProgressBar(binding: HomeFeedFragmentBinding) {
-        binding.loadingProgressBar.visibility=View.INVISIBLE
-    }
+
     private fun onRefresh(binding: HomeFeedFragmentBinding) {
         catViewModel.refreshCalled()
         binding.catRefresh.isRefreshing = false
-    }
-    private fun showProgressBar(binding: HomeFeedFragmentBinding) {
-        binding.loadingProgressBar.visibility= View.VISIBLE
     }
 
     override fun onDestroyView() {

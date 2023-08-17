@@ -26,15 +26,17 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class CatImageFragment: Fragment(R.layout.cat_image_fragment) {
     private lateinit var catImageId: String
-    private val catViewModel: HomeFeedViewModel by activityViewModels()
-    private var catImageView: AppCompatImageView?=null
-    private var catBitmap:Bitmap?=null
+    private lateinit var catImageView: AppCompatImageView
+    private lateinit var catBitmap:Bitmap
+
+    private val catViewModel: HomeViewModel by activityViewModels()
+
     private val displayMetrics: DisplayMetrics by lazy {
         requireContext().resources.displayMetrics
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         catImageId=arguments?.getString("image_id")!!
         val binding=CatImageFragmentBinding.bind(view)
         catImageView=binding.catFullImageView
@@ -61,8 +63,8 @@ class CatImageFragment: Fragment(R.layout.cat_image_fragment) {
 
     private fun displayCatImage(cat: Cat, binding:CatImageFragmentBinding) {
         Thread.sleep(1000)
-        catImageView?.layoutParams!!.height= (1.0f*displayMetrics.widthPixels*cat.height!!).toInt()/cat.width!!
-        catImageView?.load(cat.url){
+        catImageView.layoutParams!!.height= (1.0f*displayMetrics.widthPixels*cat.height!!).toInt()/cat.width!!
+        catImageView.load(cat.url){
             placeholder(Utils.provideShimmerDrawable(requireContext()))
             allowHardware(false)
             bitmapConfig(Bitmap.Config.ARGB_8888)
@@ -133,10 +135,5 @@ class CatImageFragment: Fragment(R.layout.cat_image_fragment) {
 
     private fun showRetryBtn(binding: CatImageFragmentBinding) {
         binding.retryButton.visibility=View.VISIBLE
-    }
-
-    override fun onDestroyView() {
-        catImageView=null
-        super.onDestroyView()
     }
 }

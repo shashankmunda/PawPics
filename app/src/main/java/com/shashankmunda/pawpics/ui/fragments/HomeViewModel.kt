@@ -7,10 +7,8 @@ import com.shashankmunda.pawpics.repository.CatRepository
 import com.shashankmunda.pawpics.util.ImageSize
 import com.shashankmunda.pawpics.util.MimeType
 import com.shashankmunda.pawpics.util.Result
-import com.shashankmunda.pawpics.util.Utils.Companion.MAX_LIMIT
-import com.shashankmunda.pawpics.util.Utils.Companion.OFFSET
-import com.shashankmunda.pawpics.util.Utils.Companion.clearImageCache
-import com.shashankmunda.pawpics.util.Utils.Companion.hasInternetConnection
+import com.shashankmunda.pawpics.util.Utils
+import com.shashankmunda.pawpics.util.Utils.hasInternetConnection
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -20,7 +18,7 @@ import javax.inject.Inject
 import kotlin.random.Random
 
 @HiltViewModel
-class HomeFeedViewModel @Inject constructor(private val catRepository: CatRepository, private val application: Application): ViewModel() {
+class HomeViewModel @Inject constructor(private val catRepository: CatRepository, private val application: Application): ViewModel() {
     private val _cats= MutableLiveData<Result<List<Cat>>>()
     val cats: LiveData<Result<List<Cat>>>
         get()=_cats
@@ -44,7 +42,7 @@ class HomeFeedViewModel @Inject constructor(private val catRepository: CatReposi
         viewModelScope.launch(Dispatchers.IO) {
 
             try {
-                val response = catRepository.getCats(OFFSET + Random.nextInt(MAX_LIMIT), ImageSize.THUMB,MimeType.PNG)
+                val response = catRepository.getCats(Utils.OFFSET + Random.nextInt(Utils.MAX_LIMIT), ImageSize.THUMB,MimeType.PNG)
                 _cats.postValue(updateCats(response))
             } catch (t: Throwable) {
                 when (t) {
@@ -60,7 +58,6 @@ class HomeFeedViewModel @Inject constructor(private val catRepository: CatReposi
             val cats=response.body()!!.distinctBy { cat ->
                 cat.id
             }
-            clearImageCache(application)
             return Result.Success(cats)
         }
         return Result.Error(response.message())

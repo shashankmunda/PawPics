@@ -22,8 +22,7 @@ import javax.inject.Inject
 import kotlin.math.roundToInt
 
 @FragmentScoped
-class HomeFeedAdapter @Inject constructor(@ApplicationContext context: Context) :
-    RecyclerView.Adapter<HomeFeedAdapter.CatViewHolder>() {
+class HomeFeedAdapter @Inject constructor(@ApplicationContext context: Context) : RecyclerView.Adapter<HomeFeedAdapter.CatViewHolder>() {
     private var catsList: ArrayList<Cat> = ArrayList()
     private val displayMetrics: DisplayMetrics by lazy {
         context.resources.displayMetrics
@@ -35,7 +34,7 @@ class HomeFeedAdapter @Inject constructor(@ApplicationContext context: Context) 
 
     override fun onBindViewHolder(holder: CatViewHolder, position: Int) {
         val cat=catsList[position]
-        if(cat.height==null || cat.width==null)
+        if( cat.height==null || cat.width==null)
             holder.invalidate()
         else
             holder.bind(cat,displayMetrics)

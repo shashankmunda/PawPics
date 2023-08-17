@@ -12,23 +12,17 @@
         <action
             android:id="@+id/action_home_fragment_to_full_cat_image_fragment"
             app:destination="@id/cat_image_fragment"
-            app:enterAnim="@android:anim/slide_in_left"
-            app:exitAnim="@android:anim/slide_out_right"
-            app:popEnterAnim="@android:anim/slide_in_left"
-            app:popExitAnim="@android:anim/slide_out_right"
             app:popUpTo="@id/home_fragment">
-        <argument
-            android:name="image_id"
-            app:argType="string"
-            app:nullable="true"
-            android:defaultValue="@null"
-            />
         </action>
     </fragment>
     <fragment
         android:id="@+id/cat_image_fragment"
         android:name="com.shashankmunda.pawpics.ui.fragments.CatImageFragment"
         android:label="@string/label_full_cat_image"
-        tools:layout="@layout/cat_image_fragment"
-        />
+        tools:layout="@layout/cat_image_fragment">
+        <argument
+            android:name="image_id"
+            app:argType="string"
+            />
+    </fragment>
 </navigation>

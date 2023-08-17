@@ -8,12 +8,4 @@ import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
 class PawPicsApp:Application(),DefaultLifecycleObserver{
-    override fun onDestroy(owner: LifecycleOwner) {
-        Utils.clearImageCache(this)
-        applicationContext.apply {
-            externalCacheDir?.deleteRecursively()
-            cacheDir.deleteOnExit()
-        }
-        super.onDestroy(owner)
-    }
 }
