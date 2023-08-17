@@ -11,28 +11,21 @@ import android.net.NetworkCapabilities
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
-import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.startActivity
 import androidx.core.content.FileProvider
-import coil.annotation.ExperimentalCoilApi
-import coil.imageLoader
 import com.example.pawpics.BuildConfig
 import com.facebook.shimmer.Shimmer
 import com.facebook.shimmer.ShimmerDrawable
 import java.io.File
 import java.io.FileOutputStream
 
-class Utils{
-    companion object {
+object Utils{
+
         const val BASE_URL="https://api.thecatapi.com/v1/"
         const val OFFSET=30
         const val MAX_LIMIT=20
         const val cacheSize=(5*1024*1024).toLong()
-        @OptIn(ExperimentalCoilApi::class)
-        fun clearImageCache(context: Application){
-            context.imageLoader.diskCache?.clear()
-        }
 
         fun provideShimmerDrawable(context: Context): ShimmerDrawable {
             val shimmer= Shimmer.ColorHighlightBuilder().apply {
@@ -72,6 +65,7 @@ class Utils{
             }
             return false
         }
+
         fun shareImage(context:Context,catBitmap:Bitmap,catImageId:String) {
             FileUtils.saveBitmapToCache(context, catBitmap,catImageId)
             val contentUri = FileUtils.getCurrentImageUri(catImageId, context)
@@ -86,6 +80,7 @@ class Utils{
             )
             startActivity(context,Intent.createChooser(shareIntent,null),null)
         }
+
         fun downloadImage(context: Context,catImageId: String) {
             val downloadManager =
                 context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
@@ -99,43 +94,45 @@ class Utils{
                 setDescription("File Downloaded!")
                 setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
             }
-            request.allowScanningByMediaScanner()
+            if(Build.VERSION.SDK_INT < Build.VERSION_CODES.Q)
+                request.allowScanningByMediaScanner()
             downloadManager.enqueue(request)
         }
     }
-    internal class FileUtils{
-        companion object{
-            fun getCurrentImageUri(catImageId:String, context: Context): Uri? {
-                val catDir = context.externalCacheDir
-                val imageCacheFile = File(catDir,"$catImageId.png")
-                return FileProvider.getUriForFile(
-                    context,
-                    "com.shashankmunda.fileprovider",
-                    imageCacheFile
-                )
-            }
-            fun getFileFromExternalCache(catImageId:String, context: Context): File {
-                val catDir = context.externalCacheDir
-                if (!catDir!!.exists()) catDir.mkdirs()
-                val targetFile = File(catDir, "$catImageId.png")
-                if (!targetFile.exists()) targetFile.createNewFile()
-                return targetFile
-            }
-            fun writeBitmapToFile(targetFile:File, bitmap: Bitmap){
-                val fileOutputStream = FileOutputStream(targetFile)
-                fileOutputStream.use {
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream)
-                }
-            }
-             fun saveBitmapToCache(context: Context, bitmap: Bitmap, catImageId:String) {
-                try{
-                    val targetFile = getFileFromExternalCache(catImageId,context)
-                    writeBitmapToFile(targetFile,bitmap)
-                }
-                catch (e:Exception){
-                    e.printStackTrace()
-                }
-            }
+
+object FileUtils{
+    fun getCurrentImageUri(catImageId:String, context: Context): Uri? {
+        val catDir = context.externalCacheDir
+        val imageCacheFile = File(catDir,"$catImageId.png")
+        return FileProvider.getUriForFile(
+            context,
+            "com.shashankmunda.fileprovider",
+            imageCacheFile
+        )
+    }
+
+    private fun getFileFromExternalCache(catImageId:String, context: Context): File {
+        val catDir = context.externalCacheDir
+        if (!catDir!!.exists()) catDir.mkdirs()
+        val targetFile = File(catDir, "$catImageId.png")
+        if (!targetFile.exists()) targetFile.createNewFile()
+        return targetFile
+    }
+
+    private fun writeBitmapToFile(targetFile:File, bitmap: Bitmap){
+        val fileOutputStream = FileOutputStream(targetFile)
+        fileOutputStream.use {
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream)
+        }
+    }
+
+    fun saveBitmapToCache(context: Context, bitmap: Bitmap, catImageId:String) {
+        try{
+            val targetFile = getFileFromExternalCache(catImageId,context)
+            writeBitmapToFile(targetFile,bitmap)
+        }
+        catch (e:Exception){
+            e.printStackTrace()
         }
     }
 }
