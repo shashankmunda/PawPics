@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.navigation.findNavController
 import coil.dispose
 import coil.load
-import coil.request.CachePolicy
+import coil.request.CachePolicy.ENABLED
 import coil.size.Precision
 import com.example.pawpics.R
 import com.example.pawpics.databinding.CatImageHolderBinding
@@ -29,29 +29,25 @@ class HomeFeedAdapter @Inject constructor(@ApplicationContext context: Context) 
     override fun createBinding(inflater: LayoutInflater, parent: ViewGroup) = CatImageHolderBinding.inflate(inflater,parent,false)
 
     override fun bindItem(binding: CatImageHolderBinding, item: Cat) {
-        if( item.height==null || item.width==null)
-            binding.catImageView.invalidate()
-        else{
-            binding.catImageView.layoutParams.height =
-                ((1.0f * (item.height!!) * (displayMetrics.widthPixels / 2)) / item.width!!).roundToInt()
-            binding.catImageView.load(data= item.url){
-                placeholder(Utils.provideShimmerDrawable(binding.root.context))
-                allowHardware(false)
-                precision(Precision.INEXACT)
-                memoryCachePolicy(CachePolicy.DISABLED)
-                allowRgb565(true)
-                listener(
-                    onError ={_,_ ->
-                        binding.catImageView.setImageResource(R.drawable.ic_baseline_broken_image_24)
-                    }
-                )
-            }
-            binding.catImageView.setOnClickListener {
-                val action=HomeFeedFragmentDirections.actionHomeFragmentToFullCatImageFragment(item.id)
-                it.findNavController().navigate(action)
-            }
+        binding.catImageView.layoutParams.height =
+            ((1.0f * (item.height!!) * (displayMetrics.widthPixels / 2)) / item.width!!).roundToInt()
+        binding.catImageView.load(data= item.url){
+            placeholder(Utils.provideShimmerDrawable(binding.root.context))
+            allowHardware(false)
+            precision(Precision.INEXACT)
+            diskCachePolicy(ENABLED)
+            memoryCachePolicy(ENABLED)
+            allowRgb565(true)
+            listener(
+                onError ={_,_ ->
+                    binding.catImageView.setImageResource(R.drawable.ic_baseline_broken_image_24)
+                }
+            )
         }
-
+        binding.catImageView.setOnClickListener {
+            val action=HomeFeedFragmentDirections.actionHomeFragmentToFullCatImageFragment(item.id)
+            it.findNavController().navigate(action)
+        }
     }
 
     override fun onViewRecycled(holder: ViewHolder) {

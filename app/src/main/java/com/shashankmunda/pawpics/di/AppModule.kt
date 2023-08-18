@@ -2,7 +2,9 @@ package com.shashankmunda.pawpics.di
 
 import android.app.NotificationManager
 import android.content.Context
+import androidx.room.Room
 import com.shashankmunda.pawpics.api.CatApiService
+import com.shashankmunda.pawpics.data.CatsDatabase
 import com.shashankmunda.pawpics.util.Utils
 import dagger.Module
 import dagger.Provides
@@ -49,4 +51,12 @@ object AppModule {
     fun provideNotificationManager(@ApplicationContext context:Context) =
         context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
+    @Singleton
+    @Provides
+    fun provideCatDatabase(@ApplicationContext context:Context) = Room.databaseBuilder(context,CatsDatabase::class.java, "cats_db")
+        .build()
+
+    @Singleton
+    @Provides
+    fun provideCatDao(catsDb: CatsDatabase) = catsDb.getCatsDao()
 }
