@@ -16,7 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PawPics">
         <activity
-            android:name="com.shashankmunda.pawpics.ui.MainActivity"
+            android:name="com.shashankmunda.pawpics.ui.HomeActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
