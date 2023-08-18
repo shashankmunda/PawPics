@@ -2,6 +2,7 @@ package com.shashankmunda.pawpics.ui.fragments
 
 import android.app.Application
 import androidx.lifecycle.*
+import com.shashankmunda.pawpics.base.BaseViewModel
 import com.shashankmunda.pawpics.model.Cat
 import com.shashankmunda.pawpics.repository.CatRepository
 import com.shashankmunda.pawpics.util.ImageSize
@@ -18,19 +19,23 @@ import javax.inject.Inject
 import kotlin.random.Random
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(private val catRepository: CatRepository, private val application: Application): ViewModel() {
-    private val _cats= MutableLiveData<Result<List<Cat>>>()
+class HomeViewModel @Inject constructor(private val catRepository: CatRepository, private val application: Application): BaseViewModel() {
+
+    private var _cats= MutableLiveData<Result<List<Cat>>>()
     val cats: LiveData<Result<List<Cat>>>
         get()=_cats
-    private val _currCatStatus=MutableLiveData<Result<Cat>>()
+
+    private var _currCatStatus=MutableLiveData<Result<Cat>>()
     val currCatStatus:LiveData<Result<Cat>>
         get()=_currCatStatus
+
     private var catImageSpecs=HashMap<String,Cat>()
+
     init{
-        fetchNewCats()
+        fetchCatImages()
     }
 
-    private fun fetchNewCats() {
+    private fun fetchCatImages() {
         _cats.postValue(Result.Loading())
         if (hasInternetConnection(application)) {
             makeApiRequest()
@@ -39,8 +44,7 @@ class HomeViewModel @Inject constructor(private val catRepository: CatRepository
     }
 
     private fun makeApiRequest() {
-        viewModelScope.launch(Dispatchers.IO) {
-
+        ioScope.launch{
             try {
                 val response = catRepository.getCats(Utils.OFFSET + Random.nextInt(Utils.MAX_LIMIT), ImageSize.THUMB,MimeType.PNG)
                 _cats.postValue(updateCats(response))
@@ -63,9 +67,7 @@ class HomeViewModel @Inject constructor(private val catRepository: CatRepository
         return Result.Error(response.message())
     }
 
-    fun refreshCalled(){
-        fetchNewCats()
-    }
+    fun refreshCalled() = fetchCatImages()
 
     fun isCatSpecsAvailable(catImageId: String): Boolean {
         _currCatStatus.postValue(Result.Loading())

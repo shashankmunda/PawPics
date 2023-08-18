@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.pawpics.R
 import com.example.pawpics.databinding.HomeFeedFragmentBinding
+import com.shashankmunda.pawpics.base.BaseFragment
 import com.shashankmunda.pawpics.model.Cat
 import com.shashankmunda.pawpics.util.Result
 import com.shashankmunda.pawpics.util.SpacesDecoration
@@ -16,18 +17,24 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class HomeFeedFragment: Fragment(R.layout.home_feed_fragment) {
-    private val catViewModel: HomeViewModel by activityViewModels()
+class HomeFeedFragment: BaseFragment<HomeFeedFragmentBinding, HomeViewModel>() {
     @Inject lateinit var catAdapter: HomeFeedAdapter
     private var catsDisplay: RecyclerView?=null
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        val binding=HomeFeedFragmentBinding.bind(view)
-        binding.catHomeToolbar.title = "PawPics"
-        setupAdapter(binding)
-        catViewModel.cats.observe(viewLifecycleOwner) { response ->
+    override fun getViewModelClass() = HomeViewModel::class.java
+
+    override fun getViewBinding() = HomeFeedFragmentBinding.inflate(layoutInflater)
+
+    override var sharedViewModel = true
+
+    override fun observeData() {
+        mViewModel.cats.observe(viewLifecycleOwner) { response ->
             updateUI(response,binding)
         }
+    }
+
+    override fun initViews() {
+        binding.catHomeToolbar.title = "PawPics"
+        setupAdapter(binding)
         binding.catRefresh.setOnRefreshListener {
             onRefresh(binding)
         }
@@ -70,7 +77,7 @@ class HomeFeedFragment: Fragment(R.layout.home_feed_fragment) {
     }
 
     private fun onRefresh(binding: HomeFeedFragmentBinding) {
-        catViewModel.refreshCalled()
+        mViewModel.refreshCalled()
         binding.catRefresh.isRefreshing = false
     }
 
