@@ -29,6 +29,7 @@ abstract class BaseFragment<VB: ViewBinding,VM: BaseViewModel>: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        _binding = getViewBinding()
         return binding.root
     }
 
@@ -43,7 +44,6 @@ abstract class BaseFragment<VB: ViewBinding,VM: BaseViewModel>: Fragment() {
     abstract fun initViews()
 
     private fun init(){
-        _binding = getViewBinding()
         mViewModel = if(sharedViewModel){
             ViewModelProvider(requireActivity()).get(
                 getViewModelClass()
