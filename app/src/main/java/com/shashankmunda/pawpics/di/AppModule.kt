@@ -3,6 +3,9 @@ package com.shashankmunda.pawpics.di
 import android.app.NotificationManager
 import android.content.Context
 import androidx.room.Room
+import coil.ImageLoader
+import coil.request.CachePolicy.ENABLED
+import coil.size.Precision.INEXACT
 import com.shashankmunda.pawpics.api.CatApiService
 import com.shashankmunda.pawpics.data.CatsDatabase
 import com.shashankmunda.pawpics.util.Utils
@@ -59,4 +62,16 @@ object AppModule {
     @Singleton
     @Provides
     fun provideCatDao(catsDb: CatsDatabase) = catsDb.getCatsDao()
+
+    @Singleton
+    @Provides
+    fun provideImageLoader(@ApplicationContext context: Context) =
+        ImageLoader.Builder(context)
+            .placeholder(Utils.provideShimmerDrawable(context))
+            .allowHardware(true)
+            .diskCachePolicy(ENABLED)
+            .memoryCachePolicy(ENABLED)
+            .allowRgb565(true)
+            .precision(INEXACT)
+            .build()
 }

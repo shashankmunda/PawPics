@@ -97,7 +97,7 @@ dependencies {
     kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
 
     //Image loading
-    implementation 'io.coil-kt:coil:2.4.0'
+    implementation 'io.coil-kt:coil-base:2.4.0'
 
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
 

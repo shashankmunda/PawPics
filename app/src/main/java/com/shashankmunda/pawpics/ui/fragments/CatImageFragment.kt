@@ -1,14 +1,16 @@
 package com.shashankmunda.pawpics.ui.fragments
 
 import android.graphics.Bitmap
+import android.graphics.Bitmap.Config.ARGB_8888
 import android.util.DisplayMetrics
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
+import androidx.core.graphics.drawable.toBitmap
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import coil.load
-import coil.request.CachePolicy
+import coil.ImageLoader
+import coil.request.ImageRequest
 import com.example.pawpics.R
 import com.example.pawpics.databinding.CatImageFragmentBinding
 import com.shashankmunda.pawpics.base.BaseFragment
@@ -16,10 +18,12 @@ import com.shashankmunda.pawpics.model.Cat
 import com.shashankmunda.pawpics.util.Result
 import com.shashankmunda.pawpics.util.Utils
 import dagger.hilt.android.AndroidEntryPoint
-
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class CatImageFragment: BaseFragment<CatImageFragmentBinding,HomeViewModel>() {
+
+    @Inject lateinit var imageLoader: ImageLoader
 
     private val args: CatImageFragmentArgs by navArgs()
     private lateinit var catBitmap:Bitmap
@@ -59,25 +63,26 @@ class CatImageFragment: BaseFragment<CatImageFragmentBinding,HomeViewModel>() {
 
     private fun displayCatImage(cat: Cat) {
         binding.catImgView.layoutParams!!.height= (1.0f*displayMetrics.widthPixels*cat.height!!).toInt()/cat.width!!
-        binding.catImgView.load(cat.url){
-            placeholder(Utils.provideShimmerDrawable(requireContext()))
-            bitmapConfig(Bitmap.Config.ARGB_8888)
-            memoryCachePolicy(CachePolicy.DISABLED)
-            diskCachePolicy(CachePolicy.ENABLED)
-            listener(
+        val request = ImageRequest.Builder(requireContext())
+            .data(cat.url)
+            .bitmapConfig(Bitmap.Config.ARGB_8888)
+            .target(binding.catImgView)
+            .listener(
                 onError = { _,_ ->
                     binding.loadingProgressBar.visibility = View.GONE
                     binding.catImgView.setImageResource(R.drawable.ic_baseline_broken_image_24)
                 },
                 onSuccess = { _, result ->
-                        binding.loadingProgressBar.visibility = View.GONE
-                        binding.catImageToolbar.menu.apply {
+                    binding.loadingProgressBar.visibility = View.GONE
+                    binding.catImageToolbar.menu.apply {
                         getItem(0).isEnabled=true
                         getItem(1).isEnabled=true
                     }
+                    catBitmap = result.drawable.toBitmap(cat.width,cat.height,ARGB_8888)
                 }
             )
-        }
+            .build()
+        imageLoader.enqueue(request)
     }
 
     private fun setUpToolbar() {
@@ -94,7 +99,8 @@ class CatImageFragment: BaseFragment<CatImageFragmentBinding,HomeViewModel>() {
     private val catMenuListener = Toolbar.OnMenuItemClickListener { item ->
         when(item.itemId){
             R.id.save -> {
-                Utils.downloadImage(requireContext(),args.imageId)
+                Utils.saveImage(requireContext(),args.imageId)
+                //(activity as HomeActivity).saveImageLauncher.launch(Unit)
                 true
             }
             R.id.share -> {
