@@ -24,7 +24,7 @@ object Utils{
 
         const val BASE_URL="https://api.thecatapi.com/v1/"
         const val OFFSET=30
-        const val MAX_LIMIT=20
+        const val MAX_LIMIT=15
         const val cacheSize=(5*1024*1024).toLong()
 
         fun provideShimmerDrawable(context: Context): ShimmerDrawable {
@@ -81,13 +81,13 @@ object Utils{
             startActivity(context,Intent.createChooser(shareIntent,null),null)
         }
 
-        fun downloadImage(context: Context,catImageId: String) {
+        fun saveImage(context: Context,catImageId: String) {
             val downloadManager =
                 context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
             val url = "https://cdn2.thecatapi.com/images/$catImageId.png"
             val request = DownloadManager.Request(Uri.parse(url)).apply {
                 addRequestHeader("x-api-key", BuildConfig.CAT_API_KEY)
-                setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE)
+                setAllowedOverMetered(true)
                 setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "$catImageId.png")
                 setMimeType("image/png")
                 setTitle("$catImageId.png")

@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.pawpics.databinding.HomeFeedFragmentBinding
 import com.shashankmunda.pawpics.base.BaseFragment
 import com.shashankmunda.pawpics.model.Cat
+import com.shashankmunda.pawpics.util.PaginationScrollListener
 import com.shashankmunda.pawpics.util.Result
 import com.shashankmunda.pawpics.util.SpacesDecoration
 import dagger.hilt.android.AndroidEntryPoint
@@ -22,17 +23,21 @@ class HomeFeedFragment: BaseFragment<HomeFeedFragmentBinding, HomeViewModel>() {
 
     override var sharedViewModel = true
 
+    var isLoading = false
+    var isLastPage = false
     override fun observeData() {
         mViewModel.cats.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is Result.Success -> {
+                    isLoading = false
                     binding.loadingProgressBar.visibility = View.GONE
                     response.data?.let { latestCats ->
-                        (catsDisplay!!.adapter as HomeFeedAdapter)
-                            .updateData(latestCats as ArrayList<Cat>)
+                        (binding.catsGridViewer.adapter as HomeFeedAdapter)
+                            .addItems(latestCats as ArrayList<Cat>)
                     }
                 }
                 is Result.Error -> {
+                    isLoading = false
                     binding.loadingProgressBar.visibility = View.GONE
                     response.message?.let { errorMessage ->
                         Toast.makeText(
@@ -43,6 +48,7 @@ class HomeFeedFragment: BaseFragment<HomeFeedFragmentBinding, HomeViewModel>() {
                     }
                 }
                 is Result.Loading -> {
+                    isLoading = true
                     binding.loadingProgressBar.visibility = View.VISIBLE
                 }
             }
@@ -51,22 +57,32 @@ class HomeFeedFragment: BaseFragment<HomeFeedFragmentBinding, HomeViewModel>() {
 
     override fun initViews() {
         binding.catHomeToolbar.title = "PawPics"
-        setupAdapter()
+        setupRV()
         binding.catRefresh.setOnRefreshListener {
             mViewModel.fetchCatImages()
             binding.catRefresh.isRefreshing = false
         }
     }
 
-    private fun setupAdapter() {
-        catsDisplay=binding.catsGridViewer
-        catsDisplay?.layoutManager =
-            StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL).apply {
-                gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_NONE
-            }
-        catsDisplay?.setItemViewCacheSize(25)
-        catsDisplay?.addItemDecoration(SpacesDecoration(8))
-        catsDisplay?.adapter = catAdapter
+    private fun setupRV() {
+        val staggeredGridLayoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL).apply {
+            gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_NONE
+        }
+        binding.catsGridViewer.apply {
+            layoutManager = staggeredGridLayoutManager
+            setItemViewCacheSize(25)
+            addItemDecoration(SpacesDecoration(8))
+            adapter = catAdapter
+            addOnScrollListener(object : PaginationScrollListener(staggeredGridLayoutManager){
+                override fun loadMoreItems() {
+                    mViewModel.fetchCatImages()
+                }
+
+                override fun isLastPage() = isLastPage
+
+                override fun isLoading() = isLoading
+            })
+        }
     }
 
     override fun onDestroyView() {

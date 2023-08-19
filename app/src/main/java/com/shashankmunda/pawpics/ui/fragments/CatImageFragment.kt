@@ -22,7 +22,6 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class CatImageFragment: BaseFragment<CatImageFragmentBinding,HomeViewModel>() {
-
     @Inject lateinit var imageLoader: ImageLoader
 
     private val args: CatImageFragmentArgs by navArgs()
@@ -100,7 +99,6 @@ class CatImageFragment: BaseFragment<CatImageFragmentBinding,HomeViewModel>() {
         when(item.itemId){
             R.id.save -> {
                 Utils.saveImage(requireContext(),args.imageId)
-                //(activity as HomeActivity).saveImageLauncher.launch(Unit)
                 true
             }
             R.id.share -> {

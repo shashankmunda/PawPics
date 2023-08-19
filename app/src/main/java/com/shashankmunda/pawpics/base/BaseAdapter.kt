@@ -30,6 +30,11 @@ abstract class BaseAdapter<T, VB : ViewBinding> : RecyclerView.Adapter<BaseAdapt
         notifyDataSetChanged()
     }
 
+    fun addItems(newItems: List<T>){
+        items.addAll(newItems)
+        notifyDataSetChanged()
+    }
+
     protected abstract fun createBinding(inflater: LayoutInflater, parent: ViewGroup): VB
 
     protected abstract fun bindItem(binding: VB, item: T)

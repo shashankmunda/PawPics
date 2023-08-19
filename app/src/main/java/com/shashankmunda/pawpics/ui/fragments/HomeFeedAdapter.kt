@@ -31,7 +31,7 @@ class HomeFeedAdapter @Inject constructor(@ApplicationContext var context: Conte
         val request = ImageRequest.Builder(context)
             .data(item.url)
             .allowRgb565(true)
-            .bitmapConfig(RGB_565)
+            .bitmapConfig(Config.ALPHA_8)
             .target(binding.catImageView)
             .listener(
                 onError ={_,_ ->
