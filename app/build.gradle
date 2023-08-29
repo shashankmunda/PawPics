@@ -53,7 +53,7 @@ android {
     kotlinOptions {
         jvmTarget = '15'
     }
-    namespace 'com.example.pawpics'
+    namespace 'com.shashankmunda.pawpics'
 }
 
 dependencies {

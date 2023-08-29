@@ -1,5 +1,6 @@
 package com.shashankmunda.pawpics.ui.fragments
 
+import android.app.WallpaperManager
 import android.graphics.Bitmap
 import android.graphics.Bitmap.Config.ARGB_8888
 import android.util.DisplayMetrics
@@ -7,13 +8,15 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.core.graphics.drawable.toBitmap
+import androidx.core.view.forEach
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import coil.ImageLoader
 import coil.request.ImageRequest
-import com.example.pawpics.R
-import com.example.pawpics.databinding.CatImageFragmentBinding
+import coil.size.Scale
+import com.shashankmunda.pawpics.R
 import com.shashankmunda.pawpics.base.BaseFragment
+import com.shashankmunda.pawpics.databinding.CatImageFragmentBinding
 import com.shashankmunda.pawpics.model.Cat
 import com.shashankmunda.pawpics.util.Result
 import com.shashankmunda.pawpics.util.Utils
@@ -64,6 +67,7 @@ class CatImageFragment: BaseFragment<CatImageFragmentBinding,HomeViewModel>() {
         binding.catImgView.layoutParams!!.height= (1.0f*displayMetrics.widthPixels*cat.height!!).toInt()/cat.width!!
         val request = ImageRequest.Builder(requireContext())
             .data(cat.url)
+            .scale(Scale.FILL)
             .bitmapConfig(Bitmap.Config.ARGB_8888)
             .target(binding.catImgView)
             .listener(
@@ -73,9 +77,8 @@ class CatImageFragment: BaseFragment<CatImageFragmentBinding,HomeViewModel>() {
                 },
                 onSuccess = { _, result ->
                     binding.loadingProgressBar.visibility = View.GONE
-                    binding.catImageToolbar.menu.apply {
-                        getItem(0).isEnabled=true
-                        getItem(1).isEnabled=true
+                    binding.catImageToolbar.menu.forEach {
+                        it.isEnabled = true
                     }
                     catBitmap = result.drawable.toBitmap(cat.width,cat.height,ARGB_8888)
                 }
@@ -102,9 +105,13 @@ class CatImageFragment: BaseFragment<CatImageFragmentBinding,HomeViewModel>() {
                 true
             }
             R.id.share -> {
-                    Utils.shareImage(requireContext(),catBitmap!!,args.imageId)
+                    Utils.shareImage(requireContext(), catBitmap,args.imageId)
                     true
                 }
+            R.id.set_wallpaper ->{
+                WallpaperManager.getInstance(requireContext()).setBitmap(catBitmap)
+                true
+            }
             else -> false
             }
         }

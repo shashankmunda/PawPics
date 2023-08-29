@@ -1,16 +1,16 @@
 package com.shashankmunda.pawpics.ui.fragments
 
 import android.content.Context
-import android.graphics.Bitmap.Config.RGB_565
+import android.graphics.Bitmap.Config
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.navigation.findNavController
 import coil.ImageLoader
 import coil.request.ImageRequest
-import com.example.pawpics.R
-import com.example.pawpics.databinding.CatImageHolderBinding
+import com.shashankmunda.pawpics.R
 import com.shashankmunda.pawpics.base.BaseAdapter
+import com.shashankmunda.pawpics.databinding.CatImageHolderBinding
 import com.shashankmunda.pawpics.model.Cat
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.FragmentScoped

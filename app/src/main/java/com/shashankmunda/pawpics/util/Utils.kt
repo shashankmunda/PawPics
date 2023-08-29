@@ -14,7 +14,7 @@ import android.os.Environment
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.startActivity
 import androidx.core.content.FileProvider
-import com.example.pawpics.BuildConfig
+import com.shashankmunda.pawpics.BuildConfig
 import com.facebook.shimmer.Shimmer
 import com.facebook.shimmer.ShimmerDrawable
 import java.io.File
@@ -22,9 +22,9 @@ import java.io.FileOutputStream
 
 object Utils{
 
-        const val BASE_URL="https://api.thecatapi.com/v1/"
+        const val BASE_URL="https://api.thedogapi.com/v1/"
         const val OFFSET=30
-        const val MAX_LIMIT=15
+        const val BATCH_SIZE=10
         const val cacheSize=(5*1024*1024).toLong()
 
         fun provideShimmerDrawable(context: Context): ShimmerDrawable {

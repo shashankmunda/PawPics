@@ -1,10 +1,8 @@
 package com.shashankmunda.pawpics.api
 
-import com.example.pawpics.BuildConfig
 import com.shashankmunda.pawpics.model.Cat
 import retrofit2.Response
 import retrofit2.http.GET
-import retrofit2.http.Headers
 import retrofit2.http.Path
 import retrofit2.http.Query
 

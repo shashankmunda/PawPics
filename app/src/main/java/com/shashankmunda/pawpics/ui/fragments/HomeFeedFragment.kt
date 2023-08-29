@@ -4,7 +4,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.example.pawpics.databinding.HomeFeedFragmentBinding
+import com.shashankmunda.pawpics.databinding.HomeFeedFragmentBinding
 import com.shashankmunda.pawpics.base.BaseFragment
 import com.shashankmunda.pawpics.model.Cat
 import com.shashankmunda.pawpics.util.PaginationScrollListener

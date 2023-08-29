@@ -6,4 +6,5 @@
     <string name="label_home">Home Fragment</string>
     <string name="label_full_cat_image">Full Cat Image Fragment</string>
     <string name="retry">Retry</string>
+    <string name="set_as_wallpaper">Set Wallpaper</string>
 </resources>

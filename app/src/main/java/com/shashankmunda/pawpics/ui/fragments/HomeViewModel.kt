@@ -9,7 +9,7 @@ import com.shashankmunda.pawpics.repository.CatRepository
 import com.shashankmunda.pawpics.util.ImageSize
 import com.shashankmunda.pawpics.util.MimeType
 import com.shashankmunda.pawpics.util.Result
-import com.shashankmunda.pawpics.util.Utils.MAX_LIMIT
+import com.shashankmunda.pawpics.util.Utils.BATCH_SIZE
 import com.shashankmunda.pawpics.util.Utils.hasInternetConnection
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -42,7 +42,7 @@ class HomeViewModel @Inject constructor(private val catRepository: CatRepository
     private fun makeApiRequest() {
         ioScope.launch{
             try {
-                val catsList = catRepository.getCats(MAX_LIMIT, ImageSize.FULL,MimeType.PNG)
+                val catsList = catRepository.getCats(BATCH_SIZE, ImageSize.FULL,MimeType.PNG)
                 if(catsList!=null)
                     _cats.postValue(Result.Success(catsList))
                 else
