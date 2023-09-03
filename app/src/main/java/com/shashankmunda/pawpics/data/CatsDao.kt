@@ -3,7 +3,6 @@ package com.shashankmunda.pawpics.data
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Upsert
-import com.shashankmunda.pawpics.model.Cat
 
 @Dao
 interface CatsDao {

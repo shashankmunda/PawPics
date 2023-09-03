@@ -2,7 +2,7 @@ package com.shashankmunda.pawpics.repository
 
 import com.shashankmunda.pawpics.api.CatApiService
 import com.shashankmunda.pawpics.data.CatsDao
-import com.shashankmunda.pawpics.model.Cat
+import com.shashankmunda.pawpics.data.Cat
 import com.shashankmunda.pawpics.util.ImageSize
 import com.shashankmunda.pawpics.util.MimeType
 import dagger.hilt.android.scopes.ViewModelScoped
@@ -21,7 +21,7 @@ class CatRepository @Inject constructor(private var catApiService: CatApiService
         } else null
     }
 
-    suspend fun getCatImageDetails(id: String): Cat? {
+    fun getCatImageDetails(id: String): Cat? {
         return catsDao.fetchSelectedCatsData(id)
     }
 }
