@@ -10,8 +10,8 @@ import javax.inject.Inject
 
 @ViewModelScoped
 class CatRepository @Inject constructor(private var catApiService: CatApiService,private var catsDao: CatsDao) {
-    suspend fun getCats(limit:Int,size:ImageSize,mimeType:MimeType): List<Cat>? {
-        val response = catApiService.getCats(limit,size.toString().lowercase(),mimeType.toString().lowercase())
+    suspend fun getCats(limit:Int,size:ImageSize,mimeType:MimeType,pageNo: Int): List<Cat>? {
+        val response = catApiService.getCats(limit,size.toString().lowercase(),mimeType.toString().lowercase(),pageNo)
         return if(response.isSuccessful && response.body()!=null) {
             val cats = response.body()!!.distinctBy {
                 it.id

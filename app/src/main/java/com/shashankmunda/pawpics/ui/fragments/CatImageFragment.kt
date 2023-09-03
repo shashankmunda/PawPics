@@ -17,14 +17,14 @@ import coil.size.Scale
 import com.shashankmunda.pawpics.R
 import com.shashankmunda.pawpics.base.BaseFragment
 import com.shashankmunda.pawpics.databinding.CatImageFragmentBinding
-import com.shashankmunda.pawpics.model.Cat
+import com.shashankmunda.pawpics.data.Cat
 import com.shashankmunda.pawpics.util.Result
 import com.shashankmunda.pawpics.util.Utils
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class CatImageFragment: BaseFragment<CatImageFragmentBinding,HomeViewModel>() {
+class CatImageFragment: BaseFragment<CatImageFragmentBinding,CatImageViewModel>() {
     @Inject lateinit var imageLoader: ImageLoader
 
     private val args: CatImageFragmentArgs by navArgs()
@@ -32,9 +32,10 @@ class CatImageFragment: BaseFragment<CatImageFragmentBinding,HomeViewModel>() {
     private val displayMetrics: DisplayMetrics by lazy {
         requireContext().resources.displayMetrics
     }
-    override var sharedViewModel = true
 
-    override fun getViewModelClass(): Class<HomeViewModel> = HomeViewModel::class.java
+    override var sharedViewModel = false
+
+    override fun getViewModelClass(): Class<CatImageViewModel> = CatImageViewModel::class.java
 
     override fun getViewBinding() = CatImageFragmentBinding.inflate(layoutInflater)
 

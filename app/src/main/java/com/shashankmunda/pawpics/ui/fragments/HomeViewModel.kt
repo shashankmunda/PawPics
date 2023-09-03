@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.shashankmunda.pawpics.base.BaseViewModel
-import com.shashankmunda.pawpics.model.Cat
+import com.shashankmunda.pawpics.data.Cat
 import com.shashankmunda.pawpics.repository.CatRepository
 import com.shashankmunda.pawpics.util.ImageSize
 import com.shashankmunda.pawpics.util.MimeType
@@ -23,15 +23,14 @@ class HomeViewModel @Inject constructor(private val catRepository: CatRepository
     val cats: LiveData<Result<List<Cat>>>
         get()=_cats
 
-    private var _currCatStatus=MutableLiveData<Result<Cat>>()
-    val currCatStatus:LiveData<Result<Cat>>
-        get()=_currCatStatus
+    private var pageNo = 1
 
     init{
         fetchCatImages()
     }
 
      fun fetchCatImages() {
+         pageNo++
         _cats.postValue(Result.Loading())
         if (hasInternetConnection(application))
             makeApiRequest()
@@ -42,7 +41,7 @@ class HomeViewModel @Inject constructor(private val catRepository: CatRepository
     private fun makeApiRequest() {
         ioScope.launch{
             try {
-                val catsList = catRepository.getCats(BATCH_SIZE, ImageSize.FULL,MimeType.PNG)
+                val catsList = catRepository.getCats(BATCH_SIZE, ImageSize.FULL, MimeType.PNG, pageNo)
                 if(catsList!=null)
                     _cats.postValue(Result.Success(catsList))
                 else
@@ -56,13 +55,7 @@ class HomeViewModel @Inject constructor(private val catRepository: CatRepository
         }
     }
 
-    fun fetchCatSpecs(catImageId: String) {
-       ioScope.launch{
-           val catDetails = catRepository.getCatImageDetails(catImageId)
-           if(catDetails==null)
-               _currCatStatus.postValue(Result.Error("Image not found"))
-           else _currCatStatus.postValue(Result.Success(catDetails))
-       }
+    fun resetPageCount() {
+        pageNo = 1
     }
-
 }

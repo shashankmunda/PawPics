@@ -11,15 +11,14 @@ import coil.request.ImageRequest
 import com.shashankmunda.pawpics.R
 import com.shashankmunda.pawpics.base.BaseAdapter
 import com.shashankmunda.pawpics.databinding.CatImageHolderBinding
-import com.shashankmunda.pawpics.model.Cat
+import com.shashankmunda.pawpics.data.Cat
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.FragmentScoped
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
 @FragmentScoped
-class HomeFeedAdapter @Inject constructor(@ApplicationContext var context: Context,var imageLoader: ImageLoader) :
-    BaseAdapter<Cat, CatImageHolderBinding>() {
+class HomeFeedAdapter @Inject constructor(@ApplicationContext var context: Context,var imageLoader: ImageLoader) : BaseAdapter<Cat, CatImageHolderBinding>() {
     private val displayMetrics: DisplayMetrics by lazy {
         context.resources.displayMetrics
     }
@@ -53,5 +52,5 @@ class HomeFeedAdapter @Inject constructor(@ApplicationContext var context: Conte
         super.onViewRecycled(holder)
     }
 
-    fun updateData(newCats: ArrayList<Cat>) = setItems(newCats)
+    fun isEmpty() = items.isEmpty()
 }

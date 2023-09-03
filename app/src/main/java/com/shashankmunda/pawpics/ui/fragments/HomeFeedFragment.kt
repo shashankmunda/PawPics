@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.shashankmunda.pawpics.databinding.HomeFeedFragmentBinding
 import com.shashankmunda.pawpics.base.BaseFragment
-import com.shashankmunda.pawpics.model.Cat
+import com.shashankmunda.pawpics.data.Cat
 import com.shashankmunda.pawpics.util.PaginationScrollListener
 import com.shashankmunda.pawpics.util.Result
 import com.shashankmunda.pawpics.util.SpacesDecoration
@@ -17,20 +17,23 @@ import javax.inject.Inject
 class HomeFeedFragment: BaseFragment<HomeFeedFragmentBinding, HomeViewModel>() {
     @Inject lateinit var catAdapter: HomeFeedAdapter
     private var catsDisplay: RecyclerView?=null
+
     override fun getViewModelClass() = HomeViewModel::class.java
 
     override fun getViewBinding() = HomeFeedFragmentBinding.inflate(layoutInflater)
 
-    override var sharedViewModel = true
+    override var sharedViewModel = false
 
     var isLoading = false
     var isLastPage = false
+
     override fun observeData() {
         mViewModel.cats.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is Result.Success -> {
                     isLoading = false
                     binding.loadingProgressBar.visibility = View.GONE
+                    binding.bottomProgressBar.visibility = View.GONE
                     response.data?.let { latestCats ->
                         (binding.catsGridViewer.adapter as HomeFeedAdapter)
                             .addItems(latestCats as ArrayList<Cat>)
@@ -39,6 +42,7 @@ class HomeFeedFragment: BaseFragment<HomeFeedFragmentBinding, HomeViewModel>() {
                 is Result.Error -> {
                     isLoading = false
                     binding.loadingProgressBar.visibility = View.GONE
+                    binding.bottomProgressBar.visibility = View.GONE
                     response.message?.let { errorMessage ->
                         Toast.makeText(
                             context,
@@ -49,7 +53,8 @@ class HomeFeedFragment: BaseFragment<HomeFeedFragmentBinding, HomeViewModel>() {
                 }
                 is Result.Loading -> {
                     isLoading = true
-                    binding.loadingProgressBar.visibility = View.VISIBLE
+                   if((binding.catsGridViewer.adapter as HomeFeedAdapter).isEmpty())
+                       binding.loadingProgressBar.visibility = View.VISIBLE
                 }
             }
         }
@@ -59,6 +64,7 @@ class HomeFeedFragment: BaseFragment<HomeFeedFragmentBinding, HomeViewModel>() {
         binding.catHomeToolbar.title = "PawPics"
         setupRV()
         binding.catRefresh.setOnRefreshListener {
+            mViewModel.resetPageCount()
             mViewModel.fetchCatImages()
             binding.catRefresh.isRefreshing = false
         }
@@ -75,6 +81,7 @@ class HomeFeedFragment: BaseFragment<HomeFeedFragmentBinding, HomeViewModel>() {
             adapter = catAdapter
             addOnScrollListener(object : PaginationScrollListener(staggeredGridLayoutManager){
                 override fun loadMoreItems() {
+                    binding.bottomProgressBar.visibility = View.VISIBLE
                     mViewModel.fetchCatImages()
                 }
 

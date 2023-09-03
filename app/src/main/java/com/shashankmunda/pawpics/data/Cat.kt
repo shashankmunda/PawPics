@@ -1,4 +1,4 @@
-package com.shashankmunda.pawpics.model
+package com.shashankmunda.pawpics.data
 
 import androidx.annotation.Keep
 import androidx.room.Entity
