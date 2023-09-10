@@ -1,4 +1,4 @@
-package com.shashankmunda.pawpics.ui.fragments
+package com.shashankmunda.pawpics.ui.details
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

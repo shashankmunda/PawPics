@@ -11,15 +11,15 @@ plugins {
 android {
     signingConfigs {
     }
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
 
         applicationId "com.shashankmunda.pawpics"
         minSdk 21
-        targetSdk 33
-        versionCode 3
-        versionName "1.1"
+        targetSdk 34
+        versionCode 5
+        versionName "1.4"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -31,6 +31,10 @@ android {
     }
 
     buildTypes {
+        debug {
+            minifyEnabled false
+            shrinkResources false
+        }
         release {
             minifyEnabled true
             shrinkResources true
@@ -59,7 +63,7 @@ android {
 }
 
 dependencies {
-    def nav_version = '2.6.0'
+    def nav_version = '2.7.1'
     def retrofit_version = '2.9.0'
     def hilt_version = '2.47'
     def room_version = '2.5.2'

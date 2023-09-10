@@ -1,4 +1,4 @@
-package com.shashankmunda.pawpics.ui.fragments
+package com.shashankmunda.pawpics.ui.feed
 
 import android.app.Application
 import androidx.lifecycle.LiveData
@@ -17,7 +17,7 @@ import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(private val catRepository: CatRepository, private val application: Application): BaseViewModel() {
+class HomeFeedViewModel @Inject constructor(private val catRepository: CatRepository, private val application: Application): BaseViewModel() {
 
     private var _cats= MutableLiveData<Result<List<Cat>>>()
     val cats: LiveData<Result<List<Cat>>>

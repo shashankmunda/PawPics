@@ -6,7 +6,7 @@
     app:startDestination="@id/home_fragment">
     <fragment
         android:id="@+id/home_fragment"
-        android:name="com.shashankmunda.pawpics.ui.fragments.HomeFeedFragment"
+        android:name="com.shashankmunda.pawpics.ui.feed.HomeFeedFragment"
         android:label="@string/label_home"
         tools:layout='@layout/home_feed_fragment' >
         <action
@@ -17,7 +17,7 @@
     </fragment>
     <fragment
         android:id="@+id/cat_image_fragment"
-        android:name="com.shashankmunda.pawpics.ui.fragments.CatImageFragment"
+        android:name="com.shashankmunda.pawpics.ui.details.CatImageFragment"
         android:label="@string/label_full_cat_image"
         tools:layout="@layout/cat_image_fragment">
         <argument

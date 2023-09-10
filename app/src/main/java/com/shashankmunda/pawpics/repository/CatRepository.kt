@@ -1,8 +1,8 @@
 package com.shashankmunda.pawpics.repository
 
 import com.shashankmunda.pawpics.api.CatApiService
-import com.shashankmunda.pawpics.data.CatsDao
 import com.shashankmunda.pawpics.data.Cat
+import com.shashankmunda.pawpics.data.CatsDao
 import com.shashankmunda.pawpics.util.ImageSize
 import com.shashankmunda.pawpics.util.MimeType
 import dagger.hilt.android.scopes.ViewModelScoped

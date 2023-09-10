@@ -12,5 +12,5 @@ interface CatApiService {
     suspend fun getCats(@Query("limit") limit:Int, @Query("size") size:String, @Query("mime_types") mimeType:String, @Query("page") page:Int): Response<List<Cat>>
 
     @GET("images/{image_id}")
-    suspend fun getCat(@Path("image_id") imageId:String,@Query("size") size:String):Response<Cat>
+    suspend fun getCat(@Path("image_id") imageId:String):Response<Cat>
 }

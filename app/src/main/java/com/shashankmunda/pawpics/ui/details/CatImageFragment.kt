@@ -1,4 +1,4 @@
-package com.shashankmunda.pawpics.ui.fragments
+package com.shashankmunda.pawpics.ui.details
 
 import android.app.WallpaperManager
 import android.graphics.Bitmap
@@ -16,8 +16,8 @@ import coil.request.ImageRequest
 import coil.size.Scale
 import com.shashankmunda.pawpics.R
 import com.shashankmunda.pawpics.base.BaseFragment
-import com.shashankmunda.pawpics.databinding.CatImageFragmentBinding
 import com.shashankmunda.pawpics.data.Cat
+import com.shashankmunda.pawpics.databinding.CatImageFragmentBinding
 import com.shashankmunda.pawpics.util.Result
 import com.shashankmunda.pawpics.util.Utils
 import dagger.hilt.android.AndroidEntryPoint

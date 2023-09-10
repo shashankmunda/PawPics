@@ -1,4 +1,4 @@
-package com.shashankmunda.pawpics.ui.fragments
+package com.shashankmunda.pawpics.ui.feed
 
 import android.view.View
 import android.widget.Toast
@@ -14,11 +14,11 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class HomeFeedFragment: BaseFragment<HomeFeedFragmentBinding, HomeViewModel>() {
+class HomeFeedFragment: BaseFragment<HomeFeedFragmentBinding, HomeFeedViewModel>() {
     @Inject lateinit var catAdapter: HomeFeedAdapter
     private var catsDisplay: RecyclerView?=null
 
-    override fun getViewModelClass() = HomeViewModel::class.java
+    override fun getViewModelClass() = HomeFeedViewModel::class.java
 
     override fun getViewBinding() = HomeFeedFragmentBinding.inflate(layoutInflater)
 

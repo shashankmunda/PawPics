@@ -41,7 +41,7 @@ class HomeFeedAdapter @Inject constructor(@ApplicationContext var context: Conte
             .build()
         disposables.add(imageLoader.enqueue(request))
         binding.catImageView.setOnClickListener {
-            val action=HomeFeedFragmentDirections.actionHomeFragmentToFullCatImageFragment(item.id)
+            val action= HomeFeedFragmentDirections.actionHomeFragmentToFullCatImageFragment(item.id)
             it.findNavController().navigate(action)
         }
     }
