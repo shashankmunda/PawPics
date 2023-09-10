@@ -1,4 +1,4 @@
-package com.shashankmunda.pawpics.ui.fragments
+package com.shashankmunda.pawpics.ui.feed
 
 import android.content.Context
 import android.graphics.Bitmap.Config
@@ -10,15 +10,16 @@ import coil.ImageLoader
 import coil.request.ImageRequest
 import com.shashankmunda.pawpics.R
 import com.shashankmunda.pawpics.base.BaseAdapter
-import com.shashankmunda.pawpics.databinding.CatImageHolderBinding
 import com.shashankmunda.pawpics.data.Cat
+import com.shashankmunda.pawpics.databinding.CatImageHolderBinding
+import com.shashankmunda.pawpics.util.Utils
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.FragmentScoped
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
 @FragmentScoped
-class HomeFeedAdapter @Inject constructor(@ApplicationContext var context: Context,var imageLoader: ImageLoader) : BaseAdapter<Cat, CatImageHolderBinding>() {
+class HomeFeedAdapter @Inject constructor(@ApplicationContext var context: Context,var imageLoader: ImageLoader,var imageRequest: ImageRequest.Builder) : BaseAdapter<Cat, CatImageHolderBinding>() {
     private val displayMetrics: DisplayMetrics by lazy {
         context.resources.displayMetrics
     }
@@ -27,11 +28,11 @@ class HomeFeedAdapter @Inject constructor(@ApplicationContext var context: Conte
     override fun bindItem(binding: CatImageHolderBinding, item: Cat) {
         binding.catImageView.layoutParams.height =
             ((1.0f * (item.height!!) * (displayMetrics.widthPixels / 2)) / item.width!!).roundToInt()
-        val request = ImageRequest.Builder(context)
+        val request = imageRequest
             .data(item.url)
-            .allowRgb565(true)
             .bitmapConfig(Config.ALPHA_8)
             .target(binding.catImageView)
+            .placeholder(Utils.provideShimmerDrawable())
             .listener(
                 onError ={_,_ ->
                     binding.catImageView.setImageResource(R.drawable.ic_baseline_broken_image_24)

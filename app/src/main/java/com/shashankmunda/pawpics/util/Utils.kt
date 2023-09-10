@@ -26,15 +26,12 @@ object Utils{
         const val BATCH_SIZE=10
         const val cacheSize=(5*1024*1024).toLong()
 
-        fun provideShimmerDrawable(context: Context): ShimmerDrawable {
+        fun provideShimmerDrawable(): ShimmerDrawable {
             val shimmer= Shimmer.ColorHighlightBuilder().apply {
-                setHighlightAlpha(0.93f)
-                setBaseAlpha(0.9f)
+                setBaseAlpha(0.7f)
                 setAutoStart(true)
-                setWidthRatio(1.6f)
-                setBaseColor(ContextCompat.getColor(context,android.R.color.darker_gray))
-                setHighlightColor(ContextCompat.getColor(context,android.R.color.white))
-                setHighlightAlpha(0.7f)
+                setDirection(Shimmer.Direction.LEFT_TO_RIGHT)
+                setHighlightAlpha(0.6f)
             }.build()
             return ShimmerDrawable().apply {
                 setShimmer(shimmer)

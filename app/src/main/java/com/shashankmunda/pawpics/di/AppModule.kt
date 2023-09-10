@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.room.Room
 import coil.ImageLoader
 import coil.request.CachePolicy.ENABLED
+import coil.request.ImageRequest
 import coil.size.Precision.INEXACT
 import com.shashankmunda.pawpics.api.CatApiService
 import com.shashankmunda.pawpics.data.CatsDatabase
@@ -67,11 +68,15 @@ object AppModule {
     @Provides
     fun provideImageLoader(@ApplicationContext context: Context) =
         ImageLoader.Builder(context)
-            .placeholder(Utils.provideShimmerDrawable(context))
             .allowHardware(true)
             .diskCachePolicy(ENABLED)
             .memoryCachePolicy(ENABLED)
             .allowRgb565(true)
             .precision(INEXACT)
             .build()
+
+    @Singleton
+    @Provides
+    fun provideImageRequestBuilder(@ApplicationContext context: Context) =
+        ImageRequest.Builder(context)
 }

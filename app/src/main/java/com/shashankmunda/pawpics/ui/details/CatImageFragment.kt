@@ -24,8 +24,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class CatImageFragment: BaseFragment<CatImageFragmentBinding,CatImageViewModel>() {
+class CatImageFragment: BaseFragment<CatImageFragmentBinding, CatImageViewModel>() {
     @Inject lateinit var imageLoader: ImageLoader
+    @Inject lateinit var imageRequest: ImageRequest.Builder
 
     private val args: CatImageFragmentArgs by navArgs()
     private lateinit var catBitmap:Bitmap
@@ -66,7 +67,7 @@ class CatImageFragment: BaseFragment<CatImageFragmentBinding,CatImageViewModel>(
 
     private fun displayCatImage(cat: Cat) {
         binding.catImgView.layoutParams!!.height= (1.0f*displayMetrics.widthPixels*cat.height!!).toInt()/cat.width!!
-        val request = ImageRequest.Builder(requireContext())
+        val request = imageRequest
             .data(cat.url)
             .scale(Scale.FILL)
             .bitmapConfig(Bitmap.Config.ARGB_8888)
