@@ -18,7 +18,7 @@
     <fragment
         android:id="@+id/cat_image_fragment"
         android:name="com.shashankmunda.pawpics.ui.details.CatImageFragment"
-        android:label="@string/label_full_cat_image"
+        android:label=""
         tools:layout="@layout/cat_image_fragment">
         <argument
             android:name="image_id"
