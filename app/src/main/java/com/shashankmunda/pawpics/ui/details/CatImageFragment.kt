@@ -11,9 +11,8 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.core.view.forEach
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import coil.ImageLoader
-import coil.request.ImageRequest
-import coil.size.Scale
+import coil.load
+import coil.size.Scale.FILL
 import com.shashankmunda.pawpics.R
 import com.shashankmunda.pawpics.base.BaseFragment
 import com.shashankmunda.pawpics.data.Cat
@@ -21,12 +20,9 @@ import com.shashankmunda.pawpics.databinding.CatImageFragmentBinding
 import com.shashankmunda.pawpics.util.Result
 import com.shashankmunda.pawpics.util.Utils
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class CatImageFragment: BaseFragment<CatImageFragmentBinding, CatImageViewModel>() {
-    @Inject lateinit var imageLoader: ImageLoader
-    @Inject lateinit var imageRequest: ImageRequest.Builder
 
     private val args: CatImageFragmentArgs by navArgs()
     private lateinit var catBitmap:Bitmap
@@ -67,26 +63,19 @@ class CatImageFragment: BaseFragment<CatImageFragmentBinding, CatImageViewModel>
 
     private fun displayCatImage(cat: Cat) {
         binding.catImgView.layoutParams!!.height= (1.0f*displayMetrics.widthPixels*cat.height!!).toInt()/cat.width!!
-        val request = imageRequest
-            .data(cat.url)
-            .scale(Scale.FILL)
-            .bitmapConfig(Bitmap.Config.ARGB_8888)
-            .target(binding.catImgView)
-            .listener(
-                onError = { _,_ ->
-                    binding.loadingProgressBar.visibility = View.GONE
-                    binding.catImgView.setImageResource(R.drawable.ic_baseline_broken_image_24)
-                },
-                onSuccess = { _, result ->
-                    binding.loadingProgressBar.visibility = View.GONE
-                    binding.catImageToolbar.menu.forEach {
-                        it.isEnabled = true
-                    }
-                    catBitmap = result.drawable.toBitmap(cat.width,cat.height,ARGB_8888)
+        binding.catImgView.load(cat.url, builder = {
+            scale(FILL)
+            bitmapConfig(Bitmap.Config.ARGB_8888)
+            listener(onSuccess = { _,result ->
+                binding.catImageToolbar.menu.forEach {
+                    it.isEnabled = true
                 }
-            )
-            .build()
-        imageLoader.enqueue(request)
+                catBitmap = result.drawable.toBitmap(cat.width, cat.height, ARGB_8888)
+            },
+                onError = { _,_ ->
+                    binding.catImgView.setImageResource(R.drawable.ic_baseline_broken_image_24)
+                })
+        })
     }
 
     private fun setUpToolbar() {

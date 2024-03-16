@@ -2,6 +2,8 @@ package com.shashankmunda.pawpics.ui.details
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import coil.ImageLoader
+import coil.request.ImageRequest
 import com.shashankmunda.pawpics.base.BaseViewModel
 import com.shashankmunda.pawpics.data.Cat
 import com.shashankmunda.pawpics.repository.CatRepository
@@ -12,7 +14,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CatImageViewModel @Inject constructor(private val catRepository: CatRepository): BaseViewModel() {
-
+    @Inject lateinit var imageRequest: ImageRequest.Builder
+    @Inject lateinit var imageLoader : ImageLoader
     private var _currCatStatus= MutableLiveData<Result<Cat>>()
     val currCatStatus: LiveData<Result<Cat>>
         get()=_currCatStatus

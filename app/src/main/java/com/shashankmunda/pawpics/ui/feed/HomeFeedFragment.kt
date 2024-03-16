@@ -4,9 +4,8 @@ import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.shashankmunda.pawpics.databinding.HomeFeedFragmentBinding
 import com.shashankmunda.pawpics.base.BaseFragment
-import com.shashankmunda.pawpics.data.Cat
+import com.shashankmunda.pawpics.databinding.HomeFeedFragmentBinding
 import com.shashankmunda.pawpics.util.PaginationScrollListener
 import com.shashankmunda.pawpics.util.Result
 import com.shashankmunda.pawpics.util.SpacesDecoration
@@ -36,7 +35,7 @@ class HomeFeedFragment: BaseFragment<HomeFeedFragmentBinding, HomeFeedViewModel>
                     binding.bottomProgressBar.visibility = View.GONE
                     response.data?.let { latestCats ->
                         (binding.catsGridViewer.adapter as HomeFeedAdapter)
-                            .addItems(latestCats as ArrayList<Cat>)
+                            .addItems(latestCats)
                     }
                 }
                 is Result.Error -> {

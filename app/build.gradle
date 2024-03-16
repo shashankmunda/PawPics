@@ -61,6 +61,13 @@ android {
         jvmTarget = '15'
     }
     namespace 'com.shashankmunda.pawpics'
+  sourceSets {
+    main {
+      assets {
+        srcDirs 'src/main/assets'
+      }
+    }
+  }
 }
 
 dependencies {
@@ -104,7 +111,7 @@ dependencies {
     kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
 
     //Image loading
-    implementation 'io.coil-kt:coil-base:2.4.0'
+    implementation 'io.coil-kt:coil:2.4.0'
 
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
 
@@ -113,6 +120,7 @@ dependencies {
     testImplementation 'androidx.test:core-ktx:1.5.0'
 
     implementation platform('com.google.firebase:firebase-bom:32.2.3')
-    implementation 'com.google.firebase:firebase-crashlytics-ktx'
-    implementation 'com.google.firebase:firebase-analytics-ktx'
+    releaseImplementation 'com.google.firebase:firebase-crashlytics-ktx'
+    releaseImplementation 'com.google.firebase:firebase-analytics-ktx'
+    releaseImplementation 'com.google.firebase:firebase-perf-ktx'
 }

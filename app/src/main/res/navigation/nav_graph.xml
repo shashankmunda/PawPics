@@ -24,5 +24,16 @@
             android:name="image_id"
             app:argType="string"
             />
+        <action
+            android:id="@+id/action_cat_image_fragment_to_imageEditorFragment"
+            app:destination="@id/imageEditorFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/imageEditorFragment"
+        android:name="com.shashankmunda.pawpics.ui.image_editor.ImageEditorFragment"
+        android:label="ImageEditorFragment">
+        <argument
+            android:name="image_uri"
+            app:argType="string" />
     </fragment>
 </navigation>
