@@ -14,15 +14,30 @@
             app:destination="@id/cat_image_fragment"
             app:popUpTo="@id/home_fragment">
         </action>
+        <action
+            android:id="@+id/action_home_fragment_to_search_filter_fragment"
+            app:destination="@id/search_filter_fragment" />
     </fragment>
     <fragment
         android:id="@+id/cat_image_fragment"
         android:name="com.shashankmunda.pawpics.ui.details.CatImageFragment"
-        android:label="@string/label_full_cat_image"
+        android:label=""
         tools:layout="@layout/cat_image_fragment">
         <argument
             android:name="image_id"
             app:argType="string"
+            />
+    </fragment>
+    <fragment
+        android:id="@+id/search_filter_fragment"
+        android:name="com.shashankmunda.pawpics.ui.filter.SearchFiltersFragment"
+        android:label=""
+        tools:layout="@layout/search_filter_fragment">
+
+        <action
+            android:id="@+id/action_search_filter_fragment_to_home_fragment"
+            app:destination="@id/home_fragment"
+            app:popUpTo="@id/search_filter_fragment"
             />
     </fragment>
 </navigation>

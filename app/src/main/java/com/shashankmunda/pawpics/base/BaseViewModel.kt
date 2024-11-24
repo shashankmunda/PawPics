@@ -8,9 +8,9 @@ import kotlinx.coroutines.cancel
 abstract class BaseViewModel:ViewModel() {
     protected val ioScope = CoroutineScope(Dispatchers.IO)
 
-    protected val mainScope = CoroutineScope(Dispatchers.Main)
+    private val mainScope = CoroutineScope(Dispatchers.Main)
 
-    protected val defaultScope = CoroutineScope(Dispatchers.Default)
+    private val defaultScope = CoroutineScope(Dispatchers.Default)
     override fun onCleared() {
         super.onCleared()
         ioScope.cancel()
