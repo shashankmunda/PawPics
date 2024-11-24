@@ -28,6 +28,7 @@ data class BreedInfo(
 	@Json(name = "life_span") val lifeSpan: String
 )
 
+@Keep
 data class Breed(
 	val name: String,
 	val id: String
