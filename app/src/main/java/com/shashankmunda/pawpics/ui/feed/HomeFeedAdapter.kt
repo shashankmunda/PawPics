@@ -5,8 +5,6 @@ import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.navigation.findNavController
-import coil.ImageLoader
-import coil.request.ImageRequest
 import coil.request.ImageResult
 import com.shashankmunda.pawpics.base.BaseAdapter
 import com.shashankmunda.pawpics.data.Cat
@@ -17,7 +15,9 @@ import javax.inject.Inject
 import kotlin.math.roundToInt
 
 @FragmentScoped
-class HomeFeedAdapter @Inject constructor(@ApplicationContext var context: Context,var imageLoader: ImageLoader,var imageRequest: ImageRequest.Builder) : BaseAdapter<Pair<Cat,ImageResult>, CatImageHolderBinding>() {
+class HomeFeedAdapter @Inject constructor(
+    @ApplicationContext var context: Context
+) : BaseAdapter<Pair<Cat,ImageResult>, CatImageHolderBinding>() {
     private val displayMetrics: DisplayMetrics by lazy {
         context.resources.displayMetrics
     }
@@ -41,4 +41,6 @@ class HomeFeedAdapter @Inject constructor(@ApplicationContext var context: Conte
     }
 
     fun isEmpty() = items.isEmpty()
+
+    fun clearItems() = items.clear()
 }

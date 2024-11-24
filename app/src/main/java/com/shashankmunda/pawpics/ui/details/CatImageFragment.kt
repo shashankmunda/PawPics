@@ -30,7 +30,7 @@ class CatImageFragment: BaseFragment<CatImageFragmentBinding, CatImageViewModel>
         requireContext().resources.displayMetrics
     }
 
-    override var sharedViewModel = false
+    override var sharedViewModel = true
 
     override fun getViewModelClass(): Class<CatImageViewModel> = CatImageViewModel::class.java
 

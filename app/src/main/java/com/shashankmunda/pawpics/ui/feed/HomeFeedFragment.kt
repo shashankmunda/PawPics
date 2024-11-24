@@ -2,8 +2,11 @@ package com.shashankmunda.pawpics.ui.feed
 
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.widget.Toolbar
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.shashankmunda.pawpics.R
 import com.shashankmunda.pawpics.base.BaseFragment
 import com.shashankmunda.pawpics.databinding.HomeFeedFragmentBinding
 import com.shashankmunda.pawpics.util.PaginationScrollListener
@@ -21,7 +24,7 @@ class HomeFeedFragment: BaseFragment<HomeFeedFragmentBinding, HomeFeedViewModel>
 
     override fun getViewBinding() = HomeFeedFragmentBinding.inflate(layoutInflater)
 
-    override var sharedViewModel = false
+    override var sharedViewModel = true
 
     var isLoading = false
     var isLastPage = false
@@ -57,15 +60,46 @@ class HomeFeedFragment: BaseFragment<HomeFeedFragmentBinding, HomeFeedViewModel>
                 }
             }
         }
+        mViewModel.selectedFilters.observe(viewLifecycleOwner){
+            when(it) {
+                is Result.Success -> {
+                    catAdapter.clearItems()
+                    mViewModel.resetPageCount()
+                    mViewModel.fetchCatImages()
+                }
+                is Result.Error -> {
+                    isLoading = false
+                }
+                is Result.Loading -> {
+                    isLoading = true
+                }
+            }
+        }
     }
 
     override fun initViews() {
         binding.catHomeToolbar.title = "PawPics"
+        binding.catHomeToolbar.apply {
+            inflateMenu(R.menu.home_menu)
+            setOnMenuItemClickListener(homeMenuListener)
+        }
         setupRV()
         binding.catRefresh.setOnRefreshListener {
+            catAdapter.clearItems()
             mViewModel.resetPageCount()
             mViewModel.fetchCatImages()
             binding.catRefresh.isRefreshing = false
+        }
+    }
+
+    private val homeMenuListener = Toolbar.OnMenuItemClickListener { item ->
+        when(item.itemId) {
+            R.id.filter -> {
+                val action = HomeFeedFragmentDirections.actionHomeFragmentToSearchFilterFragment()
+                findNavController().navigate(action)
+                true
+            }
+            else -> false
         }
     }
 

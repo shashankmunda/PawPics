@@ -20,7 +20,7 @@
         android:id="@+id/cat_refresh"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/bottomProgressBar"
+        app:layout_constraintBottom_toTopOf="@id/bottom_progress_bar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -36,7 +36,7 @@
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <com.google.android.material.progressindicator.CircularProgressIndicator
-        android:id="@+id/loadingProgressBar"
+        android:id="@+id/loading_progress_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
@@ -51,7 +51,7 @@
         />
 
     <com.google.android.material.progressindicator.CircularProgressIndicator
-        android:id="@+id/bottomProgressBar"
+        android:id="@+id/bottom_progress_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
