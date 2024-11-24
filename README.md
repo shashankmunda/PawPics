@@ -11,7 +11,7 @@ Explore our collection of coolest and most quirky cat pictures for free and with
 </ul>
 
 We welcome you to try out this app and tell us about your experience, suggestions and feedback. We'd love hearing from you :relaxed:.
- </b>Stay tuned</b> as we have got features like saving as wallpaper and sharing in our future releases 🤞. Also if you like our app, don't forget to give a 5-:⭐ rating.
+ </b>Stay tuned</b> as we have got features like saving as wallpaper and sharing in our future releases 🤞. Also if you like our app, don't forget to give a 5⭐ rating.
  
 <b>Acknowledgement:</b>
 
