@@ -39,6 +39,7 @@ class SearchFiltersFragment : BaseFragment<SearchFilterFragmentBinding, HomeFeed
             is Success -> {
                 val parentLayout = LinearLayout(context).apply {
                     orientation = LinearLayout.VERTICAL
+                    setPadding(16,0,0,0)
                 }
               val inflater = LayoutInflater.from(context)
                     for ( i in response.data!!.indices step 10) {
