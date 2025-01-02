@@ -1,23 +1,26 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
-    id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
     id 'androidx.navigation.safeargs.kotlin'
     id 'com.google.gms.google-services'
     id 'com.google.firebase.crashlytics'
+    id 'com.google.devtools.ksp'
 }
 
 android {
     signingConfigs {
     }
-    compileSdk 34
+
+    buildFeatures{
+        buildConfig true
+    }
+    compileSdk 35
 
     defaultConfig {
-
         applicationId "com.shashankmunda.pawpics"
         minSdk 21
-        targetSdk 34
+        targetSdk 35
         versionCode 7
         versionName "1.6"
 
@@ -53,9 +56,6 @@ android {
     buildFeatures{
         viewBinding true
     }
-    kapt {
-        correctErrorTypes = true
-    }
     kotlinOptions {
         jvmTarget = '15'
     }
@@ -70,16 +70,17 @@ android {
 }
 
 dependencies {
-    def nav_version = '2.7.7'
+    implementation 'androidx.test.ext:junit-ktx:1.2.1'
+    def nav_version = '2.8.5'
     def retrofit_version = '2.9.0'
-    def hilt_version = '2.47'
+    def hilt_version = '2.54'
     def room_version = '2.6.1'
 
-    implementation 'androidx.core:core-ktx:1.13.0'
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.core:core-ktx:1.15.0'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.0'
     implementation 'androidx.recyclerview:recyclerview:1.3.2'
-    implementation 'androidx.fragment:fragment-ktx:1.7.0'
+    implementation 'androidx.fragment:fragment-ktx:1.8.5'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
     implementation 'com.google.android.material:material:1.12.0'
 
@@ -93,32 +94,32 @@ dependencies {
 
     //Lifecycle-components
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
-    implementation 'androidx.activity:activity-ktx:1.9.0'
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.7.0'
+    implementation 'androidx.activity:activity-ktx:1.9.3'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.8.7'
 
     //Coroutines
-    implementation "androidx.work:work-runtime-ktx:2.9.0"
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
+    implementation "androidx.work:work-runtime-ktx:2.10.0"
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.1'
 
     //Room DB
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
-    kapt "androidx.room:room-compiler:$room_version"
+    ksp "androidx.room:room-compiler:$room_version"
 
     //DI
     implementation "com.google.dagger:hilt-android:$hilt_version"
-    kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
+    ksp "com.google.dagger:hilt-android-compiler:$hilt_version"
 
     //Image loading
-    implementation 'io.coil-kt:coil:2.4.0'
+    implementation 'io.coil-kt:coil:2.7.0'
 
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
 
     //Testing
     testImplementation 'junit:junit:4.13.2'
-    testImplementation 'androidx.test:core-ktx:1.5.0'
+    testImplementation 'androidx.test:core-ktx:1.6.1'
 
-    releaseImplementation platform('com.google.firebase:firebase-bom:32.2.3')
+    releaseImplementation platform('com.google.firebase:firebase-bom:33.7.0')
     releaseImplementation 'com.google.firebase:firebase-crashlytics-ktx'
     releaseImplementation 'com.google.firebase:firebase-analytics-ktx'
     releaseImplementation 'com.google.firebase:firebase-perf-ktx'

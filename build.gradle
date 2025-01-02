@@ -6,9 +6,10 @@ buildscript {
     }
     dependencies {
         classpath 'androidx.navigation:navigation-safe-args-gradle-plugin:2.5.3'
-        classpath 'com.android.tools.build:gradle:7.4.2'
-        classpath 'com.google.dagger:hilt-android-gradle-plugin:2.42'
-        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.0'
+        classpath 'com.android.tools.build:gradle:8.6.0'
+        classpath 'com.google.dagger:hilt-android-gradle-plugin:2.51.1'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:2.0.0'
+        classpath 'com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin:2.0.0-1.0.21'
         classpath 'com.google.gms:google-services:4.4.2'
         classpath 'com.google.firebase.crashlytics:com.google.firebase.crashlytics.gradle.plugin:2.9.9'
         // NOTE: Do not place your application dependencies here; they belong
@@ -19,3 +20,4 @@ buildscript {
 tasks.register('clean', Delete) {
     delete rootProject.buildDir
 }
+tasks.register('testClasses')
