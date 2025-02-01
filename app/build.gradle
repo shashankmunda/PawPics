@@ -21,8 +21,8 @@ android {
         applicationId "com.shashankmunda.pawpics"
         minSdk 21
         targetSdk 35
-        versionCode 8
-        versionName "1.7"
+        versionCode 9
+        versionName "1.8"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -45,8 +45,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_15
-        targetCompatibility JavaVersion.VERSION_15
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     testOptions{
         unitTests{
@@ -57,7 +57,7 @@ android {
         viewBinding true
     }
     kotlinOptions {
-        jvmTarget = '15'
+        jvmTarget = '17'
     }
     namespace 'com.shashankmunda.pawpics'
   sourceSets {
