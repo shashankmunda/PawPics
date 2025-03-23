@@ -3,6 +3,9 @@ package com.shashankmunda.pawpics.ui.feed
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
@@ -78,6 +81,15 @@ class HomeFeedFragment: BaseFragment<HomeFeedFragmentBinding, HomeFeedViewModel>
     }
 
     override fun initViews() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.catHomeToolbar) { v, insets ->
+            val insets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.updatePadding(
+                top = insets.top,
+                left = insets.left,
+                right = insets.right
+            )
+            WindowInsetsCompat.CONSUMED
+        }
         binding.catHomeToolbar.title = "PawPics"
         binding.catHomeToolbar.apply {
             inflateMenu(R.menu.home_menu)

@@ -8,7 +8,10 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.core.graphics.drawable.toBitmap
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.forEach
+import androidx.core.view.updatePadding
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import coil.load
@@ -79,6 +82,15 @@ class CatImageFragment: BaseFragment<CatImageFragmentBinding, CatImageViewModel>
     }
 
     private fun setUpToolbar() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.catImageToolbar) { v, insets ->
+            val insets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.updatePadding(
+                top = insets.top,
+                left = insets.left,
+                right = insets.right
+            )
+            WindowInsetsCompat.CONSUMED
+        }
         binding.catImageToolbar.apply {
             inflateMenu(R.menu.cat_menu)
             setOnMenuItemClickListener(catMenuListener)

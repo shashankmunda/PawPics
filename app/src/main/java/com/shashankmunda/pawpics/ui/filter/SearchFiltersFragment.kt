@@ -4,6 +4,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.chip.Chip
 import com.shashankmunda.pawpics.R
@@ -82,6 +85,15 @@ class SearchFiltersFragment : BaseFragment<SearchFilterFragmentBinding, HomeFeed
   }
 
   private fun setupToolbar(){
+    ViewCompat.setOnApplyWindowInsetsListener(binding.catImageToolbar) { v, insets ->
+      val insets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+      v.updatePadding(
+        top = insets.top,
+        left = insets.left,
+        right = insets.right
+      )
+      WindowInsetsCompat.CONSUMED
+    }
     binding.catImageToolbar.apply {
       inflateMenu(R.menu.search_filter_menu)
       setOnMenuItemClickListener(searchMenuListener)
