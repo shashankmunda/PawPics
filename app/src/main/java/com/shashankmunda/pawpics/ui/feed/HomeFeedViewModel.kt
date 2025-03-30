@@ -2,11 +2,14 @@ package com.shashankmunda.pawpics.ui.feed
 
 import android.app.Application
 import android.graphics.Bitmap.Config
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import coil.imageLoader
-import coil.request.ImageRequest
-import coil.request.ImageResult
+import coil3.imageLoader
+import coil3.request.CachePolicy.ENABLED
+import coil3.request.ImageRequest
+import coil3.request.ImageResult
+import coil3.request.bitmapConfig
 import com.shashankmunda.pawpics.base.BaseViewModel
 import com.shashankmunda.pawpics.data.Breed
 import com.shashankmunda.pawpics.data.Cat
@@ -25,7 +28,7 @@ import javax.inject.Inject
 class HomeFeedViewModel @Inject constructor(private val catRepository: CatRepository, private val application: Application): BaseViewModel() {
 
     private var _cats= MutableLiveData<Result<List<Pair<Cat,ImageResult>>>>()
-    val cats: LiveData<Result<List<Pair<Cat,ImageResult>>>>
+    val cats: LiveData<Result<List<Pair<Cat, ImageResult>>>>
         get()=_cats
 
     private var _filters= MutableLiveData<Result<List<Breed>>>()
@@ -90,7 +93,7 @@ class HomeFeedViewModel @Inject constructor(private val catRepository: CatReposi
     private fun makeApiRequest() {
         ioScope.launch{
             try {
-                val catsList = catRepository.getCats(BATCH_SIZE, ImageSize.FULL, MimeType.PNG, pageNo,
+                val catsList = catRepository.getCats(BATCH_SIZE, ImageSize.FULL, listOf(MimeType.PNG, MimeType.GIF), pageNo,
                     _selectedFilters.value?.data?.joinToString(",") { it.id })
                 val results=mutableListOf<Pair<Cat,ImageResult>>()
                 if(catsList != null){
@@ -98,9 +101,12 @@ class HomeFeedViewModel @Inject constructor(private val catRepository: CatReposi
                         val result = imageLoader.execute(
                             ImageRequest.Builder(application)
                                 .data(cat.url)
+                                .memoryCachePolicy(ENABLED)
+                                .diskCachePolicy(ENABLED)
                                 .bitmapConfig(Config.ALPHA_8)
                                 .build())
-                        if(result.drawable!=null)
+                        Log.d("IMAGE RESULT", result.toString());
+                        if(result.image!=null)
                             results.add(Pair(cat,result))
                     }
                 }

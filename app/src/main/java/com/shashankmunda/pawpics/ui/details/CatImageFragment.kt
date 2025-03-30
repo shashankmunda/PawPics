@@ -7,7 +7,6 @@ import android.util.DisplayMetrics
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
-import androidx.core.graphics.drawable.toBitmap
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.forEach
@@ -73,7 +72,7 @@ class CatImageFragment: BaseFragment<CatImageFragmentBinding, CatImageViewModel>
                 binding.catImageToolbar.menu.forEach {
                     it.isEnabled = true
                 }
-                catBitmap = result.drawable.toBitmap(cat.width, cat.height, ARGB_8888)
+                catBitmap = result.image.toBitmap(cat.width, cat.height, ARGB_8888)
             },
                 onError = { _,_ ->
                     binding.catImgView.setImageResource(R.drawable.ic_baseline_broken_image_24)

@@ -2,11 +2,16 @@ package com.shashankmunda.pawpics.di
 
 import android.app.NotificationManager
 import android.content.Context
+import android.os.Build.VERSION.SDK_INT
 import androidx.room.Room
-import coil.ImageLoader
-import coil.request.CachePolicy.ENABLED
-import coil.request.ImageRequest
-import coil.size.Precision.INEXACT
+import coil3.ImageLoader
+import coil3.gif.AnimatedImageDecoder
+import coil3.gif.GifDecoder
+import coil3.request.CachePolicy.ENABLED
+import coil3.request.ImageRequest
+import coil3.request.allowHardware
+import coil3.request.allowRgb565
+import coil3.size.Precision.INEXACT
 import com.shashankmunda.pawpics.api.CatApiService
 import com.shashankmunda.pawpics.data.CatsDatabase
 import com.shashankmunda.pawpics.util.Utils
@@ -73,6 +78,14 @@ object AppModule {
             .memoryCachePolicy(ENABLED)
             .allowRgb565(true)
             .precision(INEXACT)
+            .components {
+                if(SDK_INT >= 28) {
+                    add(AnimatedImageDecoder.Factory())
+                }
+                else {
+                    add(GifDecoder.Factory())
+                }
+            }
             .build()
 
     @Singleton

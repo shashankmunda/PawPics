@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import coil.ImageLoader
 import coil.request.ImageRequest
+import coil3.ImageLoader
+import coil3.request.ImageRequest
 import com.shashankmunda.pawpics.base.BaseViewModel
 import com.shashankmunda.pawpics.data.Cat
 import com.shashankmunda.pawpics.repository.CatRepository

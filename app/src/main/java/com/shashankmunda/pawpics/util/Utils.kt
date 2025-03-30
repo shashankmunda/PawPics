@@ -61,12 +61,12 @@ object Utils{
             return false
         }
 
-        fun shareImage(context:Context,catBitmap:Bitmap,catImageId:String) {
+        fun shareImage(context:Context,catBitmap:Bitmap,catImageId:String, fileExt: String) {
             FileUtils.saveBitmapToCache(context, catBitmap,catImageId)
             val contentUri = FileUtils.getCurrentImageUri(catImageId, context)
             val shareIntent: Intent = Intent().apply {
                 action = Intent.ACTION_SEND
-                setDataAndType(contentUri,"image/png")
+                setDataAndType(contentUri,"image/$fileExt")
                 putExtra(Intent.EXTRA_STREAM, contentUri)
             }
             shareIntent.clipData = ClipData.newRawUri("", contentUri)
@@ -76,16 +76,16 @@ object Utils{
             startActivity(context,Intent.createChooser(shareIntent,null),null)
         }
 
-        fun saveImage(context: Context,catImageId: String) {
+        fun saveImage(context: Context,catImageId: String, fileExt: String) {
             val downloadManager =
                 context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-            val url = "https://cdn2.thecatapi.com/images/$catImageId.png"
+            val url = "https://cdn2.thecatapi.com/images/$catImageId.$fileExt"
             val request = DownloadManager.Request(Uri.parse(url)).apply {
                 addRequestHeader("x-api-key", BuildConfig.CAT_API_KEY)
                 setAllowedOverMetered(true)
-                setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "$catImageId.png")
-                setMimeType("image/png")
-                setTitle("$catImageId.png")
+                setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "$catImageId.$fileExt")
+                setMimeType("image/$fileExt")
+                setTitle("$catImageId.$fileExt")
                 setDescription("File Downloaded!")
                 setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
             }
@@ -123,7 +123,7 @@ object FileUtils{
 
     fun saveBitmapToCache(context: Context, bitmap: Bitmap, catImageId:String) {
         try{
-            val targetFile = getFileFromExternalCache(catImageId,context)
+            val targetFile = getFileFromExternalCache(catImageId, context)
             writeBitmapToFile(targetFile,bitmap)
         }
         catch (e:Exception){
@@ -131,6 +131,14 @@ object FileUtils{
         }
     }
 }
+
+fun getExtensionFromUrl(url: String): String? {
+    val uri = Uri.parse(url)
+    val path = uri.path ?: return null
+    val extension = path.substringAfterLast('.', "")
+    return if (extension.isNotEmpty()) extension else null
+}
+
 enum class ImageSize{
     THUMB,
     SMALL,
@@ -139,5 +147,6 @@ enum class ImageSize{
 }
 enum class MimeType{
     JPG,
-    PNG
+    PNG,
+    GIF
 }
