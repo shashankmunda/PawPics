@@ -12,6 +12,8 @@ import coil3.request.ImageRequest
 import coil3.request.allowHardware
 import coil3.request.allowRgb565
 import coil3.size.Precision.INEXACT
+import com.shashankmunda.pawpics.IThemeStorage
+import com.shashankmunda.pawpics.ThemeStorage
 import com.shashankmunda.pawpics.api.CatApiService
 import com.shashankmunda.pawpics.data.CatsDatabase
 import com.shashankmunda.pawpics.util.Utils
@@ -92,4 +94,12 @@ object AppModule {
     @Provides
     fun provideImageRequestBuilder(@ApplicationContext context: Context) =
         ImageRequest.Builder(context)
+
+        @Provides
+        @Singleton
+        fun provideThemeStorage(
+            @ApplicationContext context: Context
+        ) : IThemeStorage {
+            return ThemeStorage(context)
+        }
 }

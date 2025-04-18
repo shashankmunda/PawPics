@@ -2,6 +2,7 @@ package com.shashankmunda.pawpics.ui.feed
 
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -9,6 +10,7 @@ import androidx.core.view.updatePadding
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.shashankmunda.pawpics.IThemeStorage
 import com.shashankmunda.pawpics.R
 import com.shashankmunda.pawpics.base.BaseFragment
 import com.shashankmunda.pawpics.databinding.HomeFeedFragmentBinding
@@ -22,6 +24,7 @@ import javax.inject.Inject
 class HomeFeedFragment: BaseFragment<HomeFeedFragmentBinding, HomeFeedViewModel>() {
     @Inject lateinit var catAdapter: HomeFeedAdapter
     private var catsDisplay: RecyclerView?=null
+    @Inject lateinit var themesStorage: IThemeStorage
 
     override fun getViewModelClass() = HomeFeedViewModel::class.java
 
@@ -93,6 +96,12 @@ class HomeFeedFragment: BaseFragment<HomeFeedFragmentBinding, HomeFeedViewModel>
         binding.catHomeToolbar.title = "PawPics"
         binding.catHomeToolbar.apply {
             inflateMenu(R.menu.home_menu)
+            if(themesStorage.isDarkModeApplied() == true){
+                menu.getItem(0).setIcon(R.drawable.baseline_light_mode_24);
+            }
+            else {
+                menu.getItem(0).setIcon(R.drawable.baseline_dark_mode_24);
+            }
             setOnMenuItemClickListener(homeMenuListener)
         }
         setupRV()
@@ -109,6 +118,19 @@ class HomeFeedFragment: BaseFragment<HomeFeedFragmentBinding, HomeFeedViewModel>
             R.id.filter -> {
                 val action = HomeFeedFragmentDirections.actionHomeFragmentToSearchFilterFragment()
                 findNavController().navigate(action)
+                true
+            }
+            R.id.theme -> {
+                if(themesStorage.isDarkModeApplied() == true){
+                    themesStorage.setDarkModeApplied(false)
+                    item.setIcon(R.drawable.baseline_dark_mode_24)
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                }
+                else {
+                    themesStorage.setDarkModeApplied(true)
+                    item.setIcon(R.drawable.baseline_light_mode_24)
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                }
                 true
             }
             else -> false
