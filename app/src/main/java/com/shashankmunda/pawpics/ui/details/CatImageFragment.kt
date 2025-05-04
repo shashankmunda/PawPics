@@ -13,8 +13,10 @@ import androidx.core.view.forEach
 import androidx.core.view.updatePadding
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import coil.load
-import coil.size.Scale.FILL
+import coil3.load
+import coil3.request.bitmapConfig
+import coil3.size.Scale.FILL
+import coil3.toBitmap
 import com.shashankmunda.pawpics.R
 import com.shashankmunda.pawpics.base.BaseFragment
 import com.shashankmunda.pawpics.data.Cat
@@ -103,11 +105,11 @@ class CatImageFragment: BaseFragment<CatImageFragmentBinding, CatImageViewModel>
     private val catMenuListener = Toolbar.OnMenuItemClickListener { item ->
         when(item.itemId){
             R.id.save -> {
-                Utils.saveImage(requireContext(),args.imageId)
+                Utils.saveImage(requireContext(),args.imageId, args.fileExt)
                 true
             }
             R.id.share -> {
-                    Utils.shareImage(requireContext(), catBitmap,args.imageId)
+                    Utils.shareImage(requireContext(), catBitmap,args.imageId, args.fileExt)
                     true
                 }
             R.id.set_wallpaper ->{
