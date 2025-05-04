@@ -48,7 +48,6 @@ class HomeFeedViewModel @Inject constructor(private val catRepository: CatReposi
     private var imageLoader = application.imageLoader
 
     init{
-        Log.d("TRIGGERED", "HomeFeedViewModel");
         fetchCatImages()
         fetchFilters()
     }
