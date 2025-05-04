@@ -11,7 +11,6 @@ import android.net.NetworkCapabilities
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
-import androidx.core.content.ContextCompat.startActivity
 import androidx.core.content.FileProvider
 import com.shashankmunda.pawpics.BuildConfig
 import com.facebook.shimmer.Shimmer
@@ -62,8 +61,8 @@ object Utils{
         }
 
         fun shareImage(context:Context,catBitmap:Bitmap,catImageId:String, fileExt: String) {
-            FileUtils.saveBitmapToCache(context, catBitmap,catImageId)
-            val contentUri = FileUtils.getCurrentImageUri(catImageId, context)
+            FileUtils.saveBitmapToCache(context, catBitmap,catImageId, fileExt)
+            val contentUri = FileUtils.getCurrentImageUri(catImageId, context, fileExt)
             val shareIntent: Intent = Intent().apply {
                 action = Intent.ACTION_SEND
                 setDataAndType(contentUri,"image/$fileExt")
@@ -73,7 +72,7 @@ object Utils{
             shareIntent.addFlags(
                 Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
             )
-            startActivity(context,Intent.createChooser(shareIntent,null),null)
+            context.startActivity(Intent.createChooser(shareIntent, null), null)
         }
 
         fun saveImage(context: Context,catImageId: String, fileExt: String) {
@@ -96,9 +95,9 @@ object Utils{
     }
 
 object FileUtils{
-    fun getCurrentImageUri(catImageId:String, context: Context): Uri? {
+    fun getCurrentImageUri(catImageId:String, context: Context,fileExt: String): Uri? {
         val catDir = context.externalCacheDir
-        val imageCacheFile = File(catDir,"$catImageId.png")
+        val imageCacheFile = File(catDir,"$catImageId.$fileExt")
         return FileProvider.getUriForFile(
             context,
             "com.shashankmunda.fileprovider",
@@ -106,25 +105,26 @@ object FileUtils{
         )
     }
 
-    private fun getFileFromExternalCache(catImageId:String, context: Context): File {
+    private fun getFileFromExternalCache(catImageId:String, context: Context, fileExt: String): File {
         val catDir = context.externalCacheDir
         if (!catDir!!.exists()) catDir.mkdirs()
-        val targetFile = File(catDir, "$catImageId.png")
+        val targetFile = File(catDir, "$catImageId.$fileExt")
         if (!targetFile.exists()) targetFile.createNewFile()
         return targetFile
     }
 
-    private fun writeBitmapToFile(targetFile:File, bitmap: Bitmap){
+    private fun writeBitmapToFile(targetFile:File, bitmap: Bitmap, fileExt: String){
         val fileOutputStream = FileOutputStream(targetFile)
-        fileOutputStream.use {
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream)
-        }
+        if(fileExt == "png")
+            fileOutputStream.use {
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream)
+            }
     }
 
-    fun saveBitmapToCache(context: Context, bitmap: Bitmap, catImageId:String) {
+    fun saveBitmapToCache(context: Context, bitmap: Bitmap, catImageId:String, fileExt: String) {
         try{
-            val targetFile = getFileFromExternalCache(catImageId, context)
-            writeBitmapToFile(targetFile,bitmap)
+            val targetFile = getFileFromExternalCache(catImageId, context, fileExt)
+            writeBitmapToFile(targetFile,bitmap, fileExt)
         }
         catch (e:Exception){
             e.printStackTrace()

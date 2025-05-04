@@ -31,6 +31,8 @@ class HomeFeedViewModel @Inject constructor(private val catRepository: CatReposi
     val cats: LiveData<Result<List<Pair<Cat, ImageResult>>>>
         get()=_cats
 
+    private val _cachedCats = mutableListOf<Pair<Cat, ImageResult>>()
+
     private var _filters= MutableLiveData<Result<List<Breed>>>()
     val filters: LiveData<Result<List<Breed>>>
         get()=_filters
@@ -39,12 +41,34 @@ class HomeFeedViewModel @Inject constructor(private val catRepository: CatReposi
     val selectedFilters: LiveData<Result<List<Breed>>>
         get() = _selectedFilters
 
+    private val _themeChanged = MutableLiveData<Boolean>()
+    val themeChanged: LiveData<Boolean> get() = _themeChanged
+
     private var pageNo = 0
     private var imageLoader = application.imageLoader
 
     init{
+        Log.d("TRIGGERED", "HomeFeedViewModel");
         fetchCatImages()
         fetchFilters()
+    }
+
+    fun notifyThemeChanged() {
+        _themeChanged.value = true
+    }
+
+    fun resetThemeChangeIndicator() {
+        _themeChanged.value = false
+    }
+
+    fun restoreData() {
+        if (_cachedCats.isNotEmpty()) {
+            _cats.postValue(Result.Success(_cachedCats))
+        }
+    }
+
+    fun getCachedCats(): List<Pair<Cat, ImageResult>> {
+        return _cachedCats.toList()
     }
 
     fun setFiltersForSelected(filters: List<Breed>) {
@@ -82,7 +106,6 @@ class HomeFeedViewModel @Inject constructor(private val catRepository: CatReposi
     }
 
      fun fetchCatImages() {
-         pageNo++
         _cats.postValue(Result.Loading())
         if (hasInternetConnection(application))
             makeApiRequest()
@@ -111,7 +134,11 @@ class HomeFeedViewModel @Inject constructor(private val catRepository: CatReposi
                     }
                 }
                 if(results.isNotEmpty())
+                {
+                    _cachedCats.addAll(results)
+                    pageNo++
                     _cats.postValue(Result.Success(results))
+                }
                 else
                     _cats.postValue(Result.Error("Error fetching cats"))
             } catch (t: Throwable) {
@@ -125,5 +152,6 @@ class HomeFeedViewModel @Inject constructor(private val catRepository: CatReposi
 
     fun resetPageCount() {
         pageNo = 0
+        _cachedCats.clear()
     }
 }

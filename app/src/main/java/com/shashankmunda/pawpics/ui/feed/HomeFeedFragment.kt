@@ -1,5 +1,8 @@
 package com.shashankmunda.pawpics.ui.feed
 
+import android.os.Bundle
+import android.os.Parcelable
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
@@ -32,8 +35,27 @@ class HomeFeedFragment: BaseFragment<HomeFeedFragmentBinding, HomeFeedViewModel>
 
     override var sharedViewModel = true
 
+    private var recyclerViewState: Parcelable? = null
+    private var isThemeChanging = false
+
     var isLoading = false
     var isLastPage = false
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        savedInstanceState?.let {
+            recyclerViewState = it.getParcelable("RECYCLER_STATE")
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        // Save RecyclerView state
+        binding.catsGridViewer.layoutManager?.let {
+            recyclerViewState = it.onSaveInstanceState()
+            outState.putParcelable("RECYCLER_STATE", recyclerViewState)
+        }
+    }
 
     override fun observeData() {
         mViewModel.cats.observe(viewLifecycleOwner) { response ->
@@ -45,6 +67,10 @@ class HomeFeedFragment: BaseFragment<HomeFeedFragmentBinding, HomeFeedViewModel>
                     response.data?.let { latestCats ->
                         (binding.catsGridViewer.adapter as HomeFeedAdapter)
                             .addItems(latestCats)
+                        recyclerViewState?.let { state ->
+                            binding.catsGridViewer.layoutManager?.onRestoreInstanceState(state)
+                            recyclerViewState = null
+                        }
                     }
                 }
                 is Result.Error -> {
@@ -79,6 +105,13 @@ class HomeFeedFragment: BaseFragment<HomeFeedFragmentBinding, HomeFeedViewModel>
                 is Result.Loading -> {
                     isLoading = true
                 }
+            }
+        }
+
+        mViewModel.themeChanged.observe(viewLifecycleOwner) { changed ->
+            if (changed) {
+                // Reset the flag after handling the theme change
+                mViewModel.resetThemeChangeIndicator()
             }
         }
     }
@@ -121,6 +154,11 @@ class HomeFeedFragment: BaseFragment<HomeFeedFragmentBinding, HomeFeedViewModel>
                 true
             }
             R.id.theme -> {
+                binding.catsGridViewer.layoutManager?.let {
+                    recyclerViewState = it.onSaveInstanceState()
+                }
+                isThemeChanging = true
+                mViewModel.notifyThemeChanged()
                 if(themesStorage.isDarkModeApplied() == true){
                     themesStorage.setDarkModeApplied(false)
                     item.setIcon(R.drawable.baseline_dark_mode_24)
@@ -148,14 +186,25 @@ class HomeFeedFragment: BaseFragment<HomeFeedFragmentBinding, HomeFeedViewModel>
             adapter = catAdapter
             addOnScrollListener(object : PaginationScrollListener(staggeredGridLayoutManager){
                 override fun loadMoreItems() {
-                    binding.bottomProgressBar.visibility = View.VISIBLE
-                    mViewModel.fetchCatImages()
+                    if (!isThemeChanging) {
+                        binding.bottomProgressBar.visibility = View.VISIBLE
+                        mViewModel.fetchCatImages()
+                    }
                 }
 
                 override fun isLastPage() = isLastPage
 
                 override fun isLoading() = isLoading
             })
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        isThemeChanging = false
+
+        if (catAdapter.isEmpty() && mViewModel.getCachedCats().isNotEmpty()) {
+            mViewModel.restoreData()
         }
     }
 
