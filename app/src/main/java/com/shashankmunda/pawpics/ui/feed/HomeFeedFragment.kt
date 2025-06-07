@@ -66,7 +66,7 @@ class HomeFeedFragment: BaseFragment<HomeFeedFragmentBinding, HomeFeedViewModel>
                     binding.bottomProgressBar.visibility = View.GONE
                     response.data?.let { latestCats ->
                         (binding.catsGridViewer.adapter as HomeFeedAdapter)
-                            .addItems(latestCats)
+                            .setItems(latestCats)
                         recyclerViewState?.let { state ->
                             binding.catsGridViewer.layoutManager?.onRestoreInstanceState(state)
                             recyclerViewState = null

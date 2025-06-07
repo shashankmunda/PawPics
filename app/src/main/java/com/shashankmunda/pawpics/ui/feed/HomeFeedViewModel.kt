@@ -136,7 +136,7 @@ class HomeFeedViewModel @Inject constructor(private val catRepository: CatReposi
                 {
                     _cachedCats.addAll(results)
                     pageNo++
-                    _cats.postValue(Result.Success(results))
+                    _cats.postValue(Result.Success(_cachedCats))
                 }
                 else
                     _cats.postValue(Result.Error("Error fetching cats"))
