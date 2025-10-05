@@ -9,11 +9,9 @@ abstract class PaginationScrollListener(private var layoutManager: StaggeredGrid
         super.onScrolled(recyclerView, dx, dy)
         val visibleItemCount = layoutManager.childCount
         val totalItemCount = layoutManager.itemCount
-        val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPositions(null)[0]
-        if(!isLoading() && !isLastPage()){
-            if(visibleItemCount + firstVisibleItemPosition >= totalItemCount && firstVisibleItemPosition >= 0 && isScrolling){
-                loadMoreItems()
-            }
+        val lastVisibleItemPosition = layoutManager.findLastVisibleItemPositions(null)[0];
+        if(!isLoading() && totalItemCount <= (lastVisibleItemPosition + 2)){
+            loadMoreItems()
         }
     }
 

@@ -20,6 +20,10 @@ class CatImageViewModel @Inject constructor(private val catRepository: CatReposi
     val currCatStatus: LiveData<Result<Cat>>
         get()=_currCatStatus
 
+    private var _areActionsEnabled = MutableLiveData(false)
+    val areActionsEnabled: LiveData<Boolean>
+        get() = _areActionsEnabled
+
     fun fetchCatSpecs(catImageId: String) {
         ioScope.launch{
             val catDetails = catRepository.getCatImageDetails(catImageId)
@@ -27,5 +31,9 @@ class CatImageViewModel @Inject constructor(private val catRepository: CatReposi
                 _currCatStatus.postValue(Result.Error("Image not found"))
             else _currCatStatus.postValue(Result.Success(catDetails))
         }
+    }
+
+    fun enableActions(enable: Boolean){
+        _areActionsEnabled.postValue(enable)
     }
 }
