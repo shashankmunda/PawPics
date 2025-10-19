@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.WallpaperManager
 import android.graphics.Bitmap
 import android.graphics.Bitmap.Config.ARGB_8888
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -21,7 +22,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil3.request.SuccessResult
 import coil3.toBitmap
-import com.shashankmunda.pawpics.ui.AppTheme
 import com.shashankmunda.pawpics.util.Result
 import com.shashankmunda.pawpics.util.Utils
 import kotlinx.coroutines.launch
@@ -43,7 +43,6 @@ fun CatImageContent(
   LaunchedEffect(true) {
     viewModel.fetchCatSpecs(imageId)
   }
-  AppTheme {
     Scaffold(
       topBar = {
         ImageActionsTopBar(
@@ -62,12 +61,12 @@ fun CatImageContent(
       Column(
         modifier = Modifier
           .padding(innerPadding)
-          .fillMaxSize()
+          .fillMaxSize(),
+        verticalArrangement = Arrangement.Center
       ) {
         CatImageView(currStatus, onSuccess)
       }
     }
-  }
 }
 
 @Composable

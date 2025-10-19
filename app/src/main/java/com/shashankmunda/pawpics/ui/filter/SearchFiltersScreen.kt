@@ -15,7 +15,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.shashankmunda.pawpics.data.Breed
-import com.shashankmunda.pawpics.ui.AppTheme
 import com.shashankmunda.pawpics.ui.feed.HomeFeedViewModel
 import com.shashankmunda.pawpics.util.Result
 import kotlinx.coroutines.launch
@@ -38,7 +37,6 @@ fun SearchFiltersContent(
     }
     return
   }
-  AppTheme {
     Scaffold(
       topBar = {
         FilterTopBar(onBackPressed, onSaveFilter)
@@ -56,7 +54,6 @@ fun SearchFiltersContent(
           )
       }
     }
-  }
 }
 
 @Composable

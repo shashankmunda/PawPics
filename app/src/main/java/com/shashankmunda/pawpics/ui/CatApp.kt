@@ -1,5 +1,11 @@
 package com.shashankmunda.pawpics.ui
 
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.material3.DrawerState
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -10,34 +16,68 @@ import com.shashankmunda.pawpics.ThemeStorage
 import com.shashankmunda.pawpics.ui.details.CatImageScreen
 import com.shashankmunda.pawpics.ui.feed.HomeFeedScreen
 import com.shashankmunda.pawpics.ui.filter.SearchFiltersScreen
+import com.shashankmunda.pawpics.util.getExtensionFromUrl
 
 @Composable
-fun CatApp(themeStorage: ThemeStorage) {
+fun CatApp(themeStorage: ThemeStorage, drawerState: DrawerState) {
   val navController = rememberNavController()
-  CatNavHost(navController = navController, themeStorage = themeStorage)
+  CatNavHost(navController = navController, themeStorage = themeStorage, drawerState = drawerState)
 }
 
 @Composable
-fun CatNavHost(navController: NavHostController, themeStorage: ThemeStorage) {
+fun CatNavHost(navController: NavHostController, themeStorage: ThemeStorage, drawerState: DrawerState) {
   NavHost(navController = navController, startDestination = HomeFeed) {
-    composable<HomeFeed> {
+    composable<HomeFeed>(enterTransition = {
+      slideInHorizontally(
+        animationSpec = tween(durationMillis = 300, easing = LinearOutSlowInEasing), initialOffsetX = { fullWidth ->
+          -fullWidth
+        })
+    }, exitTransition = {
+      slideOutHorizontally(
+        animationSpec = tween(durationMillis = 300, easing = LinearOutSlowInEasing)
+      ) { fullWidth ->
+        fullWidth
+      }
+    }) {
       HomeFeedScreen(themesStorage = themeStorage, onViewFilters = {
         navController.navigate(FiltersSearch)
       }, onClick = { it ->
-        navController.navigate(CatDetail(it.id, it.url))
-    })
+        navController.navigate(CatDetail(it.id, getExtensionFromUrl(it.url)!!))
+      }, drawerState = drawerState)
     }
-    composable<CatDetail> { backstackEntry ->
+    composable<CatDetail>(enterTransition = {
+      slideInHorizontally(
+        animationSpec = tween(durationMillis = 300, easing = LinearOutSlowInEasing), initialOffsetX = { fullWidth ->
+        fullWidth
+      })
+    }, exitTransition = {
+      slideOutHorizontally(
+        animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing), targetOffsetX = { fullWidth ->
+        fullWidth
+      })
+    }
+    ) { backstackEntry ->
       val catDetailRoute = backstackEntry.toRoute<CatDetail>()
       CatImageScreen(
         onBackPressed = {
           navController.popBackStack()
         },
         imageId = catDetailRoute.id,
-        fileExt =catDetailRoute.ext
+        fileExt =catDetailRoute.ext,
       )
     }
-    composable<FiltersSearch> {
+    composable<FiltersSearch>(enterTransition = {
+      slideInHorizontally(
+        animationSpec = tween(durationMillis = 300, easing = LinearOutSlowInEasing), initialOffsetX = { fullWidth ->
+          fullWidth
+        })
+    }, exitTransition = {
+      slideOutHorizontally(
+        animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing), targetOffsetX = { fullWidth ->
+          fullWidth
+        })
+    }
+    ) {
       SearchFiltersScreen(onBackPressed = {
         navController.popBackStack()
       })

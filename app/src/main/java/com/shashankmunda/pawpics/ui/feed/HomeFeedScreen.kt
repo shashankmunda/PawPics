@@ -17,6 +17,7 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DrawerState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -41,7 +42,6 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.shashankmunda.pawpics.IThemeStorage
 import com.shashankmunda.pawpics.R
 import com.shashankmunda.pawpics.data.Cat
-import com.shashankmunda.pawpics.ui.AppTheme
 import com.shashankmunda.pawpics.util.Result
 import com.shashankmunda.pawpics.util.Utils.hasInternetConnection
 import kotlinx.coroutines.launch
@@ -57,13 +57,14 @@ fun HomeFeedContent(
   onViewFilters: () -> Unit,
   onClick: (Cat) -> Unit,
   onRefresh: () -> Unit,
-  onLoadMore: () -> Unit
+  onLoadMore: () -> Unit,
+  drawerState: DrawerState
 ) {
 
-  AppTheme {
+
     Scaffold(
       topBar = {
-        HomeTopBar(isDarkMode, onChangeTheme, onViewFilters)
+        HomeTopBar(isDarkMode, onChangeTheme, onViewFilters, drawerState)
       },
     ) { innnerPadding ->
       Column(
@@ -74,7 +75,9 @@ fun HomeFeedContent(
         val context = LocalContext.current
         if (cats is Result.Loading && loadMore != true) {
           Box(modifier = Modifier.fillMaxSize()) {
-            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+            CircularProgressIndicator(
+              modifier = Modifier.align(Alignment.Center)
+            )
           }
           return@Column
         }
@@ -112,41 +115,35 @@ fun HomeFeedContent(
           CircularProgressIndicator(
             modifier = Modifier
               .align(Alignment.CenterHorizontally)
-              .padding(top = 8.dp)
+              .padding(top = 8.dp,bottom = 8.dp),
           )
       }
     }
   }
-}
 
 @Composable
 fun HomeFeedScreen(
   viewModel: HomeFeedViewModel = hiltViewModel(),
   themesStorage: IThemeStorage,
   onViewFilters: () -> Unit,
-  onClick: (Cat) -> Unit
+  onClick: (Cat) -> Unit,
+  drawerState: DrawerState
 ) {
   val loadMore by viewModel.loadMore.observeAsState()
   val cats by viewModel.cats.observeAsState()
   val cachedCats by viewModel.cachedCats.observeAsState()
-  val themeChanged by viewModel.themeChanged.observeAsState()
   val selectedFilters by viewModel.selectedFilters.observeAsState()
   val lifecycleOwner = LocalLifecycleOwner.current
   val scope = rememberCoroutineScope()
   val context = LocalContext.current
-  LaunchedEffect(themeChanged) {
-    if (themeChanged == true) {
-      viewModel.resetThemeChangeIndicator()
-    }
-  }
   DisposableEffect(lifecycleOwner) {
     val observer = LifecycleEventObserver {
       _, event ->
       if (event == androidx.lifecycle.Lifecycle.Event.ON_RESUME) {
 
-        // if (viewModel.getCachedCats()?.isNotEmpty() == true) {
-        //   viewModel.restoreData()
-        // }
+        if (viewModel.getCachedCats()?.isNotEmpty() == true) {
+          viewModel.restoreData()
+        }
       }
     }
     lifecycleOwner.lifecycle.addObserver(observer)
@@ -178,7 +175,6 @@ fun HomeFeedScreen(
     themesStorage.isDarkModeApplied() == true,
     {
       scope.launch {
-        viewModel.notifyThemeChanged()
         if (themesStorage.isDarkModeApplied() == true) {
           themesStorage.setDarkModeApplied(false)
           AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
@@ -199,5 +195,5 @@ fun HomeFeedScreen(
       scope.launch {
         viewModel.loadMoreCats()
       }
-    })
+    },drawerState)
 }

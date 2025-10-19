@@ -58,14 +58,6 @@ class HomeFeedViewModel @Inject constructor(private val catRepository: CatReposi
         fetchFilters()
     }
 
-    fun notifyThemeChanged() {
-        _themeChanged.value = true
-    }
-
-    fun resetThemeChangeIndicator() {
-        _themeChanged.value = false
-    }
-
     fun restoreData() {
         if (_cachedCats.value?.isNotEmpty() == true) {
             _cats.postValue(Result.Success(null))
@@ -133,7 +125,6 @@ class HomeFeedViewModel @Inject constructor(private val catRepository: CatReposi
                                 .diskCachePolicy(ENABLED)
                                 .bitmapConfig(Config.ALPHA_8)
                                 .build())
-                        Log.d("IMAGE RESULT", result.toString());
                         if(result.image!=null)
                             results.add(Pair(cat,result))
                     }
