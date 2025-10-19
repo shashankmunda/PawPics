@@ -31,7 +31,9 @@ class HomeFeedViewModel @Inject constructor(private val catRepository: CatReposi
     val cats: LiveData<Result<List<Pair<Cat, ImageResult>>>>
         get()=_cats
 
-    private val _cachedCats = mutableListOf<Pair<Cat, ImageResult>>()
+    private val _cachedCats = MutableLiveData<List<Pair<Cat, ImageResult>>>()
+    val cachedCats: LiveData<List<Pair<Cat, ImageResult>>>
+        get() = _cachedCats
 
     private var _filters= MutableLiveData<Result<List<Breed>>>()
     val filters: LiveData<Result<List<Breed>>>
@@ -44,6 +46,10 @@ class HomeFeedViewModel @Inject constructor(private val catRepository: CatReposi
     private val _themeChanged = MutableLiveData<Boolean>()
     val themeChanged: LiveData<Boolean> get() = _themeChanged
 
+    private val _loadMoreOnScroll = MutableLiveData<Boolean>(false)
+    val loadMore: LiveData<Boolean>
+        get() = _loadMoreOnScroll
+
     private var pageNo = 0
     private var imageLoader = application.imageLoader
 
@@ -52,22 +58,14 @@ class HomeFeedViewModel @Inject constructor(private val catRepository: CatReposi
         fetchFilters()
     }
 
-    fun notifyThemeChanged() {
-        _themeChanged.value = true
-    }
-
-    fun resetThemeChangeIndicator() {
-        _themeChanged.value = false
-    }
-
     fun restoreData() {
-        if (_cachedCats.isNotEmpty()) {
-            _cats.postValue(Result.Success(_cachedCats))
+        if (_cachedCats.value?.isNotEmpty() == true) {
+            _cats.postValue(Result.Success(null))
         }
     }
 
-    fun getCachedCats(): List<Pair<Cat, ImageResult>> {
-        return _cachedCats.toList()
+    fun getCachedCats(): List<Pair<Cat, ImageResult>>? {
+        return _cachedCats.value?.toList()
     }
 
     fun setFiltersForSelected(filters: List<Breed>) {
@@ -127,20 +125,22 @@ class HomeFeedViewModel @Inject constructor(private val catRepository: CatReposi
                                 .diskCachePolicy(ENABLED)
                                 .bitmapConfig(Config.ALPHA_8)
                                 .build())
-                        Log.d("IMAGE RESULT", result.toString());
                         if(result.image!=null)
                             results.add(Pair(cat,result))
                     }
                 }
                 if(results.isNotEmpty())
                 {
-                    _cachedCats.addAll(results)
+                    val currentCachedCats = _cachedCats.value ?: emptyList()
+                    val updatedCachedCats = currentCachedCats + results
+                    _cachedCats.postValue(updatedCachedCats)
                     pageNo++
-                    _cats.postValue(Result.Success(_cachedCats))
+                    _cats.postValue(Result.Success(null))
                 }
                 else
                     _cats.postValue(Result.Error("Error fetching cats"))
             } catch (t: Throwable) {
+                Log.d("CatViewModel", "Error fetching cats: ${t.message}")
                 when (t) {
                     is IOException -> _cats.postValue(Result.Error("Couldn't connect to the source"))
                     else -> _cats.postValue(Result.Error("JSON parsing error"))
@@ -151,6 +151,17 @@ class HomeFeedViewModel @Inject constructor(private val catRepository: CatReposi
 
     fun resetPageCount() {
         pageNo = 0
-        _cachedCats.clear()
+        _cachedCats.postValue(emptyList())
+    }
+
+    fun loadMoreCats() {
+        if(_loadMoreOnScroll.value == true)
+            return;
+        _loadMoreOnScroll.postValue(true)
+        fetchCatImages()
+    }
+
+    fun setLoadMore(loadMore: Boolean) {
+        _loadMoreOnScroll.postValue(loadMore);
     }
 }
