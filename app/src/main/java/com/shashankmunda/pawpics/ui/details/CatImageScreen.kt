@@ -22,6 +22,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil3.request.SuccessResult
 import coil3.toBitmap
+import com.shashankmunda.pawpics.data.Cat
 import com.shashankmunda.pawpics.util.Result
 import com.shashankmunda.pawpics.util.Utils
 import kotlinx.coroutines.launch
@@ -29,8 +30,8 @@ import kotlinx.coroutines.launch
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun CatImageContent(
-  imageId: String,
-  viewModel: CatImageViewModel,
+  currStatus:  Result<Cat>?,
+  areActionsEnabled: Boolean?,
   onBackPressed: () -> Unit,
   onShare: () -> Unit,
   onSetWallpaper: () -> Unit,
@@ -38,11 +39,6 @@ fun CatImageContent(
   onSuccess: (result: SuccessResult) -> Unit,
   onFabClick: () -> Unit
 ) {
-  val currStatus by viewModel.currCatStatus.observeAsState()
-  val areActionsEnabled by viewModel.areActionsEnabled.observeAsState()
-  LaunchedEffect(true) {
-    viewModel.fetchCatSpecs(imageId)
-  }
     Scaffold(
       topBar = {
         ImageActionsTopBar(
@@ -79,9 +75,14 @@ fun CatImageScreen(
   val context = LocalContext.current
   var catBitmap by remember { mutableStateOf<Bitmap?>(null) }
   val scope = rememberCoroutineScope()
+  val currStatus by viewModel.currCatStatus.observeAsState()
+  val areActionsEnabled by viewModel.areActionsEnabled.observeAsState()
+  LaunchedEffect(true) {
+    viewModel.fetchCatSpecs(imageId)
+  }
   CatImageContent(
-    imageId,
-    viewModel,
+    currStatus,
+    areActionsEnabled,
     onBackPressed,
     {
       scope.launch {

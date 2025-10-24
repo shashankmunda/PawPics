@@ -19,6 +19,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,7 +40,7 @@ fun CatsStaggeredGrid(
   onRefreshing: () -> Unit,
   onLoadMore: () -> Unit
 ) {
-  var isPullToRefreshLoading by remember { mutableStateOf(false) }
+  var isPullToRefreshLoading by rememberSaveable { mutableStateOf(false) }
   val pullToRefreshState = rememberPullToRefreshState()
 
   // Only show pull-to-refresh loading when it's explicitly triggered by user

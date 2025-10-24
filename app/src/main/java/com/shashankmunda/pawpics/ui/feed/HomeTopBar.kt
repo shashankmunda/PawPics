@@ -23,14 +23,8 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeTopBar(isDarkMode: Boolean, onChangeTheme: () -> Unit, onViewFilters: () -> Unit, drawerState: DrawerState) {
+fun HomeTopBar( onViewFilters: () -> Unit, drawerState: DrawerState) {
   val scope = rememberCoroutineScope()
-  val imageVector by remember {
-    mutableStateOf(if (isDarkMode) Icons.Default.LightMode else Icons.Default.DarkMode)
-  }
-  val imageVectorColor by remember {
-    mutableStateOf(if (isDarkMode) Color.White else Color.Black)
-  }
   TopAppBar(
     title = {
       Text("", color = MaterialTheme.colorScheme.onPrimary)
@@ -49,13 +43,6 @@ fun HomeTopBar(isDarkMode: Boolean, onChangeTheme: () -> Unit, onViewFilters: ()
       }
     },
     actions = {
-      // IconButton(onClick = onChangeTheme){
-      //   Icon(
-      //     imageVector = imageVector,
-      //     contentDescription = "Back",
-      //     tint = imageVectorColor
-      //   )
-      // }
       IconButton(onClick = onViewFilters){
         Icon(
           imageVector = Icons.Default.FilterList,
