@@ -39,7 +39,7 @@ class HomeFeedViewModel @Inject constructor(private val catRepository: CatReposi
     val filters: LiveData<Result<List<Breed>>>
         get()=_filters
 
-    private var _selectedFilters = MutableLiveData<Result<List<Breed>>>()
+    private var _selectedFilters = MutableLiveData<Result<List<Breed>>>(Result.Success(emptyList()))
     val selectedFilters: LiveData<Result<List<Breed>>>
         get() = _selectedFilters
 

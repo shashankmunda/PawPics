@@ -2,8 +2,8 @@ package com.shashankmunda.pawpics.ui.feed
 
 import android.app.Application
 import android.content.Intent
+import android.provider.Settings
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -34,12 +34,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import coil3.request.ImageResult
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.shashankmunda.pawpics.IThemeStorage
 import com.shashankmunda.pawpics.R
 import com.shashankmunda.pawpics.data.Cat
 import com.shashankmunda.pawpics.util.Result
@@ -52,8 +50,6 @@ fun HomeFeedContent(
   cats: Result<List<Pair<Cat, ImageResult>>>?,
   cachedCats: List<Pair<Cat, ImageResult>>?,
   loadMore: Boolean?,
-  isDarkMode: Boolean,
-  onChangeTheme: () -> Unit,
   onViewFilters: () -> Unit,
   onClick: (Cat) -> Unit,
   onRefresh: () -> Unit,
@@ -61,70 +57,80 @@ fun HomeFeedContent(
   drawerState: DrawerState
 ) {
 
-
-    Scaffold(
-      topBar = {
-        HomeTopBar(isDarkMode, onChangeTheme, onViewFilters, drawerState)
-      },
-    ) { innnerPadding ->
-      Column(
-        modifier = Modifier
-          .padding(innnerPadding)
-          .fillMaxSize()
-      ) {
-        val context = LocalContext.current
-        if (cats is Result.Loading && loadMore != true) {
-          Box(modifier = Modifier.fillMaxSize()) {
-            CircularProgressIndicator(
-              modifier = Modifier.align(Alignment.Center)
-            )
-          }
-          return@Column
-        }
-        if(cats is Result.Error && cachedCats == null){
-          Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
-            Image(
-              painter = painterResource(R.drawable.ic_baseline_broken_image_24),
-              contentDescription = null,
-              alignment = Alignment.Center
-            )
-            Text(
-              text = "Something went wrong. Please check your internet connection and try again.",
-              modifier = Modifier.padding(horizontal = 8.dp),
-              textAlign = TextAlign.Center
-            )
-            Button(
-              onClick={
-                if(!hasInternetConnection(context as Application)) {
-                  Intent(android.provider.Settings.ACTION_WIRELESS_SETTINGS).apply {
-                    context.startActivity(this)
-                  }
-                }
-              },
-              colors = ButtonDefaults.buttonColors(containerColor = Color.Gray, contentColor = Color.Black),
-            ) {
-              Icon(imageVector = Icons.Default.Settings, "Open settings")
-              Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
-              Text("Open settings")
-            }
-          }
-          return@Column
-        }
-        CatsStaggeredGrid(cats, cachedCats, onClick, onRefresh, onLoadMore)
-        if (loadMore == true)
+  Scaffold(
+    topBar = {
+      HomeTopBar(onViewFilters, drawerState)
+    },
+  ) { innnerPadding ->
+    Column(
+      modifier = Modifier
+        .padding(innnerPadding)
+        .fillMaxSize()
+    ) {
+      if (cats is Result.Loading && loadMore != true) {
+        Box(modifier = Modifier.fillMaxSize()) {
           CircularProgressIndicator(
-            modifier = Modifier
-              .align(Alignment.CenterHorizontally)
-              .padding(top = 8.dp,bottom = 8.dp),
+            modifier = Modifier.align(Alignment.Center)
           )
+        }
+        return@Column
       }
+      if (cats is Result.Error && cachedCats == null) {
+        HomeFeedError()
+        return@Column
+      }
+      CatsStaggeredGrid(cats, cachedCats, onClick, onRefresh, onLoadMore)
+      if (loadMore == true)
+        CircularProgressIndicator(
+          modifier = Modifier
+            .align(Alignment.CenterHorizontally)
+            .padding(top = 8.dp, bottom = 8.dp),
+        )
     }
   }
+}
+
+@Composable
+private fun HomeFeedError() {
+  val context = LocalContext.current
+  Column(
+    modifier = Modifier.fillMaxSize(),
+    horizontalAlignment = Alignment.CenterHorizontally,
+    verticalArrangement = Arrangement.Center
+  ) {
+    Image(
+      painter = painterResource(R.drawable.ic_baseline_broken_image_24),
+      contentDescription = null,
+      alignment = Alignment.Center
+    )
+    Text(
+      text = "Something went wrong. Please check your internet connection and try again.",
+      modifier = Modifier.padding(horizontal = 8.dp),
+      textAlign = TextAlign.Center
+    )
+    Button(
+      onClick = {
+        if (!hasInternetConnection(context as Application)) {
+          Intent(Settings.ACTION_WIRELESS_SETTINGS).apply {
+            context.startActivity(this)
+          }
+        }
+      },
+      colors = ButtonDefaults.buttonColors(
+        containerColor = Color.Gray,
+        contentColor = Color.Black
+      ),
+    ) {
+      Icon(imageVector = Icons.Default.Settings, "Open settings")
+      Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
+      Text("Open settings")
+    }
+  }
+}
 
 @Composable
 fun HomeFeedScreen(
-  viewModel: HomeFeedViewModel = hiltViewModel(),
-  themesStorage: IThemeStorage,
+  viewModel: HomeFeedViewModel,
   onViewFilters: () -> Unit,
   onClick: (Cat) -> Unit,
   drawerState: DrawerState
@@ -137,8 +143,7 @@ fun HomeFeedScreen(
   val scope = rememberCoroutineScope()
   val context = LocalContext.current
   DisposableEffect(lifecycleOwner) {
-    val observer = LifecycleEventObserver {
-      _, event ->
+    val observer = LifecycleEventObserver { _, event ->
       if (event == androidx.lifecycle.Lifecycle.Event.ON_RESUME) {
 
         if (viewModel.getCachedCats()?.isNotEmpty() == true) {
@@ -153,10 +158,8 @@ fun HomeFeedScreen(
   }
 
   LaunchedEffect(selectedFilters) {
-    if (selectedFilters is Result.Success) {
-      viewModel.resetPageCount()
-      viewModel.fetchCatImages()
-    }
+    viewModel.resetPageCount()
+    viewModel.fetchCatImages()
   }
 
   LaunchedEffect(cats) {
@@ -172,18 +175,6 @@ fun HomeFeedScreen(
   }
   HomeFeedContent(
     cats, cachedCats, loadMore,
-    themesStorage.isDarkModeApplied() == true,
-    {
-      scope.launch {
-        if (themesStorage.isDarkModeApplied() == true) {
-          themesStorage.setDarkModeApplied(false)
-          AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-        } else {
-          themesStorage.setDarkModeApplied(true)
-          AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-        }
-      }
-    },
     onViewFilters,
     onClick,
     {
@@ -195,5 +186,6 @@ fun HomeFeedScreen(
       scope.launch {
         viewModel.loadMoreCats()
       }
-    },drawerState)
+    }, drawerState
+  )
 }
