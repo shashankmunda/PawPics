@@ -64,7 +64,9 @@ fun SearchFiltersScreen(viewModel: HomeFeedViewModel = hiltViewModel(), onBackPr
   val scope = rememberCoroutineScope()
   LaunchedEffect(selectedFilters) {
     if (selectedFilters is Result.Success) {
-      currSelectedFilters = (selectedFilters as Result.Success).data as MutableList<Breed>
+      currSelectedFilters = if(currSelectedFilters.isNotEmpty())
+        (selectedFilters as Result.Success).data as MutableList<Breed>
+      else mutableListOf<Breed>()
     }
   }
   SearchFiltersContent(
