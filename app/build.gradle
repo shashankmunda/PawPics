@@ -23,8 +23,8 @@ android {
         applicationId "com.shashankmunda.pawpics"
         minSdk 21
         targetSdk 35
-        versionCode 14
-        versionName "1.13"
+        versionCode 16
+        versionName "1.15"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
