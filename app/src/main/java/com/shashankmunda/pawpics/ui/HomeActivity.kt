@@ -131,19 +131,19 @@ class HomeActivity : AppCompatActivity() {
                                     }
                                 }
                             )
-                            NavigationDrawerItem(
-                              label = {Text("Favorites")},
-                              icon = {
-                                Icon(Icons.Default.Favorite, contentDescription = null)
-                              },
-                              selected = false,
-                              onClick = {
-                                navController.navigate(Favorites)
-                                scope.launch {
-                                  drawerState.close()
-                                }
-                              }
-                            )
+                            // NavigationDrawerItem(
+                            //   label = {Text("Favorites")},
+                            //   icon = {
+                            //     Icon(Icons.Default.Favorite, contentDescription = null)
+                            //   },
+                            //   selected = false,
+                            //   onClick = {
+                            //     navController.navigate(Favorites)
+                            //     scope.launch {
+                            //       drawerState.close()
+                            //     }
+                            //   }
+                            // )
                             NavigationDrawerItem(
                                 label = { Text("Privacy Policy") },
                                 icon = {

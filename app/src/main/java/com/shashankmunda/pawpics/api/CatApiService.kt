@@ -25,6 +25,6 @@ interface CatApiService {
 
     @Streaming
     @GET
-    fun downloadFile(@Url url: String): Call<ResponseBody>
+      fun downloadFile(@Url url: String): Call<ResponseBody>
 
 }
