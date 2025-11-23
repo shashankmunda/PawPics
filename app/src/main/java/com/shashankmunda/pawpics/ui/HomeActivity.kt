@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BrightnessMedium
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Feedback
 import androidx.compose.material.icons.filled.PrivacyTip
 import androidx.compose.material.icons.filled.Share
@@ -34,9 +35,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
-import com.google.firebase.Firebase
+import androidx.navigation.compose.rememberNavController
 import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.analytics.analytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 import com.shashankmunda.pawpics.BuildConfig
 import com.shashankmunda.pawpics.ThemeStorage
 import dagger.hilt.android.AndroidEntryPoint
@@ -62,6 +64,7 @@ class HomeActivity : AppCompatActivity() {
     @Composable
     fun SetupNavigation(themeStorage: ThemeStorage) {
         val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+        val navController = rememberNavController()
         val scope = rememberCoroutineScope()
         ModalNavigationDrawer(
             drawerContent = {
@@ -129,6 +132,19 @@ class HomeActivity : AppCompatActivity() {
                                 }
                             )
                             NavigationDrawerItem(
+                              label = {Text("Favorites")},
+                              icon = {
+                                Icon(Icons.Default.Favorite, contentDescription = null)
+                              },
+                              selected = false,
+                              onClick = {
+                                navController.navigate(Favorites)
+                                scope.launch {
+                                  drawerState.close()
+                                }
+                              }
+                            )
+                            NavigationDrawerItem(
                                 label = { Text("Privacy Policy") },
                                 icon = {
                                     Icon(Icons.Default.PrivacyTip, contentDescription = null)
@@ -169,7 +185,7 @@ class HomeActivity : AppCompatActivity() {
                 }
             }, drawerState = drawerState
         ) {
-            CatApp(themeStorage, drawerState)
+            CatApp(themeStorage, drawerState, navController)
         }
     }
 }
@@ -178,3 +194,4 @@ class HomeActivity : AppCompatActivity() {
 @Serializable data object HomeFeed
 @Serializable data class CatDetail(val id: String, val ext: String)
 @Serializable data object FiltersSearch
+@Serializable data object Favorites

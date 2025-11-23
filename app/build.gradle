@@ -73,7 +73,6 @@ android {
 
 dependencies {
     implementation 'androidx.test.ext:junit-ktx:1.2.1'
-    implementation 'com.google.android.gms:play-services-measurement-api:22.4.0'
     def coil_version = '3.3.0'
     def compose_version = '1.9.1'
     def retrofit_version = '2.9.0'
@@ -102,8 +101,9 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'androidx.activity:activity-ktx:1.9.3'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.8.7'
+    implementation 'androidx.lifecycle:lifecycle-runtime-compose:2.8.7'
 
-    //Coroutines
+  //Coroutines
     implementation "androidx.work:work-runtime-ktx:2.10.0"
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.1'
 
@@ -144,4 +144,6 @@ dependencies {
     releaseImplementation 'com.google.firebase:firebase-crashlytics-ktx'
     releaseImplementation 'com.google.firebase:firebase-analytics-ktx'
     releaseImplementation 'com.google.firebase:firebase-perf-ktx'
+
+    releaseImplementation 'com.android.installreferrer:installreferrer:2.2'
 }

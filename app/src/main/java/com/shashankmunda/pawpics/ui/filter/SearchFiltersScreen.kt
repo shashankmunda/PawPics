@@ -84,6 +84,8 @@ fun SearchFiltersScreen(viewModel: HomeFeedViewModel = hiltViewModel(), onBackPr
     {
       scope.launch {
         viewModel.setFiltersForSelected(currSelectedFilters);
+        viewModel.resetPageCount()
+        viewModel.fetchCatImages()
       }
       onBackPressed()
     })

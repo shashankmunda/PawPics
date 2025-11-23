@@ -1,14 +1,3 @@
 <resources>
     <string name="app_name">PawPics</string>
-    <string name="save">Save</string>
-    <string name="share">Share</string>
-    <string name="set_wallpaper">Set Wallpaper</string>
-    <string name="label_home">Home Fragment</string>
-    <string name="label_full_cat_image">Full Cat Image Fragment</string>
-    <string name="retry">Retry</string>
-    <string name="set_as_wallpaper">Set Wallpaper</string>
-    <string name="filter">Filter</string>
-    <string name="confirm">Confirm</string>
-    <string name="search">Search</string>
-    <string name="theme">Theme</string>
 </resources>

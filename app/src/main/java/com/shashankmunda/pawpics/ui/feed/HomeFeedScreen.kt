@@ -138,7 +138,6 @@ fun HomeFeedScreen(
   val loadMore by viewModel.loadMore.observeAsState()
   val cats by viewModel.cats.observeAsState()
   val cachedCats by viewModel.cachedCats.observeAsState()
-  val selectedFilters by viewModel.selectedFilters.observeAsState()
   val lifecycleOwner = LocalLifecycleOwner.current
   val scope = rememberCoroutineScope()
   val context = LocalContext.current
@@ -155,11 +154,6 @@ fun HomeFeedScreen(
     onDispose {
       lifecycleOwner.lifecycle.removeObserver(observer)
     }
-  }
-
-  LaunchedEffect(selectedFilters) {
-    viewModel.resetPageCount()
-    viewModel.fetchCatImages()
   }
 
   LaunchedEffect(cats) {
