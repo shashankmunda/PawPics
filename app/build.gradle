@@ -6,8 +6,9 @@ plugins {
     id 'com.google.gms.google-services'
     id 'com.google.firebase.crashlytics'
     id 'com.google.devtools.ksp'
+    id 'org.jetbrains.kotlin.plugin.compose'
+    id 'org.jetbrains.kotlin.plugin.serialization'
 }
-
 android {
     signingConfigs {
     }
@@ -21,8 +22,8 @@ android {
         applicationId "com.shashankmunda.pawpics"
         minSdk 21
         targetSdk 35
-        versionCode 12
-        versionName "1.11"
+        versionCode 19
+        versionName "1.18"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -71,23 +72,25 @@ android {
 
 dependencies {
     implementation 'androidx.test.ext:junit-ktx:1.2.1'
-    implementation 'com.google.android.gms:play-services-measurement-api:22.4.0'
-    def nav_version = '2.8.5'
+    def coil_version = '3.3.0'
+    def compose_version = '1.9.1'
     def retrofit_version = '2.9.0'
     def hilt_version = '2.54'
     def room_version = '2.6.1'
 
+    implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
+    implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
+    debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
+
     implementation 'androidx.core:core-ktx:1.15.0'
     implementation 'androidx.appcompat:appcompat:1.7.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
-    implementation 'androidx.recyclerview:recyclerview:1.4.0'
-    implementation 'androidx.fragment:fragment-ktx:1.8.5'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
     implementation 'com.google.android.material:material:1.12.0'
 
     //Navigation component
-    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
-    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-compose:2.9.4"
+    implementation "androidx.hilt:hilt-navigation-compose:1.2.0"
 
     //Networking
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
@@ -97,8 +100,9 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'androidx.activity:activity-ktx:1.9.3'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.8.7'
+    implementation 'androidx.lifecycle:lifecycle-runtime-compose:2.8.7'
 
-    //Coroutines
+  //Coroutines
     implementation "androidx.work:work-runtime-ktx:2.10.0"
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.1'
 
@@ -112,9 +116,9 @@ dependencies {
     ksp "com.google.dagger:hilt-android-compiler:$hilt_version"
 
     //Image loading
-    implementation 'io.coil-kt.coil3:coil:3.0.0'
-    implementation 'io.coil-kt.coil3:coil-gif:3.0.0'
-    implementation 'io.coil-kt.coil3:coil-network-okhttp:3.0.0'
+    implementation("io.coil-kt.coil3:coil-compose:$coil_version")
+    implementation("io.coil-kt.coil3:coil-gif:$coil_version")
+    implementation("io.coil-kt.coil3:coil-network-okhttp:$coil_version")
 
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
 
@@ -122,8 +126,23 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'androidx.test:core-ktx:1.6.1'
 
+    def composeBom = platform('androidx.compose:compose-bom:2025.08.00')
+    implementation composeBom
+    androidTestImplementation composeBom
+    implementation 'androidx.compose.material3:material3'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx'
+    implementation "androidx.compose.material:material-icons-extended"
+
+    implementation 'androidx.compose.ui:ui-tooling-preview'
+    debugImplementation 'androidx.compose.ui:ui-tooling'
+    implementation 'com.google.accompanist:accompanist-permissions:0.37.3'
+    implementation 'com.google.android.play:review-ktx:2.0.2'
+
     releaseImplementation platform('com.google.firebase:firebase-bom:33.7.0')
     releaseImplementation 'com.google.firebase:firebase-crashlytics-ktx'
     releaseImplementation 'com.google.firebase:firebase-analytics-ktx'
     releaseImplementation 'com.google.firebase:firebase-perf-ktx'
+
+    releaseImplementation 'com.android.installreferrer:installreferrer:2.2'
 }

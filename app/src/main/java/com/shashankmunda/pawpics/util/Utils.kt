@@ -61,19 +61,26 @@ object Utils{
         }
 
         fun shareImage(context:Context,catBitmap:Bitmap,catImageId:String, fileExt: String) {
+          if(fileExt != "gif")
+          {
             FileUtils.saveBitmapToCache(context, catBitmap,catImageId, fileExt)
+          }
             val contentUri = FileUtils.getCurrentImageUri(catImageId, context, fileExt)
-            val shareIntent: Intent = Intent().apply {
-                action = Intent.ACTION_SEND
-                setDataAndType(contentUri,"image/$fileExt")
-                putExtra(Intent.EXTRA_STREAM, contentUri)
-            }
-            shareIntent.clipData = ClipData.newRawUri("", contentUri)
-            shareIntent.addFlags(
-                Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-            )
-            context.startActivity(Intent.createChooser(shareIntent, null), null)
+            shareContent(context, contentUri, fileExt)
         }
+
+      fun shareContent(context: Context, contentUri: Uri?, fileExt: String){
+        val shareIntent: Intent = Intent().apply {
+          action = Intent.ACTION_SEND
+          setDataAndType(contentUri,"image/$fileExt")
+          putExtra(Intent.EXTRA_STREAM, contentUri)
+        }
+        shareIntent.clipData = ClipData.newRawUri("", contentUri)
+        shareIntent.addFlags(
+          Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+        )
+        context.startActivity(Intent.createChooser(shareIntent, null), null)
+      }
 
         fun saveImage(context: Context,catImageId: String, fileExt: String) {
             val downloadManager =
@@ -105,7 +112,7 @@ object FileUtils{
         )
     }
 
-    private fun getFileFromExternalCache(catImageId:String, context: Context, fileExt: String): File {
+    fun getFileFromExternalCache(catImageId:String, context: Context, fileExt: String): File {
         val catDir = context.externalCacheDir
         if (!catDir!!.exists()) catDir.mkdirs()
         val targetFile = File(catDir, "$catImageId.$fileExt")

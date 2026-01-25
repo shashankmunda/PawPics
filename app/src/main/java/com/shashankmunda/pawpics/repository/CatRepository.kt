@@ -7,6 +7,7 @@ import com.shashankmunda.pawpics.data.CatsDao
 import com.shashankmunda.pawpics.util.ImageSize
 import com.shashankmunda.pawpics.util.MimeType
 import dagger.hilt.android.scopes.ViewModelScoped
+import java.io.InputStream
 import javax.inject.Inject
 
 @ViewModelScoped
@@ -33,5 +34,10 @@ class CatRepository @Inject constructor(private var catApiService: CatApiService
             return filters
         } else null
     }
+
+  fun downloadUrl(url: String): InputStream? {
+    val response = catApiService.downloadFile(url).execute()
+    return response.body()?.byteStream()
+  }
 
 }

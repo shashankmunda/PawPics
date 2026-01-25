@@ -57,4 +57,22 @@ abstract class BaseAdapter<T, VB : ViewBinding> : RecyclerView.Adapter<BaseAdapt
 
 
     inner class ViewHolder(val binding: VB) : RecyclerView.ViewHolder(binding.root)
+
+    inner class BaseDiffCallback(
+        private val oldList: List<T>,
+        private val newList: List<T>
+    ) : DiffUtil.Callback() {
+
+        override fun getOldListSize(): Int = oldList.size
+
+        override fun getNewListSize(): Int = newList.size
+
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return this@BaseAdapter.areItemsTheSame(oldList[oldItemPosition], newList[newItemPosition])
+        }
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return this@BaseAdapter.areContentsTheSame(oldList[oldItemPosition], newList[newItemPosition])
+        }
+    }
 }
