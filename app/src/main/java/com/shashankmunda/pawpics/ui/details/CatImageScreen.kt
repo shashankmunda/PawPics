@@ -56,8 +56,6 @@ fun CatImageContent(
       floatingActionButton = {
         if (currStatus is Result.Error)
           FloatingButton(onFabClick, Icons.Default.Refresh, contentDescription = null)
-        else
-          FloatingButton({},Icons.Default.Favorite,  null, Color.Gray, Color.White)
       }
     ) { innerPadding ->
       Column(

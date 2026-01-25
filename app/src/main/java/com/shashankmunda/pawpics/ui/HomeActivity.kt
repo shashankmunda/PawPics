@@ -39,6 +39,7 @@ import androidx.core.net.toUri
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.analytics.logEvent
 import com.google.firebase.ktx.Firebase
 import com.shashankmunda.pawpics.BuildConfig
 import com.shashankmunda.pawpics.ThemeStorage
@@ -201,4 +202,3 @@ class HomeActivity : AppCompatActivity() {
 @Serializable data object HomeFeed
 @Serializable data class CatDetail(val id: String, val ext: String)
 @Serializable data object FiltersSearch
-@Serializable data object Favorites
