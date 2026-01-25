@@ -12,11 +12,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.shashankmunda.pawpics.ThemeStorage
 import com.shashankmunda.pawpics.ui.details.CatImageScreen
-import com.shashankmunda.pawpics.ui.favorites.FavoritesScreen
 import com.shashankmunda.pawpics.ui.feed.HomeFeedScreen
 import com.shashankmunda.pawpics.ui.feed.HomeFeedViewModel
 import com.shashankmunda.pawpics.ui.filter.SearchFiltersScreen
@@ -104,26 +102,6 @@ fun CatNavHost(
         onBackPressed = {
           navController.popBackStack()
         })
-    }
-    composable<Favorites>(enterTransition = {
-      slideInHorizontally(
-        animationSpec = tween(durationMillis = 300, easing = LinearOutSlowInEasing),
-        initialOffsetX = { fullWidth ->
-          fullWidth
-        })
-    }, exitTransition = {
-      slideOutHorizontally(
-        animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing),
-        targetOffsetX = { fullWidth ->
-          fullWidth
-        })
-    }
-    ){
-      FavoritesScreen(
-        onBackPressed = {
-          navController.popBackStack()
-        }
-      )
     }
   }
 }

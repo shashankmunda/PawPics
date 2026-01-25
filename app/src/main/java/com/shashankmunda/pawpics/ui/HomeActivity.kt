@@ -1,5 +1,6 @@
 package com.shashankmunda.pawpics.ui
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -105,12 +106,18 @@ class HomeActivity : AppCompatActivity() {
                                 },
                                 selected = false,
                                 onClick = {
-                                    startActivity(
-                                        Intent(
-                                            Intent.ACTION_VIEW,
-                                            Uri.parse("market://details?id=com.shashankmunda.pawpics")
-                                        )
-                                    )
+                                  val intent = Intent(Intent.ACTION_VIEW).apply{
+                                    data = Uri.parse("https://play.google.com/store/apps/details?id=com.shashankmunda.pawpics")
+                                    setPackage("com.android.vending")
+                                  }
+                                  try {
+                                    startActivity(intent)
+                                  }
+                                  catch(e: ActivityNotFoundException){
+                                    firebaseAnalytics.logEvent("couldn't rate app") {
+                                      param("reason", e.message ?: "unknown")
+                                    }
+                                  }
                                 }
                             )
                             NavigationDrawerItem(

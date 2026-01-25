@@ -9,6 +9,7 @@ import coil3.imageLoader
 import coil3.request.CachePolicy.ENABLED
 import coil3.request.ImageRequest
 import coil3.request.ImageResult
+import coil3.request.allowHardware
 import coil3.request.bitmapConfig
 import com.shashankmunda.pawpics.base.BaseViewModel
 import com.shashankmunda.pawpics.data.Breed
@@ -124,6 +125,7 @@ class HomeFeedViewModel @Inject constructor(private val catRepository: CatReposi
                                 .memoryCachePolicy(ENABLED)
                                 .diskCachePolicy(ENABLED)
                                 .bitmapConfig(Config.ALPHA_8)
+                                .allowHardware(false)
                                 .build())
                         if(result.image!=null)
                             results.add(Pair(cat,result))
