@@ -1,60 +1,16 @@
 package com.shashankmunda.pawpics.ui.filter
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.shashankmunda.pawpics.data.Breed
 import com.shashankmunda.pawpics.ui.feed.HomeFeedViewModel
 import com.shashankmunda.pawpics.util.Result
 import kotlinx.coroutines.launch
-
-@Composable
-fun SearchFiltersContent(
-  filters: Result<List<Breed>>?,
-  selectedFilters: Result<List<Breed>>?,
-  onClick: (Boolean, String) -> Unit,
-  onBackPressed: () -> Unit,
-  onSaveFilter: () -> Unit
-) {
-
-  if (filters is Result.Loading) {
-    Box(
-      modifier = Modifier.fillMaxSize(),
-      contentAlignment = Alignment.Center
-    ) {
-      CircularProgressIndicator()
-    }
-    return
-  }
-    Scaffold(
-      topBar = {
-        FilterTopBar(onBackPressed, onSaveFilter)
-      }
-    ) { innerPadding ->
-      Box(
-        modifier = Modifier
-          .padding(innerPadding)
-          .fillMaxSize()
-      ) {
-        ChipGroup(filters, selectedFilters, onClick)
-        if (selectedFilters is Result.Loading)
-          CircularProgressIndicator(
-            modifier = Modifier.align(Alignment.Center)
-          )
-      }
-    }
-}
 
 @Composable
 fun SearchFiltersScreen(viewModel: HomeFeedViewModel = hiltViewModel(), onBackPressed: () -> Unit) {
