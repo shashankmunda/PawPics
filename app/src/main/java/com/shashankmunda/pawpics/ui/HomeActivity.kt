@@ -2,7 +2,6 @@ package com.shashankmunda.pawpics.ui
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -17,7 +16,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BrightnessMedium
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Feedback
 import androidx.compose.material.icons.filled.PrivacyTip
 import androidx.compose.material.icons.filled.Share
@@ -34,14 +32,14 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.analytics.logEvent
-import com.google.firebase.ktx.Firebase
 import com.shashankmunda.pawpics.BuildConfig
+import com.shashankmunda.pawpics.R
 import com.shashankmunda.pawpics.ThemeStorage
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -50,12 +48,11 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeActivity : AppCompatActivity() {
-    private lateinit var firebaseAnalytics: FirebaseAnalytics
+    @Inject lateinit var firebaseAnalytics: FirebaseAnalytics
     @Inject lateinit var themeStorage: ThemeStorage
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
-        firebaseAnalytics = Firebase.analytics
         setContent {
             AppTheme {
                 SetupNavigation(themeStorage)
@@ -73,9 +70,12 @@ class HomeActivity : AppCompatActivity() {
                 ModalDrawerSheet {
                     Column(verticalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxHeight()) {
                         Column {
-                            Box(modifier= Modifier.background(color = MaterialTheme.colorScheme.primary).fillMaxWidth().padding(top = 0.dp)) {
+                            Box(modifier= Modifier
+                              .background(color = MaterialTheme.colorScheme.primary)
+                              .fillMaxWidth()
+                              .padding(top = 0.dp)) {
                                 Text(
-                                    "PawPics",
+                                  stringResource(R.string.app_name),
                                     modifier = Modifier.padding(16.dp),
                                     color = MaterialTheme.colorScheme.onPrimary,
                                     style = MaterialTheme.typography.titleLarge
@@ -83,7 +83,7 @@ class HomeActivity : AppCompatActivity() {
                             }
                             HorizontalDivider()
                             NavigationDrawerItem(
-                                label = { Text("Invite Friend") },
+                                label = { Text(stringResource(R.string.invite_friend)) },
                                 icon = {
                                     Icon(Icons.Default.Share, contentDescription = null)
                                 },
@@ -93,22 +93,23 @@ class HomeActivity : AppCompatActivity() {
                                         action = Intent.ACTION_SEND
                                         putExtra(
                                             Intent.EXTRA_TEXT,
-                                            "Check out PawPics! It's the best app for cat lovers!: https://play.google.com/store/apps/details?id=com.shashankmunda.pawpics"
+                                          getString(R.string.check_out_pawpics, packageName)
                                         )
                                         type = "text/plain"
                                     }
-                                    startActivity(Intent.createChooser(shareIntent, "Share via"))
+                                    startActivity(Intent.createChooser(shareIntent, getString(R.string.share_via)))
                                 }
                             )
                             NavigationDrawerItem(
-                                label = { Text("Rate Us") },
+                                label = { Text(stringResource(R.string.rate_us)) },
                                 icon = {
                                     Icon(Icons.Default.StarRate, contentDescription = null)
                                 },
                                 selected = false,
                                 onClick = {
                                   val intent = Intent(Intent.ACTION_VIEW).apply{
-                                    data = Uri.parse("https://play.google.com/store/apps/details?id=com.shashankmunda.pawpics")
+                                    data =
+                                      "https://play.google.com/store/apps/details?id=com.shashankmunda.pawpics".toUri()
                                     setPackage("com.android.vending")
                                   }
                                   try {
@@ -122,7 +123,7 @@ class HomeActivity : AppCompatActivity() {
                                 }
                             )
                             NavigationDrawerItem(
-                                label = { if(themeStorage.isDarkModeApplied() == true) Text("Switch to Light Mode") else Text("Switch to Dark Mode") },
+                                label = { if(themeStorage.isDarkModeApplied() == true) Text(stringResource(R.string.switch_light_mode)) else Text(stringResource(R.string.switch_dark_mode)) },
                                 icon = {
                                     Icon(Icons.Default.BrightnessMedium, contentDescription = null)
                                 },
@@ -139,21 +140,8 @@ class HomeActivity : AppCompatActivity() {
                                     }
                                 }
                             )
-                            // NavigationDrawerItem(
-                            //   label = {Text("Favorites")},
-                            //   icon = {
-                            //     Icon(Icons.Default.Favorite, contentDescription = null)
-                            //   },
-                            //   selected = false,
-                            //   onClick = {
-                            //     navController.navigate(Favorites)
-                            //     scope.launch {
-                            //       drawerState.close()
-                            //     }
-                            //   }
-                            // )
                             NavigationDrawerItem(
-                                label = { Text("Privacy Policy") },
+                                label = { Text(stringResource(R.string.privacy_policy)) },
                                 icon = {
                                     Icon(Icons.Default.PrivacyTip, contentDescription = null)
                                 },
@@ -162,13 +150,13 @@ class HomeActivity : AppCompatActivity() {
                                     startActivity(
                                         Intent(
                                             Intent.ACTION_VIEW,
-                                          "https://shashankmunda.github.io/PawPics/privacy-policy".toUri()
+                                            "https://shashankmunda.github.io/PawPics/privacy-policy".toUri()
                                         )
                                     )
                                 }
                             )
                             NavigationDrawerItem(
-                                label = { Text("Share Feedback") },
+                                label = { Text(stringResource(R.string.share_feedback)) },
                                 icon = {
                                     Icon(Icons.Default.Feedback, contentDescription = null)
                                 },
@@ -182,18 +170,18 @@ class HomeActivity : AppCompatActivity() {
                                         )
                                         data = "mailto:shashankdec2000coder@gmail.com".toUri()
                                     }
-                                  startActivity(Intent.createChooser(intent, "Share Feedback"))
+                                  startActivity(Intent.createChooser(intent, getString(R.string.share_feedback)))
                                 })
                         }
                         Text(
-                            "Made With ❤\uFE0F in India \nVersion: ${BuildConfig.VERSION_NAME}",
+                            getString(R.string.made_in_india, BuildConfig.VERSION_NAME),
                             modifier = Modifier.padding(16.dp)
                         )
                     }
                 }
             }, drawerState = drawerState
         ) {
-            CatApp(themeStorage, drawerState, navController)
+            CatApp(drawerState, navController)
         }
     }
 }

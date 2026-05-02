@@ -7,12 +7,13 @@ import com.android.installreferrer.api.InstallReferrerStateListener
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import androidx.core.content.edit
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.analytics.logEvent
 import com.google.firebase.ktx.Firebase
 
 class ReferrerManager @Inject constructor(@ApplicationContext val context: Context) {
-  private val firebaseAnalytics = Firebase.analytics
+  @Inject lateinit var firebaseAnalytics : FirebaseAnalytics
 
   private val prefs = context.getSharedPreferences("referrer_prefs", Context.MODE_PRIVATE)
   private val KEY_REFERRER_FETCHED = "referrer_fetched"
@@ -21,7 +22,6 @@ class ReferrerManager @Inject constructor(@ApplicationContext val context: Conte
   fun fetchReferrerIfNeeded() {
     // Check if we've already fetched the referrer
     if (prefs.getBoolean(KEY_REFERRER_FETCHED, false)) {
-      Log.d("Referrer", "Already fetched, skipping")
       return
     }
 
@@ -35,15 +35,11 @@ class ReferrerManager @Inject constructor(@ApplicationContext val context: Conte
               val referrerUrl = response.installReferrer
               val clickTime = response.referrerClickTimestampSeconds
               val installTime = response.installBeginTimestampSeconds
-
               // Save the referrer data
               prefs.edit {
                 putBoolean(KEY_REFERRER_FETCHED, true)
                 putString(KEY_REFERRER_DATA, referrerUrl)
               }
-
-              Log.d("Referrer", "Saved: $referrerUrl")
-
               // Send to your analytics/backend
               firebaseAnalytics.logEvent("install_referrer") {
                 param("referrer", referrerUrl)

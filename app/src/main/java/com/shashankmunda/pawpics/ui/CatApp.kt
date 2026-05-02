@@ -13,7 +13,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
-import com.shashankmunda.pawpics.ThemeStorage
 import com.shashankmunda.pawpics.ui.details.CatImageScreen
 import com.shashankmunda.pawpics.ui.feed.HomeFeedScreen
 import com.shashankmunda.pawpics.ui.feed.HomeFeedViewModel
@@ -21,7 +20,7 @@ import com.shashankmunda.pawpics.ui.filter.SearchFiltersScreen
 import com.shashankmunda.pawpics.util.getExtensionFromUrl
 
 @Composable
-fun CatApp(themeStorage: ThemeStorage, drawerState: DrawerState, navController: NavHostController) {
+fun CatApp(drawerState: DrawerState, navController: NavHostController) {
   CatNavHost(navController = navController, drawerState = drawerState)
 }
 

@@ -53,10 +53,6 @@ fun CatImageContent(
           onSetWallpaper
         )
       },
-      floatingActionButton = {
-        if (currStatus is Result.Error)
-          FloatingButton(onFabClick, Icons.Default.Refresh, contentDescription = null)
-      }
     ) { innerPadding ->
       Column(
         modifier = Modifier

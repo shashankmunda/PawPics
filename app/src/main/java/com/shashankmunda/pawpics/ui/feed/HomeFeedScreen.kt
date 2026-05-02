@@ -32,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LifecycleEventObserver
@@ -104,7 +105,7 @@ private fun HomeFeedError() {
       alignment = Alignment.Center
     )
     Text(
-      text = "Something went wrong. Please check your internet connection and try again.",
+      text = stringResource(R.string.check_your_internet_connection),
       modifier = Modifier.padding(horizontal = 8.dp),
       textAlign = TextAlign.Center
     )
@@ -123,7 +124,7 @@ private fun HomeFeedError() {
     ) {
       Icon(imageVector = Icons.Default.Settings, "Open settings")
       Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
-      Text("Open settings")
+      Text(stringResource(R.string.open_settings))
     }
   }
 }
