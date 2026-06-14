@@ -25,6 +25,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.supervisorScope
 import java.io.IOException
 import javax.inject.Inject
 
@@ -119,28 +120,27 @@ class HomeFeedViewModel @Inject constructor(private val catRepository: CatReposi
             try {
                 val catsList = catRepository.getCats(BATCH_SIZE, ImageSize.FULL, listOf(MimeType.PNG, MimeType.GIF), pageNo,
                     _selectedFilters.value?.data?.joinToString(",") { it.id })
-                val results=mutableListOf<Pair<Cat,ImageResult>>()
-                val imageJobs = mutableListOf<Pair<Cat,Deferred<ImageResult>>>()
+                var results=mutableListOf<Pair<Cat,ImageResult>>()
                 if(catsList != null){
-                    for(cat in catsList){
-                       val imageJob = async{
-                         return@async imageLoader.execute(
-                           ImageRequest.Builder(application)
-                             .data(cat.url)
-                             .memoryCachePolicy(ENABLED)
-                             .diskCachePolicy(ENABLED)
-                             .bitmapConfig(Config.ALPHA_8)
-                             .allowHardware(false)
-                             .build())
-                       }
-                       imageJobs.add(Pair(cat,imageJob))
+                    supervisorScope {
+                        val imageJobs = catsList.map { cat ->
+                            Pair(cat, async{
+                                return@async imageLoader.execute(
+                                    ImageRequest.Builder(application)
+                                        .data(cat.url)
+                                        .memoryCachePolicy(ENABLED)
+                                        .diskCachePolicy(ENABLED)
+                                        .bitmapConfig(Config.ALPHA_8)
+                                        .allowHardware(false)
+                                        .build())
+                            })
+                        }
+                        results = imageJobs.map{ imageJob ->
+                          Pair(imageJob.first,runCatching{ imageJob.second.await()}.getOrNull())
+                        }.filter { result -> result.second?.image != null } as MutableList<Pair<Cat, ImageResult>>
                     }
                 }
-                for(job in imageJobs) {
-                  val result = job.second.await()
-                  if(result.image!=null)
-                    results.add(Pair(job.first,result))
-                }
+
                 if(results.isNotEmpty())
                 {
                     val currentCachedCats = _cachedCats.value ?: emptyList()
