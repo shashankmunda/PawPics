@@ -1,17 +1,8 @@
 package com.shashankmunda.pawpics.ui.details
 
-import android.annotation.SuppressLint
 import android.app.WallpaperManager
 import android.graphics.Bitmap
 import android.graphics.Bitmap.Config.ARGB_8888
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -20,54 +11,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil3.request.SuccessResult
 import coil3.toBitmap
-import com.shashankmunda.pawpics.data.Cat
-import com.shashankmunda.pawpics.util.Result
 import com.shashankmunda.pawpics.util.Utils
 import kotlinx.coroutines.launch
-
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@Composable
-fun CatImageContent(
-  currStatus:  Result<Cat>?,
-  areActionsEnabled: Boolean?,
-  onBackPressed: () -> Unit,
-  onShare: () -> Unit,
-  onSetWallpaper: () -> Unit,
-  onDownload: () -> Unit,
-  onSuccess: (result: SuccessResult) -> Unit,
-  onFabClick: () -> Unit
-) {
-    Scaffold(
-      topBar = {
-        ImageActionsTopBar(
-          areActionsEnabled == true,
-          onBackPressed,
-          onDownload,
-          onShare,
-          onSetWallpaper
-        )
-      },
-      floatingActionButton = {
-        if (currStatus is Result.Error)
-          FloatingButton(onFabClick, Icons.Default.Refresh, contentDescription = null)
-      }
-    ) { innerPadding ->
-      Column(
-        modifier = Modifier
-          .padding(innerPadding)
-          .fillMaxSize(),
-        verticalArrangement = Arrangement.Center
-      ) {
-        CatImageView(currStatus, onSuccess)
-      }
-    }
-}
 
 @Composable
 fun CatImageScreen(

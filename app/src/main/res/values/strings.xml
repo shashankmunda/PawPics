@@ -1,3 +1,20 @@
 <resources>
     <string name="app_name">PawPics</string>
+    <string name="invite_friend">Invite Friend</string>
+    <string name="rate_us">Rate Us</string>
+    <string name="share_via">Share Via</string>
+    <string name="switch_light_mode">Switch To Light Mode</string>
+    <string name="switch_dark_mode">Switch To Dark Mode</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="share_feedback">Share Feedback</string>
+    <string name="open_settings">Open settings</string>
+    <string name="made_in_india">Made With ❤️ in India\nVersion: %s</string>
+    <string name="check_out_pawpics">Check out PawPics! It\'s the best app for cat lovers!: https://play.google.com/store/apps/details?id=%1$s</string>
+    <string name="error_fetching_cats">Error fetching cats</string>
+    <string name="couldn_t_connect_to_the_source">Couldn\'t connect to the source</string>
+    <string name="json_parsing_error">JSON Parsing Error</string>
+    <string name="no_internet_connection">No Internet Connection</string>
+    <string name="error_fetching_filters">Error fetching filters</string>
+  <string name="check_your_internet_connection">Something went wrong. Please check your internet connection and try again.</string>
+  <string name="image_not_found">Image not found</string>
 </resources>

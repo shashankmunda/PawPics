@@ -12,6 +12,9 @@ import coil3.request.ImageRequest
 import coil3.request.allowHardware
 import coil3.request.allowRgb565
 import coil3.size.Precision.INEXACT
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 import com.shashankmunda.pawpics.IThemeStorage
 import com.shashankmunda.pawpics.ThemeStorage
 import com.shashankmunda.pawpics.api.CatApiService
@@ -95,11 +98,15 @@ object AppModule {
     fun provideImageRequestBuilder(@ApplicationContext context: Context) =
         ImageRequest.Builder(context)
 
-        @Provides
-        @Singleton
-        fun provideThemeStorage(
-            @ApplicationContext context: Context
-        ) : IThemeStorage {
-            return ThemeStorage(context)
-        }
+   @Provides
+   @Singleton
+   fun provideThemeStorage(
+     @ApplicationContext context: Context
+   ) : IThemeStorage {
+     return ThemeStorage(context)
+   }
+
+  @Singleton
+  @Provides
+  fun providesFirebaseAnalytics(): FirebaseAnalytics = Firebase.analytics
 }

@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import coil3.ImageLoader
 import coil3.request.ImageRequest
+import com.shashankmunda.pawpics.R
 import com.shashankmunda.pawpics.base.BaseViewModel
 import com.shashankmunda.pawpics.data.Cat
 import com.shashankmunda.pawpics.repository.CatRepository
@@ -33,7 +34,7 @@ class CatImageViewModel @Inject constructor(private val catRepository: CatReposi
         ioScope.launch{
             val catDetails = catRepository.getCatImageDetails(catImageId)
             if(catDetails==null)
-                _currCatStatus.postValue(Result.Error("Image not found"))
+                _currCatStatus.postValue(Result.Error(application.getString(R.string.image_not_found)))
             else _currCatStatus.postValue(Result.Success(catDetails))
         }
     }

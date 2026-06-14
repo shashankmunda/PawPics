@@ -11,6 +11,7 @@ import coil3.request.ImageRequest
 import coil3.request.ImageResult
 import coil3.request.allowHardware
 import coil3.request.bitmapConfig
+import com.shashankmunda.pawpics.R
 import com.shashankmunda.pawpics.base.BaseViewModel
 import com.shashankmunda.pawpics.data.Breed
 import com.shashankmunda.pawpics.data.Cat
@@ -21,7 +22,10 @@ import com.shashankmunda.pawpics.util.Result
 import com.shashankmunda.pawpics.util.Utils.BATCH_SIZE
 import com.shashankmunda.pawpics.util.Utils.hasInternetConnection
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.supervisorScope
 import java.io.IOException
 import javax.inject.Inject
 
@@ -92,15 +96,15 @@ class HomeFeedViewModel @Inject constructor(private val catRepository: CatReposi
                     if(!filters.isNullOrEmpty())
                         _filters.postValue(Result.Success(filters))
                     else
-                        _filters.postValue(Result.Error("Error fetching filters"))
+                        _filters.postValue(Result.Error(application.getString(R.string.error_fetching_filters)))
                 }
                 catch (t: Throwable) {
-                    _filters.postValue(Result.Error("Error fetching filters"))
+                    _filters.postValue(Result.Error(application.getString(R.string.error_fetching_filters)))
                 }
             }
         }
         else
-            _cats.postValue(Result.Error("No Internet connection"))
+            _cats.postValue(Result.Error(application.getString(R.string.no_internet_connection)))
     }
 
      fun fetchCatImages() {
@@ -108,7 +112,7 @@ class HomeFeedViewModel @Inject constructor(private val catRepository: CatReposi
         if (hasInternetConnection(application))
             makeApiRequest()
         else
-            _cats.postValue(Result.Error("No Internet connection"))
+            _cats.postValue(Result.Error(application.getString(R.string.no_internet_connection)))
     }
 
     private fun makeApiRequest() {
@@ -116,21 +120,27 @@ class HomeFeedViewModel @Inject constructor(private val catRepository: CatReposi
             try {
                 val catsList = catRepository.getCats(BATCH_SIZE, ImageSize.FULL, listOf(MimeType.PNG, MimeType.GIF), pageNo,
                     _selectedFilters.value?.data?.joinToString(",") { it.id })
-                val results=mutableListOf<Pair<Cat,ImageResult>>()
+                var results=mutableListOf<Pair<Cat,ImageResult>>()
                 if(catsList != null){
-                    for(cat in catsList){
-                        val result = imageLoader.execute(
-                            ImageRequest.Builder(application)
-                                .data(cat.url)
-                                .memoryCachePolicy(ENABLED)
-                                .diskCachePolicy(ENABLED)
-                                .bitmapConfig(Config.ALPHA_8)
-                                .allowHardware(false)
-                                .build())
-                        if(result.image!=null)
-                            results.add(Pair(cat,result))
+                    supervisorScope {
+                        val imageJobs = catsList.map { cat ->
+                            Pair(cat, async{
+                                return@async imageLoader.execute(
+                                    ImageRequest.Builder(application)
+                                        .data(cat.url)
+                                        .memoryCachePolicy(ENABLED)
+                                        .diskCachePolicy(ENABLED)
+                                        .bitmapConfig(Config.ALPHA_8)
+                                        .allowHardware(false)
+                                        .build())
+                            })
+                        }
+                        results = imageJobs.map{ imageJob ->
+                          Pair(imageJob.first,runCatching{ imageJob.second.await()}.getOrNull())
+                        }.filter { result -> result.second?.image != null } as MutableList<Pair<Cat, ImageResult>>
                     }
                 }
+
                 if(results.isNotEmpty())
                 {
                     val currentCachedCats = _cachedCats.value ?: emptyList()
@@ -140,12 +150,11 @@ class HomeFeedViewModel @Inject constructor(private val catRepository: CatReposi
                     _cats.postValue(Result.Success(null))
                 }
                 else
-                    _cats.postValue(Result.Error("Error fetching cats"))
+                    _cats.postValue(Result.Error(application.getString(R.string.error_fetching_cats)))
             } catch (t: Throwable) {
-                Log.d("CatViewModel", "Error fetching cats: ${t.message}")
                 when (t) {
-                    is IOException -> _cats.postValue(Result.Error("Couldn't connect to the source"))
-                    else -> _cats.postValue(Result.Error("JSON parsing error"))
+                    is IOException -> _cats.postValue(Result.Error(application.getString(R.string.couldn_t_connect_to_the_source)))
+                    else -> _cats.postValue(Result.Error(application.getString(R.string.json_parsing_error)))
                 }
             }
         }
