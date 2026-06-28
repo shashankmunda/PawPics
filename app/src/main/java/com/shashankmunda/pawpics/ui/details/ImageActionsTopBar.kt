@@ -13,6 +13,9 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 
+import androidx.compose.ui.res.stringResource
+import com.shashankmunda.pawpics.R
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ImageActionsTopBar(areActionsEnabled: Boolean, onBackPressed: () -> Unit, onSave: () -> Unit, onShare: () -> Unit, onApplyAsWallpaper: () -> Unit) {
@@ -24,7 +27,7 @@ fun ImageActionsTopBar(areActionsEnabled: Boolean, onBackPressed: () -> Unit, on
       IconButton(onClick=onBackPressed) {
         Icon(
           imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-          contentDescription = "Back",
+          contentDescription = stringResource(R.string.cd_back),
         )
       }
     },
@@ -32,19 +35,19 @@ fun ImageActionsTopBar(areActionsEnabled: Boolean, onBackPressed: () -> Unit, on
       IconButton(onClick=onSave, enabled= areActionsEnabled){
         Icon(
           imageVector = Icons.Default.Save,
-          contentDescription = "Back"
+          contentDescription = stringResource(R.string.cd_save)
         )
       }
       IconButton(onClick=onShare, enabled= areActionsEnabled){
         Icon(
           imageVector = Icons.Default.Share,
-          contentDescription = "Back"
+          contentDescription = stringResource(R.string.cd_share)
         )
       }
       IconButton(onClick=onApplyAsWallpaper, enabled= areActionsEnabled){
         Icon(
           imageVector = Icons.Default.Wallpaper,
-          contentDescription = "Back"
+          contentDescription = stringResource(R.string.cd_wallpaper)
         )
       }
     },

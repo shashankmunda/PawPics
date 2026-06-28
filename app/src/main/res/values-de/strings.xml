@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">PawPics</string>
+    <string name="invite_friend">Freund einladen</string>
+    <string name="rate_us">Bewerten Sie uns</string>
+    <string name="share_via">Teilen über</string>
+    <string name="switch_light_mode">Zum hellen Modus wechseln</string>
+    <string name="switch_dark_mode">Zum dunklen Modus wechseln</string>
+    <string name="privacy_policy">Datenschutzrichtlinie</string>
+    <string name="share_feedback">Feedback teilen</string>
+    <string name="open_settings">Einstellungen öffnen</string>
+    <string name="made_in_india">Mit ❤️ in Indien hergestellt\nVersion: %s</string>
+    <string name="check_out_pawpics">Schau dir PawPics an! Es ist die beste App für Katzenliebhaber!: https://play.google.com/store/apps/details?id=%1$s</string>
+    <string name="error_fetching_cats">Fehler beim Abrufen der Katzen</string>
+    <string name="couldn_t_connect_to_the_source">Verbindung zur Quelle konnte nicht hergestellt werden</string>
+    <string name="json_parsing_error">JSON-Parsing-Fehler</string>
+    <string name="no_internet_connection">Keine Internetverbindung</string>
+    <string name="error_fetching_filters">Fehler beim Abrufen der Filter</string>
+    <string name="check_your_internet_connection">Etwas ist schief gelaufen. Bitte überprüfen Sie Ihre Internetverbindung und versuchen Sie es erneut.</string>
+    <string name="image_not_found">Bild nicht gefunden</string>
+    <string name="cd_back">Zurück</string>
+    <string name="cd_open_drawer">Menü öffnen</string>
+    <string name="cd_filters">Filter</string>
+    <string name="cd_apply_filter">Filter anwenden</string>
+    <string name="cd_done_icon">Erledigt-Symbol</string>
+    <string name="cd_save">Speichern</string>
+    <string name="cd_share">Teilen</string>
+    <string name="cd_wallpaper">Als Hintergrundbild festlegen</string>
+    <string name="feedback_subject">Feedback für PawPics</string>
+    <string name="feedback_body">Ich wollte folgendes Feedback teilen:\n</string>
+    <string name="file_downloaded">Datei heruntergeladen!</string>
+</resources>

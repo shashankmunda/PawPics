@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">PawPics</string>
+    <string name="invite_friend">邀请朋友</string>
+    <string name="rate_us">评价我们</string>
+    <string name="share_via">分享方式</string>
+    <string name="switch_light_mode">切换到亮色模式</string>
+    <string name="switch_dark_mode">切换到暗色模式</string>
+    <string name="privacy_policy">隐私政策</string>
+    <string name="share_feedback">分享反馈</string>
+    <string name="open_settings">打开设置</string>
+    <string name="made_in_india">在印度用 ❤️ 制造\n版本：%s</string>
+    <string name="check_out_pawpics">快来看看 PawPics！它是猫奴们的最佳应用！：https://play.google.com/store/apps/details?id=%1$s</string>
+    <string name="error_fetching_cats">获取猫咪时出错</string>
+    <string name="couldn_t_connect_to_the_source">无法连接到来源</string>
+    <string name="json_parsing_error">JSON 解析错误</string>
+    <string name="no_internet_connection">无网络连接</string>
+    <string name="error_fetching_filters">获取过滤器时出错</string>
+    <string name="check_your_internet_connection">出错了。请检查您的网络连接并重试。</string>
+    <string name="image_not_found">未找到图片</string>
+    <string name="cd_back">返回</string>
+    <string name="cd_open_drawer">打开抽屉</string>
+    <string name="cd_filters">过滤器</string>
+    <string name="cd_apply_filter">应用过滤器</string>
+    <string name="cd_done_icon">完成图标</string>
+    <string name="cd_save">保存</string>
+    <string name="cd_share">分享</string>
+    <string name="cd_wallpaper">设为壁纸</string>
+    <string name="feedback_subject">对 PawPics 的反馈</string>
+    <string name="feedback_body">我想分享以下反馈：\n</string>
+    <string name="file_downloaded">文件已下载！</string>
+</resources>

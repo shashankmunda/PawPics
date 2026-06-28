@@ -59,7 +59,7 @@ fun HomeFeedError() {
         contentColor = Color.Black
       ),
     ) {
-      Icon(imageVector = Icons.Default.Settings, "Open settings")
+      Icon(imageVector = Icons.Default.Settings, stringResource(R.string.open_settings))
       Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
       Text(stringResource(R.string.open_settings))
     }
