@@ -163,10 +163,10 @@ class HomeActivity : AppCompatActivity() {
                                 selected = false,
                                 onClick = {
                                     val intent = Intent(Intent.ACTION_SENDTO).apply {
-                                        putExtra(Intent.EXTRA_SUBJECT, "Feedback for CatApp")
+                                        putExtra(Intent.EXTRA_SUBJECT, getString(R.string.feedback_subject))
                                         putExtra(
                                             Intent.EXTRA_TEXT,
-                                            "I wanted to share the following feedback:\n"
+                                            getString(R.string.feedback_body)
                                         )
                                         data = "mailto:shashankdec2000coder@gmail.com".toUri()
                                     }

@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">PawPics</string>
+    <string name="invite_friend">友達を招待</string>
+    <string name="rate_us">評価する</string>
+    <string name="share_via">共有方法</string>
+    <string name="switch_light_mode">ライトモードに切り替え</string>
+    <string name="switch_dark_mode">ダークモードに切り替え</string>
+    <string name="privacy_policy">プライバシーポリシー</string>
+    <string name="share_feedback">フィードバックを共有</string>
+    <string name="open_settings">設定を開く</string>
+    <string name="made_in_india">インドで ❤️ を込めて制作\nバージョン: %s</string>
+    <string name="check_out_pawpics">PawPicsをチェック！猫好きにはたまらないアプリです！: https://play.google.com/store/apps/details?id=%1$s</string>
+    <string name="error_fetching_cats">猫の取得中にエラーが発生しました</string>
+    <string name="couldn_t_connect_to_the_source">ソースに接続できませんでした</string>
+    <string name="json_parsing_error">JSONパースエラー</string>
+    <string name="no_internet_connection">インターネット接続がありません</string>
+    <string name="error_fetching_filters">フィルターの取得中にエラーが発生しました</string>
+    <string name="check_your_internet_connection">問題が発生しました。インターネット接続を確認して、もう一度お試しください。</string>
+    <string name="image_not_found">画像が見つかりません</string>
+    <string name="cd_back">戻る</string>
+    <string name="cd_open_drawer">ドロワーを開く</string>
+    <string name="cd_filters">フィルター</string>
+    <string name="cd_apply_filter">フィルターを適用</string>
+    <string name="cd_done_icon">完了アイコン</string>
+    <string name="cd_save">保存</string>
+    <string name="cd_share">共有</string>
+    <string name="cd_wallpaper">壁紙として設定</string>
+    <string name="feedback_subject">PawPics へのフィードバック</string>
+    <string name="feedback_body">以下のフィードバックを共有したいと思います：\n</string>
+    <string name="file_downloaded">ファイルをダウンロードしました！</string>
+</resources>

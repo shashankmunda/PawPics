@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">PawPics</string>
+    <string name="invite_friend">বন্ধুকে আমন্ত্রণ জানান</string>
+    <string name="rate_us">আমাদের রেট দিন</string>
+    <string name="share_via">এর মাধ্যমে শেয়ার করুন</string>
+    <string name="switch_light_mode">লাইট মোডে পরিবর্তন করুন</string>
+    <string name="switch_dark_mode">ডার্ক মোডে পরিবর্তন করুন</string>
+    <string name="privacy_policy">গোপনীয়তা নীতি</string>
+    <string name="share_feedback">ফিডব্যাক শেয়ার করুন</string>
+    <string name="open_settings">সেটিংস খুলুন</string>
+    <string name="made_in_india">ভারতে ❤️ এর সাথে তৈরি\nসংস্করণ: %s</string>
+    <string name="check_out_pawpics">PawPics দেখুন! এটি বিড়াল প্রেমীদের জন্য সেরা অ্যাপ!: https://play.google.com/store/apps/details?id=%1$s</string>
+    <string name="error_fetching_cats">বিড়াল পেতে ত্রুটি</string>
+    <string name="couldn_t_connect_to_the_source">উৎসের সাথে সংযোগ করা যায়নি</string>
+    <string name="json_parsing_error">JSON পার্সিং ত্রুটি</string>
+    <string name="no_internet_connection">কোনো ইন্টারনেট সংযোগ নেই</string>
+    <string name="error_fetching_filters">ফিল্টার পেতে ত্রুটি</string>
+    <string name="check_your_internet_connection">কিছু ভুল হয়েছে। অনুগ্রহ করে আপনার ইন্টারনেট সংযোগ পরীক্ষা করুন এবং আবার চেষ্টা করুন।</string>
+    <string name="image_not_found">ছবি পাওয়া যায়নি</string>
+    <string name="cd_back">ফিরে যান</string>
+    <string name="cd_open_drawer">ড্রয়ার খুলুন</string>
+    <string name="cd_filters">ফিল্টার</string>
+    <string name="cd_apply_filter">ফিল্টার প্রয়োগ করুন</string>
+    <string name="cd_done_icon">সম্পন্ন আইকন</string>
+    <string name="cd_save">সংরক্ষণ করুন</string>
+    <string name="cd_share">শেয়ার করুন</string>
+    <string name="cd_wallpaper">ওয়ালপেপার হিসেবে প্রয়োগ করুন</string>
+    <string name="feedback_subject">PawPics-এর জন্য ফিডব্যাক</string>
+    <string name="feedback_body">আমি নিম্নলিখিত ফিডব্যাক শেয়ার করতে চেয়েছিলাম:\n</string>
+    <string name="file_downloaded">ফাইল ডাউনলোড হয়েছে!</string>
+</resources>

@@ -19,6 +19,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
+import com.shashankmunda.pawpics.R
 import com.shashankmunda.pawpics.data.Breed
 import com.shashankmunda.pawpics.util.Result
 
@@ -40,7 +42,7 @@ fun Chip(isSelected: Boolean, onClick: (Boolean, String) -> Unit, label: String)
       {
         Icon(
           Icons.Filled.Done,
-          "Done icon",
+          stringResource(R.string.cd_done_icon),
           Modifier.size(FilterChipDefaults.IconSize)
         )
       }
