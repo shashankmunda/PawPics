@@ -5,13 +5,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImagePainter
 import coil3.compose.rememberAsyncImagePainter
 import coil3.request.SuccessResult
@@ -22,10 +22,9 @@ import com.shashankmunda.pawpics.util.Result
 @Composable
 fun CatImageView(currStatus: Result<Cat>?, onSuccess: (SuccessResult) -> Unit) {
   val height = LocalConfiguration.current.screenHeightDp.dp
-  //(1.0f * displayMetrics.widthPixels * cat.height!!).toInt() / cat.width!!
   if(currStatus?.data?.url != null){
     val painter = rememberAsyncImagePainter(currStatus.data.url)
-    val state by painter.state.collectAsState()
+    val state by painter.state.collectAsStateWithLifecycle()
     when(state){
       is AsyncImagePainter.State.Empty,
         is AsyncImagePainter.State.Loading -> {

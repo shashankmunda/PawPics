@@ -2,7 +2,6 @@ package com.shashankmunda.pawpics.ui.feed
 
 import android.app.Application
 import android.graphics.Bitmap.Config
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import coil3.imageLoader
@@ -22,7 +21,6 @@ import com.shashankmunda.pawpics.util.Result
 import com.shashankmunda.pawpics.util.Utils.BATCH_SIZE
 import com.shashankmunda.pawpics.util.Utils.hasInternetConnection
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
@@ -48,9 +46,6 @@ class HomeFeedViewModel @Inject constructor(private val catRepository: CatReposi
     val selectedFilters: LiveData<Result<List<Breed>>>
         get() = _selectedFilters
 
-    private val _themeChanged = MutableLiveData<Boolean>()
-    val themeChanged: LiveData<Boolean> get() = _themeChanged
-
     private val _loadMoreOnScroll = MutableLiveData<Boolean>(false)
     val loadMore: LiveData<Boolean>
         get() = _loadMoreOnScroll
@@ -75,16 +70,6 @@ class HomeFeedViewModel @Inject constructor(private val catRepository: CatReposi
 
     fun setFiltersForSelected(filters: List<Breed>) {
         _selectedFilters.postValue(Result.Success(filters))
-    }
-
-    fun addFilterToSelection(filter: Breed) {
-        if(_selectedFilters.isInitialized)
-        _selectedFilters.postValue(Result.Success(_selectedFilters.value?.data?.plus(filter)!!))
-        else _selectedFilters.postValue(Result.Success(listOf(filter)))
-    }
-
-    fun removeFilterFromSelection(filter: Breed) {
-        _selectedFilters.value = Result.Success(_selectedFilters.value?.data?.filterNot { it == filter }!!)
     }
 
     private fun fetchFilters(){

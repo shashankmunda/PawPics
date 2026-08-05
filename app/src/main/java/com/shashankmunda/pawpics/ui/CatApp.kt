@@ -49,7 +49,7 @@ fun CatNavHost(
         onViewFilters = {
           navController.navigate(FiltersSearch)
         },
-        onClick = { it ->
+        onClick = {
           navController.navigate(CatDetail(it.id, getExtensionFromUrl(it.url)!!))
         },
         drawerState = drawerState

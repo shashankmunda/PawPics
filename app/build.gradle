@@ -16,14 +16,14 @@ android {
     buildFeatures{
         buildConfig true
     }
-    compileSdk 35
+    compileSdk 36
 
     defaultConfig {
         applicationId "com.shashankmunda.pawpics"
-        minSdk 21
-        targetSdk 35
-        versionCode 22
-        versionName "1.21"
+        minSdk 23
+        targetSdk 36
+        versionCode 23
+        versionName "1.22"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
