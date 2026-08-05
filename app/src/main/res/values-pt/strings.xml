@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">PawPics</string>
+    <string name="invite_friend">Convidar Amigo</string>
+    <string name="rate_us">Avalie-nos</string>
+    <string name="share_via">Compartilhar via</string>
+    <string name="switch_light_mode">Mudar para o Modo Claro</string>
+    <string name="switch_dark_mode">Mudar para o Modo Escuro</string>
+    <string name="privacy_policy">Política de Privacidade</string>
+    <string name="share_feedback">Compartilhar Feedback</string>
+    <string name="open_settings">Abrir configurações</string>
+    <string name="made_in_india">Feito com ❤️ na Índia\nVersão: %s</string>
+    <string name="check_out_pawpics">Confira o PawPics! É o melhor app para quem ama gatos!: https://play.google.com/store/apps/details?id=%1$s</string>
+    <string name="error_fetching_cats">Erro ao buscar gatos</string>
+    <string name="couldn_t_connect_to_the_source">Não foi possível conectar à fonte</string>
+    <string name="json_parsing_error">Erro de processamento JSON</string>
+    <string name="no_internet_connection">Sem Conexão com a Internet</string>
+    <string name="error_fetching_filters">Erro ao buscar filtros</string>
+    <string name="check_your_internet_connection">Algo deu errado. Verifique sua conexão com a Internet e tente novamente.</string>
+    <string name="image_not_found">Imagem não encontrada</string>
+    <string name="cd_back">Voltar</string>
+    <string name="cd_open_drawer">Abrir gaveta</string>
+    <string name="cd_filters">Filtros</string>
+    <string name="cd_apply_filter">Aplicar filtro</string>
+    <string name="cd_done_icon">Ícone de concluído</string>
+    <string name="cd_save">Salvar</string>
+    <string name="cd_share">Compartilhar</string>
+    <string name="cd_wallpaper">Aplicar como papel de parede</string>
+    <string name="feedback_subject">Feedback para PawPics</string>
+    <string name="feedback_body">Eu gostaria de compartilhar o seguinte feedback:\n</string>
+    <string name="file_downloaded">Arquivo baixado!</string>
+</resources>

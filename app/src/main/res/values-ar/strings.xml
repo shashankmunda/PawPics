@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">PawPics</string>
+    <string name="invite_friend">دعوة صديق</string>
+    <string name="rate_us">قيمنا</string>
+    <string name="share_via">مشاركة عبر</string>
+    <string name="switch_light_mode">التبديل إلى الوضع الفاتح</string>
+    <string name="switch_dark_mode">التبديل إلى الوضع الداكن</string>
+    <string name="privacy_policy">سياسة الخصوصية</string>
+    <string name="share_feedback">مشاركة الملاحظات</string>
+    <string name="open_settings">فتح الإعدادات</string>
+    <string name="made_in_india">صنع بـ ❤️ في الهند\nالإصدار: %s</string>
+    <string name="check_out_pawpics">تفقد PawPics! إنه أفضل تطبيق لمحبي القطط!: https://play.google.com/store/apps/details?id=%1$s</string>
+    <string name="error_fetching_cats">خطأ في جلب القطط</string>
+    <string name="couldn_t_connect_to_the_source">تعذر الاتصال بالمصدر</string>
+    <string name="json_parsing_error">خطأ في تحليل JSON</string>
+    <string name="no_internet_connection">لا يوجد اتصال بالإنترنت</string>
+    <string name="error_fetching_filters">خطأ في جلب الفلاتر</string>
+    <string name="check_your_internet_connection">حدث خطأ ما. يرجى التحقق من اتصالك بالإنترنت والمحاولة مرة أخرى.</string>
+    <string name="image_not_found">الصورة غير موجودة</string>
+    <string name="cd_back">رجوع</string>
+    <string name="cd_open_drawer">فتح الدرج</string>
+    <string name="cd_filters">الفلاتر</string>
+    <string name="cd_apply_filter">تطبيق الفلتر</string>
+    <string name="cd_done_icon">أيقونة تم</string>
+    <string name="cd_save">حفظ</string>
+    <string name="cd_share">مشاركة</string>
+    <string name="cd_wallpaper">تعيين كخلفية</string>
+    <string name="feedback_subject">ملاحظات حول PawPics</string>
+    <string name="feedback_body">أردت مشاركة الملاحظات التالية:\n</string>
+    <string name="file_downloaded">تم تحميل الملف!</string>
+</resources>

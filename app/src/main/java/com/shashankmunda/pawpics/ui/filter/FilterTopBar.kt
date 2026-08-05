@@ -11,6 +11,9 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 
+import androidx.compose.ui.res.stringResource
+import com.shashankmunda.pawpics.R
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FilterTopBar(onBackPressed: () -> Unit, onSaveFilter: () -> Unit) {
@@ -20,7 +23,7 @@ fun FilterTopBar(onBackPressed: () -> Unit, onSaveFilter: () -> Unit) {
       IconButton(onClick = onBackPressed) {
         Icon(
           imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-          contentDescription = "Back",
+          contentDescription = stringResource(R.string.cd_back),
         )
       }
     },
@@ -28,7 +31,7 @@ fun FilterTopBar(onBackPressed: () -> Unit, onSaveFilter: () -> Unit) {
       IconButton(onClick = onSaveFilter) {
         Icon(
           imageVector = Icons.Default.Check,
-          "Apply Filter"
+          contentDescription = stringResource(R.string.cd_apply_filter)
         )
       }
     },

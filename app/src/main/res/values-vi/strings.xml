@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">PawPics</string>
+    <string name="invite_friend">Mời bạn bè</string>
+    <string name="rate_us">Đánh giá chúng tôi</string>
+    <string name="share_via">Chia sẻ qua</string>
+    <string name="switch_light_mode">Chuyển sang Chế độ sáng</string>
+    <string name="switch_dark_mode">Chuyển sang Chế độ tối</string>
+    <string name="privacy_policy">Chính sách bảo mật</string>
+    <string name="share_feedback">Chia sẻ phản hồi</string>
+    <string name="open_settings">Mở cài đặt</string>
+    <string name="made_in_india">Được làm bằng ❤️ tại Ấn Độ\nPhiên bản: %s</string>
+    <string name="check_out_pawpics">Hãy xem qua PawPics! Đây là ứng dụng tuyệt vời nhất dành cho những người yêu mèo!: https://play.google.com/store/apps/details?id=%1$s</string>
+    <string name="error_fetching_cats">Lỗi khi tải dữ liệu mèo</string>
+    <string name="couldn_t_connect_to_the_source">Không thể kết nối với nguồn</string>
+    <string name="json_parsing_error">Lỗi phân tích cú pháp JSON</string>
+    <string name="no_internet_connection">Không có kết nối Internet</string>
+    <string name="error_fetching_filters">Lỗi khi tải bộ lọc</string>
+    <string name="check_your_internet_connection">Đã xảy ra lỗi. Vui lòng kiểm tra kết nối internet của bạn và thử lại.</string>
+    <string name="image_not_found">Không tìm thấy hình ảnh</string>
+    <string name="cd_back">Quay lại</string>
+    <string name="cd_open_drawer">Mở ngăn kéo</string>
+    <string name="cd_filters">Bộ lọc</string>
+    <string name="cd_apply_filter">Áp dụng bộ lọc</string>
+    <string name="cd_done_icon">Biểu tượng hoàn tất</string>
+    <string name="cd_save">Lưu</string>
+    <string name="cd_share">Chia sẻ</string>
+    <string name="cd_wallpaper">Đặt làm hình nền</string>
+    <string name="feedback_subject">Phản hồi cho PawPics</string>
+    <string name="feedback_body">Tôi muốn chia sẻ phản hồi sau:\n</string>
+    <string name="file_downloaded">Đã tải tệp xuống!</string>
+</resources>

@@ -15,6 +15,17 @@
     <string name="json_parsing_error">JSON Parsing Error</string>
     <string name="no_internet_connection">No Internet Connection</string>
     <string name="error_fetching_filters">Error fetching filters</string>
-  <string name="check_your_internet_connection">Something went wrong. Please check your internet connection and try again.</string>
-  <string name="image_not_found">Image not found</string>
+    <string name="check_your_internet_connection">Something went wrong. Please check your internet connection and try again.</string>
+    <string name="image_not_found">Image not found</string>
+    <string name="cd_back">Back</string>
+    <string name="cd_open_drawer">Open Drawer</string>
+    <string name="cd_filters">Filters</string>
+    <string name="cd_apply_filter">Apply Filter</string>
+    <string name="cd_done_icon">Done icon</string>
+    <string name="cd_save">Save</string>
+    <string name="cd_share">Share</string>
+    <string name="cd_wallpaper">Apply as Wallpaper</string>
+    <string name="feedback_subject">Feedback for PawPics</string>
+    <string name="feedback_body">I wanted to share the following feedback:\n</string>
+    <string name="file_downloaded">File Downloaded!</string>
 </resources>

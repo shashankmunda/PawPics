@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">PawPics</string>
+    <string name="invite_friend">दोस्त को आमंत्रित करें</string>
+    <string name="rate_us">हमें रेट करें</string>
+    <string name="share_via">इसके माध्यम से साझा करें</string>
+    <string name="switch_light_mode">लाइट मोड पर स्विच करें</string>
+    <string name="switch_dark_mode">डार्क मोड पर स्विच करें</string>
+    <string name="privacy_policy">गोपनीयता नीति</string>
+    <string name="share_feedback">फीडबैक साझा करें</string>
+    <string name="open_settings">सेटिंग्स खोलें</string>
+    <string name="made_in_india">भारत में ❤️ के साथ बनाया गया\nसंस्करण: %s</string>
+    <string name="check_out_pawpics">PawPics देखें! यह बिल्ली प्रेमियों के लिए सबसे अच्छा ऐप है!: https://play.google.com/store/apps/details?id=%1$s</string>
+    <string name="error_fetching_cats">बिल्लियाँ प्राप्त करने में त्रुटि</string>
+    <string name="couldn_t_connect_to_the_source">स्रोत से कनेक्ट नहीं हो सका</string>
+    <string name="json_parsing_error">JSON पार्सिंग त्रुटि</string>
+    <string name="no_internet_connection">कोई इंटरनेट कनेक्शन नहीं</string>
+    <string name="error_fetching_filters">फ़िल्टर प्राप्त करने में त्रुटि</string>
+    <string name="check_your_internet_connection">कुछ गलत हो गया। कृपया अपना इंटरनेट कनेक्शन जांचें और पुनः प्रयास करें।</string>
+    <string name="image_not_found">छवि नहीं मिली</string>
+    <string name="cd_back">पीछे</string>
+    <string name="cd_open_drawer">ड्रॉर खोलें</string>
+    <string name="cd_filters">फ़िल्टर</string>
+    <string name="cd_apply_filter">फ़िल्टर लागू करें</string>
+    <string name="cd_done_icon">पूर्ण आइकन</string>
+    <string name="cd_save">सहेजें</string>
+    <string name="cd_share">साझा करें</string>
+    <string name="cd_wallpaper">वॉलपेपर के रूप में लागू करें</string>
+    <string name="feedback_subject">PawPics के लिए फीडबैक</string>
+    <string name="feedback_body">मैं निम्नलिखित फीडबैक साझा करना चाहता था:\n</string>
+    <string name="file_downloaded">फ़ाइल डाउनलोड हो गई!</string>
+</resources>

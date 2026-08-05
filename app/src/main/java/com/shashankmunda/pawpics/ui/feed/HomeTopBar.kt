@@ -19,6 +19,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import com.shashankmunda.pawpics.R
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -37,7 +39,7 @@ fun HomeTopBar( onViewFilters: () -> Unit, drawerState: DrawerState) {
       }) {
         Icon(
           imageVector = Icons.Default.Menu,
-          contentDescription = "Open Drawer",
+          contentDescription = stringResource(R.string.cd_open_drawer),
           tint = MaterialTheme.colorScheme.onPrimary
         )
       }
@@ -46,7 +48,7 @@ fun HomeTopBar( onViewFilters: () -> Unit, drawerState: DrawerState) {
       IconButton(onClick = onViewFilters){
         Icon(
           imageVector = Icons.Default.FilterList,
-          contentDescription = "Filters"
+          contentDescription = stringResource(R.string.cd_filters)
         )
       }
     },

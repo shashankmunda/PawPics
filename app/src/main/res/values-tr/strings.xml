@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">PawPics</string>
+    <string name="invite_friend">Arkadaş Davet Et</string>
+    <string name="rate_us">Bizi Değerlendirin</string>
+    <string name="share_via">Şununla Paylaş</string>
+    <string name="switch_light_mode">Açık Moda Geç</string>
+    <string name="switch_dark_mode">Karanlık Moda Geç</string>
+    <string name="privacy_policy">Gizlilik Politikası</string>
+    <string name="share_feedback">Geri Bildirim Paylaş</string>
+    <string name="open_settings">Ayarları aç</string>
+    <string name="made_in_india">Hindistan\'da ❤️ ile yapıldı\nSürüm: %s</string>
+    <string name="check_out_pawpics">PawPics\'e göz atın! Kedi severler için en iyi uygulama!: https://play.google.com/store/apps/details?id=%1$s</string>
+    <string name="error_fetching_cats">Kediler getirilirken hata oluştu</string>
+    <string name="couldn_t_connect_to_the_source">Kaynağa bağlanılamadı</string>
+    <string name="json_parsing_error">JSON Ayrıştırma Hatası</string>
+    <string name="no_internet_connection">İnternet Bağlantısı Yok</string>
+    <string name="error_fetching_filters">Filtreler getirilirken hata oluştu</string>
+    <string name="check_your_internet_connection">Bir şeyler yanlış gitti. Lütfen internet bağlantınızı kontrol edin ve tekrar deneyin.</string>
+    <string name="image_not_found">Resim bulunamadı</string>
+    <string name="cd_back">Geri</string>
+    <string name="cd_open_drawer">Çekmeceyi Aç</string>
+    <string name="cd_filters">Filtreler</string>
+    <string name="cd_apply_filter">Filtreyi Uygula</string>
+    <string name="cd_done_icon">Tamam simgesi</string>
+    <string name="cd_save">Kaydet</string>
+    <string name="cd_share">Paylaş</string>
+    <string name="cd_wallpaper">Duvar kağıdı olarak ayarla</string>
+    <string name="feedback_subject">PawPics için Geri Bildirim</string>
+    <string name="feedback_body">Aşağıdaki geri bildirimi paylaşmak istedim:\n</string>
+    <string name="file_downloaded">Dosya indirildi!</string>
+</resources>

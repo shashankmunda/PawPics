@@ -15,6 +15,7 @@ import androidx.core.content.FileProvider
 import com.shashankmunda.pawpics.BuildConfig
 import com.facebook.shimmer.Shimmer
 import com.facebook.shimmer.ShimmerDrawable
+import com.shashankmunda.pawpics.R
 import java.io.File
 import java.io.FileOutputStream
 
@@ -92,7 +93,7 @@ object Utils{
                 setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "$catImageId.$fileExt")
                 setMimeType("image/$fileExt")
                 setTitle("$catImageId.$fileExt")
-                setDescription("File Downloaded!")
+                setDescription(context.getString(R.string.file_downloaded))
                 setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
             }
             if(Build.VERSION.SDK_INT < Build.VERSION_CODES.Q)

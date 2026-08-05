@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">PawPics</string>
+    <string name="invite_friend">Invitar amigo</string>
+    <string name="rate_us">Califícanos</string>
+    <string name="share_via">Compartir vía</string>
+    <string name="switch_light_mode">Cambiar a modo claro</string>
+    <string name="switch_dark_mode">Cambiar a modo oscuro</string>
+    <string name="privacy_policy">Política de privacidad</string>
+    <string name="share_feedback">Compartir comentarios</string>
+    <string name="open_settings">Abrir ajustes</string>
+    <string name="made_in_india">Hecho con ❤️ en India\nVersión: %s</string>
+    <string name="check_out_pawpics">¡Echa un vistazo a PawPics! ¡Es la mejor aplicación para los amantes de los gatos!: https://play.google.com/store/apps/details?id=%1$s</string>
+    <string name="error_fetching_cats">Error al obtener los gatos</string>
+    <string name="couldn_t_connect_to_the_source">No se pudo conectar a la fuente</string>
+    <string name="json_parsing_error">Error de análisis JSON</string>
+    <string name="no_internet_connection">Sin conexión a Internet</string>
+    <string name="error_fetching_filters">Error al obtener los filtros</string>
+    <string name="check_your_internet_connection">Algo salió mal. Por favor, comprueba tu conexión a Internet e inténtalo de nuevo.</string>
+    <string name="image_not_found">Imagen no encontrada</string>
+    <string name="cd_back">Atrás</string>
+    <string name="cd_open_drawer">Abrir panel lateral</string>
+    <string name="cd_filters">Filtros</string>
+    <string name="cd_apply_filter">Aplicar filtro</string>
+    <string name="cd_done_icon">Icono de listo</string>
+    <string name="cd_save">Guardar</string>
+    <string name="cd_share">Compartir</string>
+    <string name="cd_wallpaper">Establecer como fondo de pantalla</string>
+    <string name="feedback_subject">Comentarios para PawPics</string>
+    <string name="feedback_body">Quería compartir los siguientes comentarios:\n</string>
+    <string name="file_downloaded">¡Archivo descargado!</string>
+</resources>

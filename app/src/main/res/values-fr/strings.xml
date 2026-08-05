@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">PawPics</string>
+    <string name="invite_friend">Inviter un ami</string>
+    <string name="rate_us">Évaluez-nous</string>
+    <string name="share_via">Partager via</string>
+    <string name="switch_light_mode">Passer au mode clair</string>
+    <string name="switch_dark_mode">Passer au mode sombre</string>
+    <string name="privacy_policy">Politique de confidentialité</string>
+    <string name="share_feedback">Partager vos commentaires</string>
+    <string name="open_settings">Ouvrir les paramètres</string>
+    <string name="made_in_india">Fait avec ❤️ en Inde\nVersion : %s</string>
+    <string name="check_out_pawpics">Découvrez PawPics ! C\'est la meilleure application pour les amoureux des chats ! : https://play.google.com/store/apps/details?id=%1$s</string>
+    <string name="error_fetching_cats">Erreur lors de la récupération des chats</string>
+    <string name="couldn_t_connect_to_the_source">Impossible de se connecter à la source</string>
+    <string name="json_parsing_error">Erreur d\'analyse JSON</string>
+    <string name="no_internet_connection">Pas de connexion Internet</string>
+    <string name="error_fetching_filters">Erreur lors de la récupération des filtres</string>
+    <string name="check_your_internet_connection">Une erreur est survenue. Veuillez vérifier votre connexion Internet et réessayer. </string>
+    <string name="image_not_found">Image non trouvée</string>
+    <string name="cd_back">Retour</string>
+    <string name="cd_open_drawer">Ouvrir le tiroir</string>
+    <string name="cd_filters">Filtres</string>
+    <string name="cd_apply_filter">Appliquer le filtre</string>
+    <string name="cd_done_icon">Icône terminé</string>
+    <string name="cd_save">Enregistrer</string>
+    <string name="cd_share">Partager</string>
+    <string name="cd_wallpaper">Appliquer comme fond d\'écran</string>
+    <string name="feedback_subject">Commentaires pour PawPics</string>
+    <string name="feedback_body">Je voulais partager les commentaires suivants :\n</string>
+    <string name="file_downloaded">Fichier téléchargé !</string>
+</resources>
