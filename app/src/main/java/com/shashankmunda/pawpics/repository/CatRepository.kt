@@ -31,7 +31,7 @@ class CatRepository @Inject constructor(private var catApiService: CatApiService
         val response = catApiService.fetchBreeds()
         return if(response.isSuccessful && response.body()!=null) {
             val filters = response.body()!!
-            return filters
+            filters
         } else null
     }
 

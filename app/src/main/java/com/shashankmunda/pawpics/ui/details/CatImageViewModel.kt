@@ -4,8 +4,6 @@ import android.app.Application
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import coil3.ImageLoader
-import coil3.request.ImageRequest
 import com.shashankmunda.pawpics.R
 import com.shashankmunda.pawpics.base.BaseViewModel
 import com.shashankmunda.pawpics.data.Cat
@@ -19,10 +17,11 @@ import java.io.FileOutputStream
 import javax.inject.Inject
 
 @HiltViewModel
-class CatImageViewModel @Inject constructor(private val catRepository: CatRepository, private val application: Application): BaseViewModel() {
-    @Inject lateinit var imageRequest: ImageRequest.Builder
-    @Inject lateinit var imageLoader : ImageLoader
-    private var _currCatStatus= MutableLiveData<Result<Cat>>()
+class CatImageViewModel @Inject constructor(
+    private val catRepository: CatRepository,
+    private val application: Application
+) : BaseViewModel() {
+    private var _currCatStatus = MutableLiveData<Result<Cat>>()
     val currCatStatus: LiveData<Result<Cat>>
         get()=_currCatStatus
 
