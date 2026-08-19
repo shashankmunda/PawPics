@@ -23,7 +23,7 @@ object Utils{
 
         const val BASE_URL="https://api.thecatapi.com/v1/"
         const val BATCH_SIZE=10
-        const val cacheSize=(5*1024*1024).toLong()
+        const val CACHE_SIZE=(5*1024*1024).toLong()
 
         fun provideShimmerDrawable(): ShimmerDrawable {
             val shimmer= Shimmer.ColorHighlightBuilder().apply {

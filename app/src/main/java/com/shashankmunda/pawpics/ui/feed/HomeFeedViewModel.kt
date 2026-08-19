@@ -4,7 +4,7 @@ import android.app.Application
 import android.graphics.Bitmap.Config
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import coil3.imageLoader
+import coil3.ImageLoader
 import coil3.request.CachePolicy.ENABLED
 import coil3.request.ImageRequest
 import coil3.request.ImageResult
@@ -28,19 +28,23 @@ import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeFeedViewModel @Inject constructor(private val catRepository: CatRepository, private val application: Application): BaseViewModel() {
+class HomeFeedViewModel @Inject constructor(
+    private val catRepository: CatRepository,
+    private val application: Application,
+    private val imageLoader: ImageLoader
+) : BaseViewModel() {
 
-    private var _cats= MutableLiveData<Result<List<Pair<Cat,ImageResult>>>>()
+    private var _cats = MutableLiveData<Result<List<Pair<Cat, ImageResult>>>>()
     val cats: LiveData<Result<List<Pair<Cat, ImageResult>>>>
-        get()=_cats
+        get() = _cats
 
     private val _cachedCats = MutableLiveData<List<Pair<Cat, ImageResult>>>()
     val cachedCats: LiveData<List<Pair<Cat, ImageResult>>>
         get() = _cachedCats
 
-    private var _filters= MutableLiveData<Result<List<Breed>>>()
+    private var _filters = MutableLiveData<Result<List<Breed>>>()
     val filters: LiveData<Result<List<Breed>>>
-        get()=_filters
+        get() = _filters
 
     private var _selectedFilters = MutableLiveData<Result<List<Breed>>>(Result.Success(emptyList()))
     val selectedFilters: LiveData<Result<List<Breed>>>
@@ -51,9 +55,8 @@ class HomeFeedViewModel @Inject constructor(private val catRepository: CatReposi
         get() = _loadMoreOnScroll
 
     private var pageNo = 0
-    private var imageLoader = application.imageLoader
 
-    init{
+    init {
         fetchCatImages()
         fetchFilters()
     }

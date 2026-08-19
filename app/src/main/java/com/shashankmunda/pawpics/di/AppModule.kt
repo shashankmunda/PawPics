@@ -19,6 +19,7 @@ import com.shashankmunda.pawpics.IThemeStorage
 import com.shashankmunda.pawpics.ThemeStorage
 import com.shashankmunda.pawpics.api.CatApiService
 import com.shashankmunda.pawpics.data.CatsDatabase
+import com.shashankmunda.pawpics.ui.NavigationDrawerItems
 import com.shashankmunda.pawpics.util.Utils
 import dagger.Module
 import dagger.Provides
@@ -38,7 +39,7 @@ object AppModule {
     @Singleton
     @Provides
     fun getCacheDir(@ApplicationContext context: Context) =
-        Cache(context.cacheDir,Utils.cacheSize)
+        Cache(context.cacheDir,Utils.CACHE_SIZE)
 
     @Singleton
     @Provides
@@ -109,4 +110,8 @@ object AppModule {
   @Singleton
   @Provides
   fun providesFirebaseAnalytics(): FirebaseAnalytics = Firebase.analytics
+
+    @Singleton
+    @Provides
+    fun bindNavigationItemsProvider(firebaseAnalytics: FirebaseAnalytics, themeStorage: ThemeStorage): NavigationDrawerItems = NavigationDrawerItems(firebaseAnalytics, themeStorage)
 }
