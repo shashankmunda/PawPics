@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import coil3.request.SuccessResult
 import com.shashankmunda.pawpics.data.Cat
@@ -36,10 +37,11 @@ fun CatImageContent(
     },
   ) { innerPadding ->
     Column(
-      modifier = Modifier.Companion
+      modifier = Modifier
         .padding(innerPadding)
         .fillMaxSize(),
-      verticalArrangement = Arrangement.Center
+      verticalArrangement = Arrangement.Center,
+      horizontalAlignment = Alignment.CenterHorizontally
     ) {
       CatImageView(currStatus, onSuccess)
     }

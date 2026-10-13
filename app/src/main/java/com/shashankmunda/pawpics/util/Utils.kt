@@ -6,15 +6,15 @@ import android.content.ClipData
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.Bitmap.CompressFormat
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import androidx.core.content.FileProvider
+import androidx.core.net.toUri
 import com.shashankmunda.pawpics.BuildConfig
-import com.facebook.shimmer.Shimmer
-import com.facebook.shimmer.ShimmerDrawable
 import com.shashankmunda.pawpics.R
 import java.io.File
 import java.io.FileOutputStream
@@ -24,18 +24,6 @@ object Utils{
         const val BASE_URL="https://api.thecatapi.com/v1/"
         const val BATCH_SIZE=10
         const val CACHE_SIZE=(5*1024*1024).toLong()
-
-        fun provideShimmerDrawable(): ShimmerDrawable {
-            val shimmer= Shimmer.ColorHighlightBuilder().apply {
-                setBaseAlpha(0.7f)
-                setAutoStart(true)
-                setDirection(Shimmer.Direction.LEFT_TO_RIGHT)
-                setHighlightAlpha(0.6f)
-            }.build()
-            return ShimmerDrawable().apply {
-                setShimmer(shimmer)
-            }
-        }
 
 
         fun hasInternetConnection(application:Application): Boolean {
@@ -87,7 +75,7 @@ object Utils{
             val downloadManager =
                 context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
             val url = "https://cdn2.thecatapi.com/images/$catImageId.$fileExt"
-            val request = DownloadManager.Request(Uri.parse(url)).apply {
+            val request = DownloadManager.Request(url.toUri()).apply {
                 addRequestHeader("x-api-key", BuildConfig.CAT_API_KEY)
                 setAllowedOverMetered(true)
                 setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "$catImageId.$fileExt")
@@ -121,12 +109,24 @@ object FileUtils{
         return targetFile
     }
 
+  private fun getCompressionFormat(fileExt: String): CompressFormat?{
+    if(fileExt == "jpg")
+      return CompressFormat.JPEG
+    if(fileExt == "png")
+      return CompressFormat.PNG
+    if(fileExt == "webp"){
+      return if(Build.VERSION.SDK_INT >= 30)
+        CompressFormat.WEBP_LOSSLESS
+      else CompressFormat.WEBP
+    }
+    return null
+  }
+
     private fun writeBitmapToFile(targetFile:File, bitmap: Bitmap, fileExt: String){
         val fileOutputStream = FileOutputStream(targetFile)
-        if(fileExt == "png")
-            fileOutputStream.use {
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream)
-            }
+        getCompressionFormat(fileExt)?.let { format ->
+          bitmap.compress(format, 100, fileOutputStream)
+        }
     }
 
     fun saveBitmapToCache(context: Context, bitmap: Bitmap, catImageId:String, fileExt: String) {
@@ -141,10 +141,10 @@ object FileUtils{
 }
 
 fun getExtensionFromUrl(url: String): String? {
-    val uri = Uri.parse(url)
+  val uri = url.toUri()
     val path = uri.path ?: return null
     val extension = path.substringAfterLast('.', "")
-    return if (extension.isNotEmpty()) extension else null
+    return extension.ifEmpty { null }
 }
 
 enum class ImageSize{
