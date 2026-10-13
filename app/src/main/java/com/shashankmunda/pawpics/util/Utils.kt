@@ -13,8 +13,6 @@ import android.os.Build
 import android.os.Environment
 import androidx.core.content.FileProvider
 import com.shashankmunda.pawpics.BuildConfig
-import com.facebook.shimmer.Shimmer
-import com.facebook.shimmer.ShimmerDrawable
 import com.shashankmunda.pawpics.R
 import java.io.File
 import java.io.FileOutputStream
@@ -24,18 +22,6 @@ object Utils{
         const val BASE_URL="https://api.thecatapi.com/v1/"
         const val BATCH_SIZE=10
         const val CACHE_SIZE=(5*1024*1024).toLong()
-
-        fun provideShimmerDrawable(): ShimmerDrawable {
-            val shimmer= Shimmer.ColorHighlightBuilder().apply {
-                setBaseAlpha(0.7f)
-                setAutoStart(true)
-                setDirection(Shimmer.Direction.LEFT_TO_RIGHT)
-                setHighlightAlpha(0.6f)
-            }.build()
-            return ShimmerDrawable().apply {
-                setShimmer(shimmer)
-            }
-        }
 
 
         fun hasInternetConnection(application:Application): Boolean {
